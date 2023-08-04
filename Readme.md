@@ -23,30 +23,16 @@
 ---
 
 ## 2. 팀원
-- [황도경](https://github.com/Dokyung-Hwang)
 
-<img src="https://media.discordapp.net/attachments/1136919820567322745/1136919979799875684/image1.jpg?width=525&height=525" width=200px />
+| [양연주(FE)](https://github.com/judevv)                                                                                                                                 | [장용민(FE)](https://github.com/poiuy4004) | [함재형(FE)](https://github.com/hamjaehyeong) | [박영길(BE)](https://github.com/ParkYoungGil) | [황도경(BE)](https://github.com/Dokyung-Hwang)                                                                                             | [김도형(BE)]() | [이승태(BE)](https://github.com/NtoZero) |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------|-----------------------------------------------|-----------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|----------------|------------------------------------------|
+| <img src="https://media.discordapp.net/attachments/1136919820567322745/1136920104316194836/KakaoTalk_Photo_2023-08-04-16-14-10.png?width=525&height=525" width=150px ></img> |                                            |                                               |                                               | <img src="https://media.discordapp.net/attachments/1136919820567322745/1136919979799875684/image1.jpg?width=525&height=525" width=150 ></img> |                |                                          |
 
-
-- [박영길](https://github.com/ParkYoungGil)
-![]()
-
-- [양연주](https://github.com/judevv)
-<img src="https://media.discordapp.net/attachments/1136919820567322745/1136920104316194836/KakaoTalk_Photo_2023-08-04-16-14-10.png?width=525&height=525" width=200px />
-
-- [이승태](https://github.com/NtoZero)
-![]()
-
-- [함재형](https://github.com/hamjaehyeong)
-![]()
-
-- [장용민](https://github.com/poiuy4004)
-![]()
-
-- [김도형]()
 
 <br/>
 
 ---
 
 ## 3. 핵심 기능 
+
+- 게시판
