@@ -23,23 +23,27 @@
 ---
 
 ## 2. 팀원
-- 황도경
+- [황도경](https://github.com/Dokyung-Hwang)
+
+<img src="https://media.discordapp.net/attachments/1136919820567322745/1136919979799875684/image1.jpg?width=525&height=525" width=200px />
+
+
+- [박영길](https://github.com/ParkYoungGil)
 ![]()
 
-- 박영길
+- [양연주](https://github.com/judevv)
+<img src="https://media.discordapp.net/attachments/1136919820567322745/1136920104316194836/KakaoTalk_Photo_2023-08-04-16-14-10.png?width=525&height=525" width=200px />
+
+- [이승태](https://github.com/NtoZero)
 ![]()
 
-- 양연주
+- [함재형](https://github.com/hamjaehyeong)
 ![]()
 
-- 이승태
+- [장용민](https://github.com/poiuy4004)
 ![]()
 
-- 함재형
-![]()
-
-- 장용민
-![]()
+- [김도형]()
 
 <br/>
 
