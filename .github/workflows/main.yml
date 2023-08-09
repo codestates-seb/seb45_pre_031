@@ -43,6 +43,19 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
+
+      - name: SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.AWS_SSH_HOST }}
+          username: ${{ secrets.AWS_SSH_USERNAME }}
+          key: ${{ secrets.AWS_SSH_KEY }}
+          port: ${{ secrets.AWS_SSH_PORT }}
+          script: |
+            whoami
+
+
+
       - name: Start Session Manager session
         run: aws ssm start-session --target i-0d95576197b6c8bc5
         working-directory: ${{ env.working-directory }}
