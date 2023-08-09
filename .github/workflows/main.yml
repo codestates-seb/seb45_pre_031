@@ -35,3 +35,35 @@ jobs:
           docker tag 7elenven-cicd gdh012/7eleven-cicd:${GITHUB_SHA::7}
           docker push gdh012/7eleven-cicd:${GITHUB_SHA::7}
         working-directory: ${{ env.working-directory }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Start Session Manager session
+        run: aws ssm start-session --target i-0d95576197b6c8bc5
+        working-directory: ${{ env.working-directory }}
+
+      - name: Deploy to Server
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ap-northeast-2
+        run: |
+          aws ssm send-command \
+            --instance-ids i-0d95576197b6c8bc5 \
+            --document-name "AWS-RunShellScript" \
+            --parameters "commands=[
+              'if sudo docker ps -a --format \\'{{.Names}}\\' | grep -q \'^server$\\'; then',
+              '  sudo docker stop server',
+              '  sudo docker rm server',
+              'fi',
+              'sudo docker pull gdh012/7eleven-cicd:${GITHUB_SHA::7}',
+              'sudo docker tag gdh012/7eleven-cicd:${GITHUB_SHA::7} 7eleven-cicd',
+              'sudo docker run -d --name server -p 8080:8080 7eleven-cicd'
+            ]" \
+            --output text
+        working-directory: ${{ env.working-directory }}
