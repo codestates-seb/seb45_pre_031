@@ -44,7 +44,7 @@ jobs:
           aws-region: ap-northeast-2
 
 
-      - name: SSH
+      - name: SSH Connection and Deploy to Server
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.AWS_SSH_HOST }}
@@ -65,11 +65,3 @@ jobs:
               'sudo docker run -d --name server -p 8080:8080 7eleven-cicd'
             ]" \
             --output text
-
-
-      - name: Deploy to Server
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ap-northeast-2
-        run: |
