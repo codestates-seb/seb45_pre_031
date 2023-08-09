@@ -52,21 +52,7 @@ jobs:
           key: ${{ secrets.AWS_SSH_KEY }}
           port: ${{ secrets.AWS_SSH_PORT }}
           script: |
-            whoami
-
-
-
-      - name: Start Session Manager session
-        run: aws ssm start-session --target i-0d95576197b6c8bc5
-        working-directory: ${{ env.working-directory }}
-
-      - name: Deploy to Server
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ap-northeast-2
-        run: |
-          aws ssm send-command \
+            aws ssm send-command \
             --instance-ids i-0d95576197b6c8bc5 \
             --document-name "AWS-RunShellScript" \
             --parameters "commands=[
@@ -79,4 +65,11 @@ jobs:
               'sudo docker run -d --name server -p 8080:8080 7eleven-cicd'
             ]" \
             --output text
-        working-directory: ${{ env.working-directory }}
+
+
+      - name: Deploy to Server
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ap-northeast-2
+        run: |
