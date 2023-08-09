@@ -52,7 +52,7 @@ jobs:
           key: ${{ secrets.AWS_SSH_KEY }}
           port: ${{ secrets.AWS_SSH_PORT }}
           script: |
-            docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
+            sudo docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
             sudo docker rm -f $(docker ps -qa)
             sudo docker pull gdh012/7eleven-cicd:${GITHUB_SHA::7}
             sudo docker tag gdh012/7eleven-cicd:${GITHUB_SHA::7} 7eleven-cicd
