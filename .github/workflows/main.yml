@@ -51,6 +51,7 @@ jobs:
           username: ${{ secrets.AWS_SSH_USERNAME }}
           key: ${{ secrets.AWS_SSH_KEY }}
           port: ${{ secrets.AWS_SSH_PORT }}
+          envs: GITHUB_SHA
           script: |
             sudo docker pull gdh012/7eleven-cicd:${GITHUB_SHA::7}
             sudo docker tag gdh012/7eleven-cicd:${GITHUB_SHA::7} 7eleven-cicd
