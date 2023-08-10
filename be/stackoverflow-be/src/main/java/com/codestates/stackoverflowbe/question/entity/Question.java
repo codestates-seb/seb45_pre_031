@@ -5,10 +5,16 @@ import com.codestates.stackoverflowbe.comment.entity.Comment;
 import com.codestates.stackoverflowbe.tag.entity.Tag;
 import com.codestates.stackoverflowbe.user.entity.User;
 import com.codestates.stackoverflowbe.vote.entity.Vote;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
 
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Question extends BaseTimeEntity {
 
@@ -23,13 +29,13 @@ public class Question extends BaseTimeEntity {
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    @OneToMany(mappedBy = "comment")
+    @OneToMany(mappedBy = "question")
     private List<Comment> comments;
 
-    @OneToMany(mappedBy = "answer")
+    @OneToMany(mappedBy = "question")
     private List<Comment> answers;
 
-    @OneToMany(mappedBy = "tag")
+    @OneToMany(mappedBy = "question")
     private List<Tag> tags;
 
     @OneToOne()

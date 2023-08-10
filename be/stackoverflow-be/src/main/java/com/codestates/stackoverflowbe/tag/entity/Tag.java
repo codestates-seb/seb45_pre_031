@@ -1,9 +1,15 @@
 package com.codestates.stackoverflowbe.tag.entity;
 
 import com.codestates.stackoverflowbe.question.entity.Question;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Tag {
 
