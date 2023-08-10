@@ -13,9 +13,6 @@ public class Answer extends BaseTimeEntity {
     private Long answer_id;
     private String body;
 
-
-
-
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user_id;
