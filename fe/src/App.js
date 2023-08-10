@@ -5,7 +5,7 @@ import Header from "./components/Header";
 import QuestionListPage from "./pages/QuestionListPage";
 import LoginPage from "./pages/LoginPage";
 import MembershipPage from "./pages/MembershipPage";
-import QuestionlistPage from "./pages/QuestionlistPage";
+import QuestionlistPage from "./pages/QuestionListPage";
 import QuestionDetailPage from "./pages/QuestionDetailPage";
 import TagListPage from "./pages/TagListPage";
 
