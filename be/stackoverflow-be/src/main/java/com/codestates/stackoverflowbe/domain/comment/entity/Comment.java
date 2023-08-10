@@ -1,8 +1,8 @@
-package com.codestates.stackoverflowbe.comment.entity;
+package com.codestates.stackoverflowbe.domain.comment.entity;
 
-import com.codestates.stackoverflowbe.answer.entity.Answer;
-import com.codestates.stackoverflowbe.question.entity.Question;
-import com.codestates.stackoverflowbe.user.entity.User;
+import com.codestates.stackoverflowbe.domain.answer.entity.Answer;
+import com.codestates.stackoverflowbe.domain.question.entity.Question;
+import com.codestates.stackoverflowbe.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

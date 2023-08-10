@@ -1,8 +1,8 @@
-package com.codestates.stackoverflowbe.user.entity;
+package com.codestates.stackoverflowbe.domain.user.entity;
 
-import com.codestates.stackoverflowbe.answer.entity.Answer;
-import com.codestates.stackoverflowbe.audit.BaseTimeEntity;
-import com.codestates.stackoverflowbe.vote.entity.Vote;
+import com.codestates.stackoverflowbe.domain.answer.entity.Answer;
+import com.codestates.stackoverflowbe.global.audit.BaseTimeEntity;
+import com.codestates.stackoverflowbe.domain.vote.entity.Vote;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +24,7 @@ public class User extends BaseTimeEntity {
 
     private String username;
     private String password;
+
 
     @OneToMany(mappedBy = "user")
     private List<Answer> answers = new ArrayList<>();

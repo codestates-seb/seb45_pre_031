@@ -1,10 +1,10 @@
-package com.codestates.stackoverflowbe.answer.entity;
+package com.codestates.stackoverflowbe.domain.answer.entity;
 
-import com.codestates.stackoverflowbe.audit.BaseTimeEntity;
-import com.codestates.stackoverflowbe.comment.entity.Comment;
-import com.codestates.stackoverflowbe.question.entity.Question;
-import com.codestates.stackoverflowbe.user.entity.User;
-import com.codestates.stackoverflowbe.vote.entity.Vote;
+import com.codestates.stackoverflowbe.global.audit.BaseTimeEntity;
+import com.codestates.stackoverflowbe.domain.comment.entity.Comment;
+import com.codestates.stackoverflowbe.domain.question.entity.Question;
+import com.codestates.stackoverflowbe.domain.user.entity.User;
+import com.codestates.stackoverflowbe.domain.vote.entity.Vote;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
