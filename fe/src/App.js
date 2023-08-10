@@ -1,13 +1,14 @@
-import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Header from "./components/Header";
 import QuestionListPage from "./pages/QuestionListPage";
 import LoginPage from "./pages/LoginPage";
 import MembershipPage from "./pages/MembershipPage";
-import QuestionlistPage from "./pages/QuestionlistPage";
+import QuestionlistPage from "./pages/QuestionListPage";
 import QuestionDetailPage from "./pages/QuestionDetailPage";
 import TagListPage from "./pages/TagListPage";
+
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/questiondetail" element={<QuestionDetailPage />}></Route>
           <Route path="/taglist" element={<TagListPage />}></Route>
         </Routes>
+        <Footer />
       </div>
     </BrowserRouter>
   );
