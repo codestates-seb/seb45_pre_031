@@ -2,6 +2,7 @@ package com.codestates.stackoverflowbe.user.entity;
 
 import com.codestates.stackoverflowbe.answer.entity.Answer;
 import com.codestates.stackoverflowbe.audit.BaseTimeEntity;
+import com.codestates.stackoverflowbe.vote.entity.Vote;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -19,4 +20,8 @@ public class User extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "answer")
     private List<Answer> answers = new ArrayList<>();
+
+    @OneToOne()
+    @JoinColumn(name = "VOTE_ID")
+    private Vote vote;
 }
