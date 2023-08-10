@@ -26,9 +26,9 @@ logging:
 # swagger
 springdoc:
   swagger-ui:
-    path: /swagger-ui.html
-    groups-order: DESC
-    operationsSorter: method
+    path: /swagger
+    operationsSorter: alpha
+    tags-sorter: alpha
     disable-swagger-default-url: true
     display-request-duration: true
   api-docs:
