@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/stackoverflow?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
-    username: smiledk
-    password: 1112
+    url: jdbc:mysql://3.36.128.133:3306/stackoverflow?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+    username: 7eleven
+    password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
