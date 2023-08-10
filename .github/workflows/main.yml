@@ -43,9 +43,8 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
-
       - name: SSH Connection and Deploy to Server
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@0.1.3
         with:
           host: ${{ secrets.AWS_SSH_HOST }}
           username: ${{ secrets.AWS_SSH_USERNAME }}
