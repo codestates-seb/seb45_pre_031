@@ -8,6 +8,7 @@ import QuestionlistPage from "./pages/QuestionListPage";
 import QuestionDetailPage from "./pages/QuestionDetailPage";
 import TagListPage from "./pages/TagListPage";
 
+import Aside from "./components/Aside";
 import Footer from "./components/Footer";
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           <Route path="/questiondetail" element={<QuestionDetailPage />}></Route>
           <Route path="/taglist" element={<TagListPage />}></Route>
         </Routes>
+        <Aside />
         <Footer />
       </div>
     </BrowserRouter>

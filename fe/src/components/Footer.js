@@ -1,6 +1,8 @@
 import { styled } from "styled-components";
 
 const Footer_footer = styled.footer`
+  position: static;
+  bottom: 0;
   height: 322px;
   background-color: rgb(35, 38, 41);
 `
