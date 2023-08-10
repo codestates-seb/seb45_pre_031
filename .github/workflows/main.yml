@@ -53,7 +53,7 @@ jobs:
           port: ${{ secrets.AWS_SSH_PORT }}
           envs: GITHUB_SHA
           script: |
-            sudo docker rm server
+            sudo docker rm -f server
             sudo docker pull gdh012/7eleven-cicd:${GITHUB_SHA::7}
             sudo docker tag gdh012/7eleven-cicd:${GITHUB_SHA::7} 7eleven-cicd
             sudo docker run -d --name server -p 8080:8080 7eleven-cicd
