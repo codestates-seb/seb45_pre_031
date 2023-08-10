@@ -1,6 +1,6 @@
-package com.codestates.stackoverflowbe.tag.entity;
+package com.codestates.stackoverflowbe.domain.tag.entity;
 
-import com.codestates.stackoverflowbe.question.entity.Question;
+import com.codestates.stackoverflowbe.domain.question.entity.Question;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
