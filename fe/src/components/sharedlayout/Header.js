@@ -106,6 +106,5 @@ function Header() {
       </BtnContatiner>
     </HeaderContainer>
   );
-}
 
 export default Header;
