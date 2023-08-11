@@ -1,13 +1,13 @@
 import { styled } from "styled-components";
 import { Link } from "react-router-dom";
 
-const Footer_footer = styled.footer`
+const FooterFooter = styled.footer`
   position: static;
   bottom: 0;
   height: 322px;
   background-color: rgb(35, 38, 41);
 `
-const Div_Container = styled.div`
+const DivContainer = styled.div`
   display: flex;
   flex-flow: row wrap;
   margin: 0 88px;
@@ -16,39 +16,39 @@ const Div_Container = styled.div`
   color: rgb(145, 153, 161);
 `
 
-const Div_LogoContainer = styled.div`
+const DivLogoContainer = styled.div`
   flex: 0 0 64px;
   margin: -12px 0 32px 0;
 `
-const Img_Logo = styled.img`
+const ImgLogo = styled.img`
 `
 
-const Nav_MainContainer = styled.nav`
+const NavMainContainer = styled.nav`
   display: flex;
   flex: 2 1 auto;
   flex-wrap: wrap;
 `
-const Div_MainBox = styled.div`
+const DivMainBox = styled.div`
   flex: 1 0 auto;
   padding: 0 12px 24px 0;
 `
-const H5_MainTitle = styled.div`
+const H5MainTitle = styled.div`
   margin-bottom: 12px;
   font-weight: 700;
   color: rgb(186, 191, 196);
 `
-const Ul_MainBodyBox = styled.ul`
+const UlMainBodyBox = styled.ul`
   list-style: none;
   vertical-align: baseline;
   font-weight: 400;
 `
-const Li_MainBody = styled.li`
+const LiMainBody = styled.li`
   padding: 4px 0;
 `
-const Li_MainBodyAPI = styled(Li_MainBody)`
+const LiMainBodyAPI = styled(LiMainBody)`
   margin-top: 16px !important;
 `
-const Div_MainBoxLast = styled(Div_MainBox)`
+const Div_MainBoxLast = styled(DivMainBox)`
   
 `
 
@@ -74,118 +74,118 @@ const P_SubBottom = styled.p`
 
 function Footer() {
   return(
-    <Footer_footer>
-      <Div_Container>
+    <FooterFooter>
+      <DivContainer>
 
-        <Div_LogoContainer>
+        <DivLogoContainer>
           <Link to="/">
-            <Img_Logo
+            <ImgLogo
               src="https://media.discordapp.net/attachments/1138344984454631504/1138711197278015569/image.png?width=612&height=708"
               alt="Stack Overflow Logo"
               width="32px" height="37px"
             />
           </Link>
-        </Div_LogoContainer>
+        </DivLogoContainer>
 
-        <Nav_MainContainer>
-          <Div_MainBox>
-            <H5_MainTitle>
+        <NavMainContainer>
+          <DivMainBox>
+            <H5MainTitle>
               STACK OVERFLOW
-            </H5_MainTitle>
-            <Ul_MainBodyBox>
-              <Li_MainBody>
+            </H5MainTitle>
+            <UlMainBodyBox>
+              <LiMainBody>
                 Questions
-              </Li_MainBody>
-              <Li_MainBody>
+              </LiMainBody>
+              <LiMainBody>
                 Help
-              </Li_MainBody>
-            </Ul_MainBodyBox>
-          </Div_MainBox>
-          <Div_MainBox>
-            <H5_MainTitle>
+              </LiMainBody>
+            </UlMainBodyBox>
+          </DivMainBox>
+          <DivMainBox>
+            <H5MainTitle>
               PRODUCTS
-            </H5_MainTitle>
-            <Ul_MainBodyBox>
-              <Li_MainBody>
+            </H5MainTitle>
+            <UlMainBodyBox>
+              <LiMainBody>
                 Teams
-              </Li_MainBody>
-              <Li_MainBody>
+              </LiMainBody>
+              <LiMainBody>
                 Advertising
-              </Li_MainBody>
-              <Li_MainBody>
+              </LiMainBody>
+              <LiMainBody>
                 Collectives
-              </Li_MainBody>
-              <Li_MainBody>
+              </LiMainBody>
+              <LiMainBody>
                 Talent
-              </Li_MainBody>
-            </Ul_MainBodyBox>
-          </Div_MainBox>
-          <Div_MainBox>
-            <H5_MainTitle>
+              </LiMainBody>
+            </UlMainBodyBox>
+          </DivMainBox>
+          <DivMainBox>
+            <H5MainTitle>
               COMPANY
-            </H5_MainTitle>
-            <Ul_MainBodyBox>
-              <Li_MainBody>
+            </H5MainTitle>
+            <UlMainBodyBox>
+              <LiMainBody>
                 About
-              </Li_MainBody>
-              <Li_MainBody>
+              </LiMainBody>
+              <LiMainBody>
                 Press
-              </Li_MainBody>
-              <Li_MainBody>
+              </LiMainBody>
+              <LiMainBody>
                 Work Here
-              </Li_MainBody>
-              <Li_MainBody>
+              </LiMainBody>
+              <LiMainBody>
                 Legal
-              </Li_MainBody>
-              <Li_MainBody>
+              </LiMainBody>
+              <LiMainBody>
                 Privacy Policy
-              </Li_MainBody>
-              <Li_MainBody>
+              </LiMainBody>
+              <LiMainBody>
                 Terms of Service
-              </Li_MainBody>
-              <Li_MainBody>
+              </LiMainBody>
+              <LiMainBody>
                 Contact Us
-              </Li_MainBody>
-              <Li_MainBody>
+              </LiMainBody>
+              <LiMainBody>
                 Cookie Settings
-              </Li_MainBody>
-              <Li_MainBody>
+              </LiMainBody>
+              <LiMainBody>
                 Cookie Policy
-              </Li_MainBody>
-            </Ul_MainBodyBox>
-          </Div_MainBox>
+              </LiMainBody>
+            </UlMainBodyBox>
+          </DivMainBox>
           <Div_MainBoxLast>
-            <H5_MainTitle>
+            <H5MainTitle>
               STACK EXCHANGE NETWORK
-            </H5_MainTitle>
-            <Ul_MainBodyBox>
-              <Li_MainBody>
+            </H5MainTitle>
+            <UlMainBodyBox>
+              <LiMainBody>
                 Technology
-              </Li_MainBody>
-              <Li_MainBody>
+              </LiMainBody>
+              <LiMainBody>
                 Culture & recreation
-              </Li_MainBody>
-              <Li_MainBody>
+              </LiMainBody>
+              <LiMainBody>
                 Life & arts
-              </Li_MainBody>
-              <Li_MainBody>
+              </LiMainBody>
+              <LiMainBody>
                 Science
-              </Li_MainBody>
-              <Li_MainBody>
+              </LiMainBody>
+              <LiMainBody>
                 Professional
-              </Li_MainBody>
-              <Li_MainBody>
+              </LiMainBody>
+              <LiMainBody>
                 Business
-              </Li_MainBody>
-              <Li_MainBodyAPI>
+              </LiMainBody>
+              <LiMainBodyAPI>
                 API
-              </Li_MainBodyAPI>
-              <Li_MainBody>
+              </LiMainBodyAPI>
+              <LiMainBody>
                 Data
-              </Li_MainBody>
-            </Ul_MainBodyBox>
+              </LiMainBody>
+            </UlMainBodyBox>
           </Div_MainBoxLast>
-        </Nav_MainContainer>
+        </NavMainContainer>
 
         <Div_SubContainer>
           <Ul_SubTitleBox>
@@ -214,8 +214,8 @@ function Footer() {
           </P_SubBottom>
         </Div_SubContainer>
 
-      </Div_Container>
-    </Footer_footer>
+      </DivContainer>
+    </FooterFooter>
   )
 }
 
