@@ -48,26 +48,26 @@ const LiMainBody = styled.li`
 const LiMainBodyAPI = styled(LiMainBody)`
   margin-top: 16px !important;
 `
-const Div_MainBoxLast = styled(DivMainBox)`
+const DivMainBoxLast = styled(DivMainBox)`
   
 `
 
-const Div_SubContainer = styled.div`
+const DivSubContainer = styled.div`
   flex: 1 1 150px;
   display: flex;
   flex-direction: column;
   font-size: 11px;
   font-weight: 400;
 `
-const Ul_SubTitleBox = styled.ul`
+const UlSubTitleBox = styled.ul`
   display: flex;
   list-style: none;
 `
-const Li_SubTitle = styled.li`
+const LiSubTitle = styled.li`
   padding: 4px 0;
   margin-right: 12px;
 `
-const P_SubBottom = styled.p`
+const PSubBottom = styled.p`
   margin-top: auto;
   margin-bottom: 24px;
 `
@@ -154,7 +154,7 @@ function Footer() {
               </LiMainBody>
             </UlMainBodyBox>
           </DivMainBox>
-          <Div_MainBoxLast>
+          <DivMainBoxLast>
             <H5MainTitle>
               STACK EXCHANGE NETWORK
             </H5MainTitle>
@@ -184,35 +184,35 @@ function Footer() {
                 Data
               </LiMainBody>
             </UlMainBodyBox>
-          </Div_MainBoxLast>
+          </DivMainBoxLast>
         </NavMainContainer>
 
-        <Div_SubContainer>
-          <Ul_SubTitleBox>
-            <Li_SubTitle>
+        <DivSubContainer>
+          <UlSubTitleBox>
+            <LiSubTitle>
               Blog
-            </Li_SubTitle>
-            <Li_SubTitle>
+            </LiSubTitle>
+            <LiSubTitle>
               Facebook
-            </Li_SubTitle>
-            <Li_SubTitle>
+            </LiSubTitle>
+            <LiSubTitle>
               Twitter
-            </Li_SubTitle>
-            <Li_SubTitle>
+            </LiSubTitle>
+            <LiSubTitle>
               LinkedIn
-            </Li_SubTitle>
-            <Li_SubTitle>
+            </LiSubTitle>
+            <LiSubTitle>
               Instagram
-            </Li_SubTitle>
-          </Ul_SubTitleBox>
-          <P_SubBottom>
+            </LiSubTitle>
+          </UlSubTitleBox>
+          <PSubBottom>
             "
             Site design / logo © 2023 Stack Exchange Inc; user contributions licensed under "
             <span>CC BY-SA</span>
             ".                    "
             <span>rev&nbsp;2023.8.9.43572</span>
-          </P_SubBottom>
-        </Div_SubContainer>
+          </PSubBottom>
+        </DivSubContainer>
 
       </DivContainer>
     </FooterFooter>
