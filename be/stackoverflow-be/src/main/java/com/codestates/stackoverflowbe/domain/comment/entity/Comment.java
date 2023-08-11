@@ -2,7 +2,7 @@ package com.codestates.stackoverflowbe.domain.comment.entity;
 
 import com.codestates.stackoverflowbe.domain.answer.entity.Answer;
 import com.codestates.stackoverflowbe.domain.question.entity.Question;
-import com.codestates.stackoverflowbe.domain.user.entity.User;
+import com.codestates.stackoverflowbe.domain.account.entity.Account;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +23,7 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
-    private User user;
+    private Account account;
 
     @ManyToOne
     @JoinColumn(name = "QUESTION_ID")
