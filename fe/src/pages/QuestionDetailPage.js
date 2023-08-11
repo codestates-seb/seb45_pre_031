@@ -1,22 +1,19 @@
 import { styled } from "styled-components";
-import NavBar from "../components/sharedlayout/NavBar"
-import Aside from "../components/sharedlayout/Aside"
+import NavBar from "../components/sharedlayout/NavBar";
+import Aside from "../components/sharedlayout/Aside";
 
-const Div_allContainer = styled.div`
+const DivAllContainer = styled.div`
   display: flex;
   justify-content: space-between;
-`
-
+`;
 
 function QuestionDetailPage() {
-  return(
-    <Div_allContainer>
+  return (
+    <DivAllContainer>
       <NavBar />
-        <main>
-          QuestionDetailPage
-        </main>
+      <main>QuestionDetailPage</main>
       <Aside />
-    </Div_allContainer>
-  )
+    </DivAllContainer>
+  );
 }
 export default QuestionDetailPage;
