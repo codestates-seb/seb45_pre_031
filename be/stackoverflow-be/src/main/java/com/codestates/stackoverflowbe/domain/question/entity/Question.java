@@ -3,7 +3,7 @@ package com.codestates.stackoverflowbe.domain.question.entity;
 import com.codestates.stackoverflowbe.global.audit.BaseTimeEntity;
 import com.codestates.stackoverflowbe.domain.comment.entity.Comment;
 import com.codestates.stackoverflowbe.domain.tag.entity.Tag;
-import com.codestates.stackoverflowbe.domain.user.entity.User;
+import com.codestates.stackoverflowbe.domain.account.entity.Account;
 import com.codestates.stackoverflowbe.domain.vote.entity.Vote;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,7 +27,7 @@ public class Question extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
-    private User user;
+    private Account account;
 
     @OneToMany(mappedBy = "question")
     private List<Comment> comments;
