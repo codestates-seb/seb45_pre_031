@@ -1,222 +1,151 @@
 import { styled } from "styled-components";
 import { Link } from "react-router-dom";
 
-const Footer_footer = styled.footer`
+const FooterFooter = styled.footer`
   position: static;
   bottom: 0;
   height: 322px;
   background-color: rgb(35, 38, 41);
-`
-const Div_Container = styled.div`
+`;
+const DivContainer = styled.div`
   display: flex;
   flex-flow: row wrap;
   margin: 0 88px;
   padding: 32px 12px 12px;
   font-size: 13px;
   color: rgb(145, 153, 161);
-`
+`;
 
-const Div_LogoContainer = styled.div`
+const DivLogoContainer = styled.div`
   flex: 0 0 64px;
   margin: -12px 0 32px 0;
-`
-const Img_Logo = styled.img`
-`
+`;
+const ImgLogo = styled.img``;
 
-const Nav_MainContainer = styled.nav`
+const NavMainContainer = styled.nav`
   display: flex;
   flex: 2 1 auto;
   flex-wrap: wrap;
-`
-const Div_MainBox = styled.div`
+`;
+const DivMainBox = styled.div`
   flex: 1 0 auto;
   padding: 0 12px 24px 0;
-`
-const H5_MainTitle = styled.div`
+`;
+const H5MainTitle = styled.div`
   margin-bottom: 12px;
   font-weight: 700;
   color: rgb(186, 191, 196);
-`
-const Ul_MainBodyBox = styled.ul`
+`;
+const UlMainBodyBox = styled.ul`
   list-style: none;
   vertical-align: baseline;
   font-weight: 400;
-`
-const Li_MainBody = styled.li`
+`;
+const LiMainBody = styled.li`
   padding: 4px 0;
-`
-const Li_MainBodyAPI = styled(Li_MainBody)`
+`;
+const LiMainBodyAPI = styled(LiMainBody)`
   margin-top: 16px !important;
-`
-const Div_MainBoxLast = styled(Div_MainBox)`
-  
-`
+`;
+const DivMainBoxLast = styled(DivMainBox)``;
 
-const Div_SubContainer = styled.div`
+const DivSubContainer = styled.div`
   flex: 1 1 150px;
   display: flex;
   flex-direction: column;
   font-size: 11px;
   font-weight: 400;
-`
-const Ul_SubTitleBox = styled.ul`
+`;
+const UlSubTitleBox = styled.ul`
   display: flex;
   list-style: none;
-`
-const Li_SubTitle = styled.li`
+`;
+const LiSubTitle = styled.li`
   padding: 4px 0;
   margin-right: 12px;
-`
-const P_SubBottom = styled.p`
+`;
+const PSubBottom = styled.p`
   margin-top: auto;
   margin-bottom: 24px;
-`
+`;
 
 function Footer() {
-  return(
-    <Footer_footer>
-      <Div_Container>
-
-        <Div_LogoContainer>
+  return (
+    <FooterFooter>
+      <DivContainer>
+        <DivLogoContainer>
           <Link to="/">
-            <Img_Logo
+            <ImgLogo
               src="https://media.discordapp.net/attachments/1138344984454631504/1138711197278015569/image.png?width=612&height=708"
               alt="Stack Overflow Logo"
-              width="32px" height="37px"
+              width="32px"
+              height="37px"
             />
           </Link>
-        </Div_LogoContainer>
+        </DivLogoContainer>
 
-        <Nav_MainContainer>
-          <Div_MainBox>
-            <H5_MainTitle>
-              STACK OVERFLOW
-            </H5_MainTitle>
-            <Ul_MainBodyBox>
-              <Li_MainBody>
-                Questions
-              </Li_MainBody>
-              <Li_MainBody>
-                Help
-              </Li_MainBody>
-            </Ul_MainBodyBox>
-          </Div_MainBox>
-          <Div_MainBox>
-            <H5_MainTitle>
-              PRODUCTS
-            </H5_MainTitle>
-            <Ul_MainBodyBox>
-              <Li_MainBody>
-                Teams
-              </Li_MainBody>
-              <Li_MainBody>
-                Advertising
-              </Li_MainBody>
-              <Li_MainBody>
-                Collectives
-              </Li_MainBody>
-              <Li_MainBody>
-                Talent
-              </Li_MainBody>
-            </Ul_MainBodyBox>
-          </Div_MainBox>
-          <Div_MainBox>
-            <H5_MainTitle>
-              COMPANY
-            </H5_MainTitle>
-            <Ul_MainBodyBox>
-              <Li_MainBody>
-                About
-              </Li_MainBody>
-              <Li_MainBody>
-                Press
-              </Li_MainBody>
-              <Li_MainBody>
-                Work Here
-              </Li_MainBody>
-              <Li_MainBody>
-                Legal
-              </Li_MainBody>
-              <Li_MainBody>
-                Privacy Policy
-              </Li_MainBody>
-              <Li_MainBody>
-                Terms of Service
-              </Li_MainBody>
-              <Li_MainBody>
-                Contact Us
-              </Li_MainBody>
-              <Li_MainBody>
-                Cookie Settings
-              </Li_MainBody>
-              <Li_MainBody>
-                Cookie Policy
-              </Li_MainBody>
-            </Ul_MainBodyBox>
-          </Div_MainBox>
-          <Div_MainBoxLast>
-            <H5_MainTitle>
-              STACK EXCHANGE NETWORK
-            </H5_MainTitle>
-            <Ul_MainBodyBox>
-              <Li_MainBody>
-                Technology
-              </Li_MainBody>
-              <Li_MainBody>
-                Culture & recreation
-              </Li_MainBody>
-              <Li_MainBody>
-                Life & arts
-              </Li_MainBody>
-              <Li_MainBody>
-                Science
-              </Li_MainBody>
-              <Li_MainBody>
-                Professional
-              </Li_MainBody>
-              <Li_MainBody>
-                Business
-              </Li_MainBody>
-              <Li_MainBodyAPI>
-                API
-              </Li_MainBodyAPI>
-              <Li_MainBody>
-                Data
-              </Li_MainBody>
-            </Ul_MainBodyBox>
-          </Div_MainBoxLast>
-        </Nav_MainContainer>
+        <NavMainContainer>
+          <DivMainBox>
+            <H5MainTitle>STACK OVERFLOW</H5MainTitle>
+            <UlMainBodyBox>
+              <LiMainBody>Questions</LiMainBody>
+              <LiMainBody>Help</LiMainBody>
+            </UlMainBodyBox>
+          </DivMainBox>
+          <DivMainBox>
+            <H5MainTitle>PRODUCTS</H5MainTitle>
+            <UlMainBodyBox>
+              <LiMainBody>Teams</LiMainBody>
+              <LiMainBody>Advertising</LiMainBody>
+              <LiMainBody>Collectives</LiMainBody>
+              <LiMainBody>Talent</LiMainBody>
+            </UlMainBodyBox>
+          </DivMainBox>
+          <DivMainBox>
+            <H5MainTitle>COMPANY</H5MainTitle>
+            <UlMainBodyBox>
+              <LiMainBody>About</LiMainBody>
+              <LiMainBody>Press</LiMainBody>
+              <LiMainBody>Work Here</LiMainBody>
+              <LiMainBody>Legal</LiMainBody>
+              <LiMainBody>Privacy Policy</LiMainBody>
+              <LiMainBody>Terms of Service</LiMainBody>
+              <LiMainBody>Contact Us</LiMainBody>
+              <LiMainBody>Cookie Settings</LiMainBody>
+              <LiMainBody>Cookie Policy</LiMainBody>
+            </UlMainBodyBox>
+          </DivMainBox>
+          <DivMainBoxLast>
+            <H5MainTitle>STACK EXCHANGE NETWORK</H5MainTitle>
+            <UlMainBodyBox>
+              <LiMainBody>Technology</LiMainBody>
+              <LiMainBody>Culture & recreation</LiMainBody>
+              <LiMainBody>Life & arts</LiMainBody>
+              <LiMainBody>Science</LiMainBody>
+              <LiMainBody>Professional</LiMainBody>
+              <LiMainBody>Business</LiMainBody>
+              <LiMainBodyAPI>API</LiMainBodyAPI>
+              <LiMainBody>Data</LiMainBody>
+            </UlMainBodyBox>
+          </DivMainBoxLast>
+        </NavMainContainer>
 
-        <Div_SubContainer>
-          <Ul_SubTitleBox>
-            <Li_SubTitle>
-              Blog
-            </Li_SubTitle>
-            <Li_SubTitle>
-              Facebook
-            </Li_SubTitle>
-            <Li_SubTitle>
-              Twitter
-            </Li_SubTitle>
-            <Li_SubTitle>
-              LinkedIn
-            </Li_SubTitle>
-            <Li_SubTitle>
-              Instagram
-            </Li_SubTitle>
-          </Ul_SubTitleBox>
-          <P_SubBottom>
-            "
-            Site design / logo © 2023 Stack Exchange Inc; user contributions licensed under "
-            <span>CC BY-SA</span>
-            ".                    "
-            <span>rev&nbsp;2023.8.9.43572</span>
-          </P_SubBottom>
-        </Div_SubContainer>
-
-      </Div_Container>
-    </Footer_footer>
-  )
+        <DivSubContainer>
+          <UlSubTitleBox>
+            <LiSubTitle>Blog</LiSubTitle>
+            <LiSubTitle>Facebook</LiSubTitle>
+            <LiSubTitle>Twitter</LiSubTitle>
+            <LiSubTitle>LinkedIn</LiSubTitle>
+            <LiSubTitle>Instagram</LiSubTitle>
+          </UlSubTitleBox>
+          <PSubBottom>
+            " Site design / logo © 2023 Stack Exchange Inc; user contributions licensed under "<span>CC BY-SA</span>
+            ". "<span>rev&nbsp;2023.8.9.43572</span>
+          </PSubBottom>
+        </DivSubContainer>
+      </DivContainer>
+    </FooterFooter>
+  );
 }
 
 export default Footer;

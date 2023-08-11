@@ -1,11 +1,12 @@
 import styled from "styled-components";
+import AskQuestionBtn from "../atoms/AskQuestionBtn";
 
 function QuestionList() {
   return (
     <StyledQuestionList>
       <HeaderContainer>
         <h1>All Questions</h1>
-        <button>Ask Question</button>
+        <AskQuestionBtn>Ask Question</AskQuestionBtn>
       </HeaderContainer>
       <FiterContainer>
         <span>25,533,92 quesitons</span>
