@@ -35,12 +35,6 @@ public class HelloController {
 
 
     @Operation(summary = "Request Post test", description = "Response name, email, phone")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = HelloController.class))),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
-            @ApiResponse(responseCode = "404", description = "NOT FOUND"),
-            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
-    })
     @PostMapping("/sample")
     public ResponseEntity<?> postTest(@RequestParam("name") String name,
                                       @RequestParam("email") String email,
@@ -54,24 +48,12 @@ public class HelloController {
     }
 
     @Operation(summary = "Request Get test", description = "Response id, name, email, phone")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = HelloController.class))),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
-            @ApiResponse(responseCode = "404", description = "NOT FOUND"),
-            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
-    })
     @GetMapping("/sample")
     public ResponseEntity<?> getAllTest() {
         return new ResponseEntity<>(samples, HttpStatus.OK);
     }
 
     @Operation(summary = "Request Delete test", description = "Empty Response")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = HelloController.class))),
-            @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
-            @ApiResponse(responseCode = "404", description = "NOT FOUND"),
-            @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
-    })
     @DeleteMapping("/sample/{test-id}")
     public ResponseEntity<?> deleteTest(@PathVariable("test-id") Long sampleId) {
         if (!samples.containsKey(sampleId))
