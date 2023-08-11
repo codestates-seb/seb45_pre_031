@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { styled } from "styled-components";
-import logo from '../../assets/images/logo.png';
-import search from '../../assets/images/search.png';
+import logo from "../../assets/images/logo.png";
+import search from "../../assets/images/search.png";
 
 const HeaderContainer = styled.header`
   display: flex;
@@ -14,11 +14,11 @@ const HeaderContainer = styled.header`
   width: 100%;
   height: 56px;
   border-top: 3px solid #f48024;
-  border-bottom: 1px solid #BBC0C4;
+  border-bottom: 1px solid #bbc0c4;
   z-index: 999;
   margin: 0 auto;
   gap: 12px;
-`
+`;
 
 const Logo = styled.div`
   display: flex;
@@ -29,7 +29,7 @@ const Logo = styled.div`
     width: 150px;
     height: 30px;
   }
-`
+`;
 
 const SearchContainer = styled.div`
   position: relative;
@@ -45,7 +45,7 @@ const SearchContainer = styled.div`
     width: 18px;
     height: 18px;
   }
-`
+`;
 
 const SearchInput = styled.input`
   padding-left: 2.5em;
@@ -53,14 +53,14 @@ const SearchInput = styled.input`
   width: 100%;
   border-radius: 6px;
   font-size: 13px;
-  border: 1px solid #BBC0C4;
+  border: 1px solid #bbc0c4;
 
   &:focus {
     border-color: hsl(206, 90%, 69.5%);
     box-shadow: 0 0 0 4px hsla(206, 100%, 40%, 0.15);
     outline: none;
   }
-`
+`;
 
 const HeaderBtn = styled.button`
   padding: 8px 0.8em;
@@ -69,10 +69,9 @@ const HeaderBtn = styled.button`
   white-space: nowrap;
   cursor: pointer;
 
-  color: ${(props) => (props.skyblue ? 'hsl(205,47%,42%)' : 'white')};
-  background-color: ${(props) =>
-    props.skyblue ? 'hsl(205,46%,92%)' : 'hsl(206,100%,52%)'};
-`
+  color: ${(props) => (props.skyblue ? "hsl(205,47%,42%)" : "white")};
+  background-color: ${(props) => (props.skyblue ? "hsl(205,46%,92%)" : "hsl(206,100%,52%)")};
+`;
 
 const BtnContatiner = styled.div`
   display: flex;
@@ -80,7 +79,7 @@ const BtnContatiner = styled.div`
   justify-content: center;
   flex-grow: 0;
   gap: 6px;
-`
+`;
 
 function Header() {
   return (
@@ -92,9 +91,7 @@ function Header() {
       </Logo>
       <SearchContainer>
         <img className="searchImg" src={search} alt="" />
-        <SearchInput
-          type="text"
-          placeholder="Search..." />
+        <SearchInput type="text" placeholder="Search..." />
       </SearchContainer>
       <BtnContatiner>
         <Link to="/login">
@@ -106,5 +103,5 @@ function Header() {
       </BtnContatiner>
     </HeaderContainer>
   );
-
+}
 export default Header;
