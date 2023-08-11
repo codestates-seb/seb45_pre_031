@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { styled } from "styled-components";
-import logo from '../assets/images/logo.png';
-import search from '../assets/images/search.png';
+import logo from '../../assets/images/logo.png';
+import search from '../../assets/images/search.png';
 
 const HeaderContainer = styled.header`
   display: flex;
@@ -87,11 +87,11 @@ function Header() {
     <HeaderContainer>
       <Logo>
         <Link to="/">
-          <img className="logoImg" src={logo} />
+          <img className="logoImg" src={logo} alt="" />
         </Link>
       </Logo>
       <SearchContainer>
-        <img className="searchImg" src={search} />
+        <img className="searchImg" src={search} alt="" />
         <SearchInput
           type="text"
           placeholder="Search..." />

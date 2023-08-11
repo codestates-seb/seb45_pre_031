@@ -1,7 +1,7 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Header from "./components/Header";
+import Header from "./components/sharedlayout/Header";
 import QuestionListPage from "./pages/QuestionListPage";
 import LoginPage from "./pages/LoginPage";
 import MembershipPage from "./pages/MembershipPage";
