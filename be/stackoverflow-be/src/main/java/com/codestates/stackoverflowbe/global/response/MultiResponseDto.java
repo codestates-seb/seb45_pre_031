@@ -1,0 +1,22 @@
+package com.codestates.stackoverflowbe.global.response;
+
+import com.codestates.stackoverflowbe.global.constants.HttpStatusCode;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import org.springframework.data.domain.Page;
+
+import java.util.List;
+
+@Getter
+public class MultiResponseDto<T> extends ApiResponse{
+    private List<T> data;
+    private PageInfo pageInfo;
+
+    @Builder
+    public MultiResponseDto(HttpStatusCode status, String message, List<T> data, Page page) {
+        super(status, message);
+        this.data = data;
+        this.pageInfo = new PageInfo(page.getNumber() + 1, page.getSize(), page.getTotalElements(), page.getTotalPages());
+    }
+}
