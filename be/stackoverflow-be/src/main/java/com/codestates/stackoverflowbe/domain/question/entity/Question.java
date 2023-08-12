@@ -26,7 +26,7 @@ public class Question extends BaseTimeEntity {
     private String body;
 
     @ManyToOne
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "ACCOUNT_ID")
     private Account account;
 
     @OneToMany(mappedBy = "question")
