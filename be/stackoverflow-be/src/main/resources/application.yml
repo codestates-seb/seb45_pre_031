@@ -19,15 +19,15 @@ spring:
       client:
         registration:
           google:
-            client-id: ${G_CLIENT_ID}
-            client-secret: ${G_CLIENT_SECRET}
+            client-id: ${{secrets.G_CLIENT_ID}}
+            client-secret: ${{secrets.G_CLIENT_SECRET}}
             redirect-uri: http://localhost:8080/login/oauth2/code/google
             scope:
               - email
               - profile
 jwt:
   key:
-    secret: ${JWT_SECRET_KEY}               # 민감한 정보는 시스템 환경 변수에서 로드
+    secret: ${{secrets.JWT_SECRET_KEY}}               # 민감한 정보는 시스템 환경 변수에서 로드
   access-token-expiration-minutes: 30
   refresh-token-expiration-minutes: 420
 
