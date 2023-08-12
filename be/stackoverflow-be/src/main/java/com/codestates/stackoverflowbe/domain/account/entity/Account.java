@@ -1,9 +1,10 @@
-package com.codestates.stackoverflowbe.domain.user.entity;
+package com.codestates.stackoverflowbe.domain.account.entity;
 
 import com.codestates.stackoverflowbe.domain.answer.entity.Answer;
 import com.codestates.stackoverflowbe.global.audit.BaseTimeEntity;
 import com.codestates.stackoverflowbe.domain.vote.entity.Vote;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,19 +16,24 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
-public class User extends BaseTimeEntity {
+public class Account extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long user_id;
+    private Long account_id;
 
-    private String username;
+    private String displayName;
+    private String email;
     private String password;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
-    private List<Answer> answers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "account")
+   private List<Answer> answers = new ArrayList<>();
 
     @OneToOne()
     @JoinColumn(name = "VOTE_ID")

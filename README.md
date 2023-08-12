@@ -3,6 +3,13 @@
 # 프로젝트 : 
 
 ---
+##  Docs
+- **[노션](https://www.notion.so/7-ELEVEN-b1616d8b43914952b225cc24e371da9a)**
+- **[요구사항 정의서](https://docs.google.com/spreadsheets/d/1tdLBhFRqCk3BhhVWZiORQIztHyythrvUMrCedejgq8w/edit#gid=0)**
+- **[ERD 설계](https://dbdiagram.io/d/64d1d66202bd1c4a5e67c4fd)** 
+- **[API 명세서](https://documenter.getpostman.com/view/15713384/2s9Xxzut34)** 
+- **[화면정의서](https://www.figma.com/file/3axgvRGBEyD2u9e2KsC1qz/stackoverflow-clone-layout?type=design&node-id=0-1&mode=design&t=WnPKalo8Rvt1qpoJ-0)** 
+---
 ## 1. 기술 스택 
 
 <br/>
