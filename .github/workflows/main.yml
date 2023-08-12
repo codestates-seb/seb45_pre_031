@@ -9,6 +9,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
+      G_CLIENT_ID: ${{secrets.G_CLIENT_ID}}
+      G_CLIENT_SECRET: ${{secrets.G_CLIENT_SECRET}}
+      JWT_SECRET_KEY: ${{secrets.JWT_SECRET_KEY}}
       working-directory: ./be/stackoverflow-be
 
     steps:
@@ -25,10 +28,6 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build
-        env:
-          G_CLIENT_ID: ${{secrets.G_CLIENT_ID}}
-          G_CLIENT_SECRET: ${{G_CLIENT_SECRET}}
-          JWT_SECRET_KEY: ${{secrets.JWT_SECRET_KEY}}
         working-directory: ${{ env.working-directory }}
 
       - name: Docker build
