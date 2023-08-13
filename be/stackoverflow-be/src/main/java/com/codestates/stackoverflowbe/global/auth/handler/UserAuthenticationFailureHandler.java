@@ -20,16 +20,16 @@ public class UserAuthenticationFailureHandler implements AuthenticationFailureHa
                                         AuthenticationException exception) throws IOException, ServletException {
         log.error("Authentication failed! : {}", exception.getMessage());
 
-//        sendErrorResponse(response);
+        sendErrorResponse(response);
     }
 
-//    private void sendErrorResponse(HttpServletResponse response) throws IOException {
-//        Gson gson = new Gson();
-//        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED);
-//        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-//        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-//        response.getWriter().write(gson.toJson(errorResponse, ErrorResponse.class));
-//    }
+    private void sendErrorResponse(HttpServletResponse response) throws IOException {
+        Gson gson = new Gson();
+        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.getWriter().write(gson.toJson(errorResponse, ErrorResponse.class));
+    }
 
 
 }

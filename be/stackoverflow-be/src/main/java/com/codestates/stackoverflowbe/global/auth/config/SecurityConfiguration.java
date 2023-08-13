@@ -57,14 +57,15 @@ public class SecurityConfiguration {
                 .formLogin().disable() // CSR 방식을 사용하기 때문에 formLogin 방식 사용하지 않음
                 .httpBasic().disable() // UsernamePasswordAuthenticationFilter, BasicAuthenticationFilter 등 비활성화
                 .exceptionHandling() // 예외처리 기능
-                .authenticationEntryPoint(new UserAuthenticationEntryPoint()) // 인증 실패시 처리 (UserAuthenticationEntryPoint 동작)
-                .accessDeniedHandler(new UserAccessDeniedHandler()) //인가 거부시 UserAccessDeniedHandler가 처리되도록 설계
+                    .authenticationEntryPoint(new UserAuthenticationEntryPoint()) // 인증 실패시 처리 (UserAuthenticationEntryPoint 동작)
+                    .accessDeniedHandler(new UserAccessDeniedHandler()) //인가 거부시 UserAccessDeniedHandler가 처리되도록 설계
                 .and()
                 .apply(new CustomFilterConfigurer()) // 커스터마이징한 필터 추가
                 .and() // 허용되는 HttpMethod와 역할 설정
                 .authorizeHttpRequests( authorize -> authorize
-                        .antMatchers(HttpMethod.POST, "/accounts/**").permitAll()
                         .antMatchers(HttpMethod.GET, "/accounts").hasRole("ADMIN")
+                        .antMatchers(HttpMethod.POST, "/accounts/**").permitAll()
+                        .anyRequest().permitAll()
 //                .oauth2Login( oauth2 -> oauth2
 //                        //OAuth2 인증이 성공했을 때 핸들러 처리
 //                        .successHandler(new OAuth2UserSuccessHandler(jwtTokenizer, authorityUtils, accountService)) //OAuth 2.0 로그인이 성공했을 때의 동작을 정의하는 커스텀 핸들러
@@ -105,7 +106,7 @@ public class SecurityConfiguration {
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer); // JwtAuthenticationFilter 객체 생성하며 DI하기
 
             // AbstractAuthenticationProcessingFilter에서 상속받은 filterProcessurl을 설정 (설정하지 않으면 default 값인 /Login)
-            jwtAuthenticationFilter.setFilterProcessesUrl("/accounts/login");
+            jwtAuthenticationFilter.setFilterProcessesUrl("/accounts/authenticate");
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new AccountAuthenticationSuccessHandler());
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new UserAuthenticationFailureHandler());
 
