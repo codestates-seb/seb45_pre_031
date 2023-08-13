@@ -42,6 +42,8 @@ public class AccountService {
         List<String> roles = authorityUtils.createRoles(accountPostDto.getEmail());
 
         String encryptedPassword = passwordEncoder.encode(accountPostDto.getPassword());
+//        Account willBeSavedAccount = accountPostDto.toEntity();
+//        willBeSavedAccount = willBeSavedAccount.builder().roles(roles).password(encryptedPassword).build();
         Account willBeSavedAccount = new Account(
                 0L, // id 지정하지 않음 (AUTO_INCREMENT)
                 accountPostDto.getDisplayName(),

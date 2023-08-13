@@ -37,6 +37,14 @@ public class AccountController {
         return new ResponseEntity(new SingleResponseDto<>(HttpStatusCode.CREATED,"member created!",accountResponseDto), HttpStatus.CREATED);
     }
 
+//    @GetMapping("/login")
+//    public String getLogin() {
+//        return "redirect:/login.html";
+//    }
+//
+//    @PostMapping("/authenticate")
+
+
     @GetMapping
     public ResponseEntity getMembers(@Positive @RequestParam int page,
                                      @Positive @RequestParam int size) {
@@ -47,4 +55,5 @@ public class AccountController {
                 new MultiResponseDto<>(HttpStatusCode.OK, "get accountsPage", accounts, accountsPage)
         , HttpStatus.OK);
     }
+
 }
