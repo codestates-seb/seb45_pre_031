@@ -17,6 +17,7 @@ public class AccountDto {
     @Getter
     @Setter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class Post {
         private String displayName;
         private String email;

@@ -17,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 public class Question extends BaseTimeEntity {
+    // JPA 어노테이션을 사용한 질문 엔티티 클래스
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,5 +42,14 @@ public class Question extends BaseTimeEntity {
     @OneToOne()
     @JoinColumn(name = "VOTE_ID")
     private Vote vote;
-
+    public void setTitle(String title) {
+        this.title = title;
+    }
+    public void setBody(String body) {
+        this.body = body;
+    }
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+// 필드에 값을 설정하는 메서드
 }

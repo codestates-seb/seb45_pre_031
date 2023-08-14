@@ -37,12 +37,12 @@ public class AccountController {
         return new ResponseEntity(new SingleResponseDto<>(HttpStatusCode.CREATED,"member created!",accountResponseDto), HttpStatus.CREATED);
     }
 
-//    @GetMapping("/login")
-//    public String getLogin() {
-//        return "redirect:/login.html";
-//    }
-//
-//    @PostMapping("/authenticate")
+    @GetMapping("/login")
+    public String getLogin() {
+        return "redirect:/login.html";
+    }
+
+    @PostMapping("/authenticate")
 
 
     @GetMapping
