@@ -59,6 +59,10 @@ function LoginPage (props) {
       const response = await axios.post("http://localhost:8080/accounts/authenticate", {
         username,
         password,
+      }, {
+        headers: {
+          "Access-Control-Allow-Origin": "http://localhost:3000", // 서버 도메인 설정
+        },
       });
 
       if (response.data.success) {
