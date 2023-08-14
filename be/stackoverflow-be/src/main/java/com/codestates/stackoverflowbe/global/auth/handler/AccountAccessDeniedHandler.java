@@ -13,7 +13,7 @@ import java.io.IOException;
 
 @Slf4j
 @Component
-public class UserAccessDeniedHandler implements org.springframework.security.web.access.AccessDeniedHandler {
+public class AccountAccessDeniedHandler implements org.springframework.security.web.access.AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,
