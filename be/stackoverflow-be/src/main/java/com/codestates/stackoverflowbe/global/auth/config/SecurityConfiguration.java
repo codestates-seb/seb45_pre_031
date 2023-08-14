@@ -34,17 +34,16 @@ public class SecurityConfiguration {
 
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
-    private final AccountService accountService;
+//    private final AccountService accountService;
 
     private final CorsFilter corsFilter;
 
-    @Lazy // accountService의 순환참조 문제 해결
-    public SecurityConfiguration(JwtTokenizer jwtTokenizer, CustomAuthorityUtils authorityUtils, AccountService accountService,
+//    @Lazy // accountService의 순환참조 문제 해결
+    public SecurityConfiguration(JwtTokenizer jwtTokenizer, CustomAuthorityUtils authorityUtils,
                                  CorsFilter corsFilter) {
         this.jwtTokenizer = jwtTokenizer;
         this.authorityUtils = authorityUtils;
-        this.accountService = accountService;
-//        this.corsFilter = corsFilter;
+//        this.accountService = accountService;
         this.corsFilter = corsFilter;
     }
 
@@ -54,7 +53,7 @@ public class SecurityConfiguration {
                 .headers().frameOptions().sameOrigin() // (해당 옵션 유효한 경우 h2사용가능) SOP 정책 유지, 다른 도메인에서 iframe 로드 방지
                 .and()
                 .csrf().disable()
-                .cors(Customizer.withDefaults()) //CORS 처리하는 가장 쉬운 방법인 CorsFilter 사용, CorsConfigurationSource Bean을 제공
+//                .cors(Customizer.withDefaults()) //CORS 처리하는 가장 쉬운 방법인 CorsFilter 사용, CorsConfigurationSource Bean을 제공
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 정보 저장X
                 .and()
                 .formLogin().disable() // CSR 방식을 사용하기 때문에 formLogin 방식 사용하지 않음
@@ -66,6 +65,7 @@ public class SecurityConfiguration {
                 .apply(new CustomFilterConfigurer()) // 커스터마이징한 필터 추가
                 .and() // 허용되는 HttpMethod와 역할 설정
                 .authorizeHttpRequests( authorize -> authorize
+                        .antMatchers(HttpMethod.GET, "/accounts/is-admin").hasRole("ADMIN")
                         .antMatchers(HttpMethod.GET, "/accounts").hasRole("ADMIN")
                         .antMatchers(HttpMethod.POST, "/accounts/**").permitAll()
                         .anyRequest().permitAll()

@@ -6,8 +6,6 @@ import com.codestates.stackoverflowbe.global.auth.utils.CustomAuthorityUtils;
 import com.codestates.stackoverflowbe.global.exception.BusinessLogicException;
 import com.codestates.stackoverflowbe.global.exception.ExceptionCode;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -43,7 +41,7 @@ public class AccountDetailService implements UserDetailsService {
 
         public AccountDetails(Account account) {
 
-            super(account.getAccount_id(), account.getEmail(), account.getPassword(),  account.getRoles());
+            super(account.getAccountId(), account.getEmail(), account.getPassword(),  account.getRoles());
 
         }
 
