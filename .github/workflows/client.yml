@@ -9,6 +9,7 @@ jobs:
       - name: Install dependencies
         run: npm install
         working-directory: ./fe
+      - run: npm test
       - name: Build
         run: npm run build
         working-directory: ./fe
@@ -25,4 +26,4 @@ jobs:
             --region ap-northeast-2 \
             build s3://seveneleven-stackoverflow-s3 \
             --delete
-        working-directory: ./my-agora-states-client
+        working-directory: ./fe
