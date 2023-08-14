@@ -1,5 +1,10 @@
-function LoginPage() {
-  return <div>LoginPage</div>;
+import GoogleLoginBtn from "../components/features/GoogleLoginBtn";
+
+
+function LoginPage () {
+  return (<div>LoginPage
+    <GoogleLoginBtn />
+  </div>)
 }
 
 export default LoginPage;

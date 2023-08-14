@@ -84,7 +84,7 @@ const BtnContatiner = styled.div`
   gap: 6px;
 `;
 
-function Header() {
+function Header () {
   const [ isFocus, setIsFocus ] = useState(false);
 
   const focusHandler = () => {
