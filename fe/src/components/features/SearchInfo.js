@@ -8,7 +8,7 @@ const SearchInfoContainer = styled.div`
     background-color: hsl(0,0%,100%);
     border: 1px solid hsl(210,8%,85%);
     box-shadow: 0 1px 3px hsla(0,0%,0%,0.06), 0 2px 6px hsla(0, 0%, 0%, 0.06), 0 3px 8px hsla(0, 0%, 0%, 0.09);
-    width: 640px;
+    width: 500px;
     height: 184px;
     border-radius: 6px;
     color: hsl(210,8%,5%);
