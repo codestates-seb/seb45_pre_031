@@ -25,7 +25,7 @@ public class QuestionService {
         newQuestion.setAccount(account);
 
         // 다른 Question 엔티티의 필드를 설정할 경우 여기에 추가
-
+        //
         return questionRepository.save(newQuestion);
     }
 
