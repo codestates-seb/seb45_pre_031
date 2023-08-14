@@ -21,7 +21,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -37,15 +36,17 @@ public class SecurityConfiguration {
     private final CustomAuthorityUtils authorityUtils;
     private final AccountService accountService;
 //    private final CorsFilter corsFilter;
+    private final CorsFilter corsFilter;
 
     @Lazy // accountService의 순환참조 문제 해결
-    public SecurityConfiguration(JwtTokenizer jwtTokenizer, CustomAuthorityUtils authorityUtils, AccountService accountService
+    public SecurityConfiguration(JwtTokenizer jwtTokenizer, CustomAuthorityUtils authorityUtils, AccountService accountService,
 //                                 CorsFilter corsFilter
-    ) {
+                                 CorsFilter corsFilter) {
         this.jwtTokenizer = jwtTokenizer;
         this.authorityUtils = authorityUtils;
         this.accountService = accountService;
 //        this.corsFilter = corsFilter;
+        this.corsFilter = corsFilter;
     }
 
     @Bean
@@ -117,10 +118,10 @@ public class SecurityConfiguration {
 
             // Spring Security FilterChain에 추가
             builder
-//                    .addFilter(corsFilter)
+                    .addFilter(corsFilter)
                     .addFilter(jwtAuthenticationFilter)
                     // OAuth2LoginAuthenticationFilter : OAuth2.0 권한 부여 응답 처리 클래스 뒤에 jwtVerificationFilter 추가 (Oauth)
-                    .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);
+                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class);
         }
     }
 
