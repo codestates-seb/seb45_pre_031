@@ -35,12 +35,11 @@ public class SecurityConfiguration {
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
     private final AccountService accountService;
-//    private final CorsFilter corsFilter;
+
     private final CorsFilter corsFilter;
 
     @Lazy // accountService의 순환참조 문제 해결
     public SecurityConfiguration(JwtTokenizer jwtTokenizer, CustomAuthorityUtils authorityUtils, AccountService accountService,
-//                                 CorsFilter corsFilter
                                  CorsFilter corsFilter) {
         this.jwtTokenizer = jwtTokenizer;
         this.authorityUtils = authorityUtils;
