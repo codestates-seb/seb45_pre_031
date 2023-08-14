@@ -26,7 +26,7 @@ const SearchInfoContainer = styled.div`
         border-left: 12px solid transparent;
         position: absolute;
         top: -13px;
-        left: 0;
+        left: 300;
     }
 `
 

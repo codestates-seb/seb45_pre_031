@@ -34,7 +34,7 @@ const HeaderLogo = styled.div`
   }
 `;
 
-const SearchContainer = styled.div`
+const SearchContainer = styled.form`
   position: relative;
   display: flex;
   align-items: center;
@@ -49,6 +49,9 @@ const SearchContainer = styled.div`
     height: 18px;
   }
 `;
+
+const SearchbarContainer = styled. div`
+`
 
 const SearchInput = styled.input`
   padding-left: 2.5em;
@@ -99,7 +102,8 @@ function Header() {
           <img className="logoImg" src={logo} alt="" />
         </Link>
       </HeaderLogo>
-      <SearchContainer>
+      <SearchContainer> {/* form */}
+        <SearchbarContainer></SearchbarContainer>
         <img className="searchImg" src={search} alt="" />
         <SearchInput
           type="text"
