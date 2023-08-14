@@ -1,6 +1,9 @@
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import GlobeIcon from "../../assets/icons/GlobeIcon";
+import ExclamationMarkIcon from "../../assets/icons/ExclamationMarkIcon";
+import InStartIcon from "../../assets/icons/InStarIcon";
+import BriefcaseIcon from "../../assets/icons/BriefcaseIcon";
 
 function NavBar() {
   return (
@@ -14,6 +17,33 @@ function NavBar() {
       <NavLink to="/taglist" className="link" style={linkStyle}>
         <div className="icon"></div>Tags
       </NavLink>
+      <Dummy>
+        <DummySection>
+          <NonFunctionalLinkTitle>
+            <span>COLLECTIVES</span>
+            <ExclamationMarkIcon />
+          </NonFunctionalLinkTitle>
+          <NonFunctionalLinkContent>
+            <InStartIcon />
+            <span className="content">Explore Collectives </span>
+          </NonFunctionalLinkContent>
+        </DummySection>
+        <DummySection>
+          <NonFunctionalLinkTitle>
+            <span>TEAMS</span>
+            <ExclamationMarkIcon />
+          </NonFunctionalLinkTitle>
+          <NonFunctionalLinkContent>
+            <div className="orange">
+              <BriefcaseIcon />
+            </div>
+            <span className="content">Create free Team</span>
+          </NonFunctionalLinkContent>
+        </DummySection>
+        <DummySection>
+          <NonFunctionalLinkBox>Looking for your Teams?</NonFunctionalLinkBox>
+        </DummySection>
+      </Dummy>
     </StyledNavBar>
   );
 }
@@ -21,11 +51,21 @@ function NavBar() {
 export default NavBar;
 
 const StyledNavBar = styled.nav`
+  width: 164px;
   min-width: 164px;
   height: 100vh;
   display: flex;
   flex-direction: column;
   padding-top: 20px;
+
+  .orange {
+    display: flex;
+    justify-content: center;
+    border-radius: 4px;
+    width: 16px;
+    height: 16px;
+    background-color: rgb(244, 130, 37);
+  }
 
   .link {
     display: flex;
@@ -64,3 +104,41 @@ const linkStyle = ({ isActive }) => {
   }
   return;
 };
+const Dummy = styled.div``;
+
+const DummySection = styled.div`
+  margin-top: 16px;
+`;
+
+const NonFunctionalLinkTitle = styled.div`
+  display: flex;
+  flex-direction: row;
+  padding-left: 10px;
+  padding-right: 10px;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  font-size: 11px;
+  color: rgb(121, 126, 132);
+`;
+
+const NonFunctionalLinkContent = styled.div`
+  display: flex;
+  flex-direction: row;
+  font-size: 13px;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: rgb(121, 126, 132);
+  .content {
+    margin-left: 6px;
+  }
+`;
+
+const NonFunctionalLinkBox = styled.div`
+  font-size: 12px;
+  color: rgb(0, 99, 191);
+  background-color: rgb(240, 248, 255);
+  padding: 7px;
+  border-radius: 6px;
+  margin-left: 4px;
+  margin-right: 6px;
+`;
