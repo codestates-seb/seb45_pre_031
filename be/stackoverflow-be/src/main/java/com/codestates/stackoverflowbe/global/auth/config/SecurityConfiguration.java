@@ -18,6 +18,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
@@ -54,6 +55,7 @@ public class SecurityConfiguration {
                 .and()
                 .csrf().disable()
                 .cors(Customizer.withDefaults()) //CORS 처리하는 가장 쉬운 방법인 CorsFilter 사용, CorsConfigurationSource Bean을 제공
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // 세션 정보 저장X
                 .formLogin().disable() // CSR 방식을 사용하기 때문에 formLogin 방식 사용하지 않음
                 .httpBasic().disable() // UsernamePasswordAuthenticationFilter, BasicAuthenticationFilter 등 비활성화
                 .exceptionHandling() // 예외처리 기능
@@ -116,7 +118,7 @@ public class SecurityConfiguration {
             builder
 //                    .addFilter(corsFilter)
                     .addFilter(jwtAuthenticationFilter)
-                    // OAuth2LoginAuthenticationFilter : OAuth2.0 권한 부여 응답 처리 클래스 뒤에 jwtVerificationFilter 추가 (Oauth
+                    // OAuth2LoginAuthenticationFilter : OAuth2.0 권한 부여 응답 처리 클래스 뒤에 jwtVerificationFilter 추가 (Oauth)
                     .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);
         }
     }

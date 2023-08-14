@@ -11,7 +11,6 @@ import java.util.List;
 
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -31,7 +30,7 @@ public class Account extends BaseTimeEntity {
 
 
     @OneToMany(mappedBy = "account")
-   private List<Answer> answers = new ArrayList<>();
+    private List<Answer> answers = new ArrayList<>();
 
     @OneToOne()
     @JoinColumn(name = "VOTE_ID")
