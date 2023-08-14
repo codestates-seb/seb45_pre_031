@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import GlobeIcon from "../../assets/icons/GlobeIcon";
 import ExclamationMarkIcon from "../../assets/icons/ExclamationMarkIcon";
-import InStartIcon from "../../assets/icons/InStarIcon";
+import InStarIcon from "../../assets/icons/InStarIcon";
 import BriefcaseIcon from "../../assets/icons/BriefcaseIcon";
 
 function NavBar() {
@@ -24,7 +24,7 @@ function NavBar() {
             <ExclamationMarkIcon />
           </NonFunctionalLinkTitle>
           <NonFunctionalLinkContent>
-            <InStartIcon />
+            <InStarIcon />
             <span className="content">Explore Collectives </span>
           </NonFunctionalLinkContent>
         </DummySection>
