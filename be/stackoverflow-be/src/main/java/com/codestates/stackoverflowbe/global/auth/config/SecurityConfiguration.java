@@ -3,10 +3,10 @@ package com.codestates.stackoverflowbe.global.auth.config;
 import com.codestates.stackoverflowbe.domain.account.service.AccountService;
 import com.codestates.stackoverflowbe.global.auth.filter.JwtVerificationFilter;
 import com.codestates.stackoverflowbe.global.auth.handler.AccountAuthenticationSuccessHandler;
-import com.codestates.stackoverflowbe.global.auth.handler.UserAccessDeniedHandler;
+import com.codestates.stackoverflowbe.global.auth.handler.AccountAccessDeniedHandler;
 import com.codestates.stackoverflowbe.global.auth.filter.JwtAuthenticationFilter;
-import com.codestates.stackoverflowbe.global.auth.handler.UserAuthenticationEntryPoint;
-import com.codestates.stackoverflowbe.global.auth.handler.UserAuthenticationFailureHandler;
+import com.codestates.stackoverflowbe.global.auth.handler.AccountAuthenticationEntryPoint;
+import com.codestates.stackoverflowbe.global.auth.handler.AccountAuthenticationFailureHandler;
 import com.codestates.stackoverflowbe.global.auth.jwt.JwtTokenizer;
 //import com.codestates.stackoverflowbe.global.auth.handler.OAuth2UserSuccessHandler;
 import com.codestates.stackoverflowbe.global.auth.utils.CustomAuthorityUtils;
@@ -60,8 +60,8 @@ public class SecurityConfiguration {
                 .formLogin().disable() // CSR 방식을 사용하기 때문에 formLogin 방식 사용하지 않음
                 .httpBasic().disable() // UsernamePasswordAuthenticationFilter, BasicAuthenticationFilter 등 비활성화
                 .exceptionHandling() // 예외처리 기능
-                    .authenticationEntryPoint(new UserAuthenticationEntryPoint()) // 인증 실패시 처리 (UserAuthenticationEntryPoint 동작)
-                    .accessDeniedHandler(new UserAccessDeniedHandler()) //인가 거부시 UserAccessDeniedHandler가 처리되도록 설계
+                    .authenticationEntryPoint(new AccountAuthenticationEntryPoint()) // 인증 실패시 처리 (UserAuthenticationEntryPoint 동작)
+                    .accessDeniedHandler(new AccountAccessDeniedHandler()) //인가 거부시 UserAccessDeniedHandler가 처리되도록 설계
                 .and()
                 .apply(new CustomFilterConfigurer()) // 커스터마이징한 필터 추가
                 .and() // 허용되는 HttpMethod와 역할 설정
@@ -111,7 +111,7 @@ public class SecurityConfiguration {
             // AbstractAuthenticationProcessingFilter에서 상속받은 filterProcessurl을 설정 (설정하지 않으면 default 값인 /Login)
             jwtAuthenticationFilter.setFilterProcessesUrl("/accounts/authenticate");
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new AccountAuthenticationSuccessHandler());
-            jwtAuthenticationFilter.setAuthenticationFailureHandler(new UserAuthenticationFailureHandler());
+            jwtAuthenticationFilter.setAuthenticationFailureHandler(new AccountAuthenticationFailureHandler());
 
             JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils);
 
