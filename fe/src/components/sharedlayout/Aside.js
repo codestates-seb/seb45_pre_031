@@ -177,7 +177,7 @@ function Aside(){
             <Div1BoxSvg>
               <img
                 src="https://static-00.iconduck.com/assets.00/stack-overflow-icon-427x512-cz0mn36a.png"
-                width="16px" height="16px"
+                width="16px" height="16px" alt=""
               />
             </Div1BoxSvg>
             <Div1BoxText>
@@ -188,7 +188,7 @@ function Aside(){
             <Div1BoxSvg>
               <img
                 src="https://static-00.iconduck.com/assets.00/stack-overflow-icon-427x512-cz0mn36a.png"
-                width="16px" height="16px"
+                width="16px" height="16px" alt=""
               />
             </Div1BoxSvg>
             <Div1BoxText>
@@ -199,7 +199,7 @@ function Aside(){
             <Div1BoxSvg>
               <img
                 src="https://static-00.iconduck.com/assets.00/stack-overflow-icon-427x512-cz0mn36a.png"
-                width="16px" height="16px"
+                width="16px" height="16px" alt=""
               />
             </Div1BoxSvg>
             <Div1BoxText>
@@ -214,7 +214,7 @@ function Aside(){
           <Div2SeeAll>
             see all
           </Div2SeeAll>
-        "  
+        "
         Collectives
         "
         </Div2TitleBox>
@@ -223,7 +223,7 @@ function Aside(){
             <Div2Img>
               <img
                 src="https://play-lh.googleusercontent.com/RyoQTmHnxsxPYabsETmWVXHtLorVh_yOO48hsdv2VmI-Uki4qt5c5vV1cicJODV56A4=w480-h960-rw"
-                width="32px" height="32px"
+                width="32px" height="32px" alt=""
               />
             </Div2Img>
             <Div2TextBox>
@@ -247,7 +247,7 @@ function Aside(){
             <Div2Img>
               <img
                 src="https://visualstudio.microsoft.com/wp-content/uploads/2023/01/msft-logo.png"
-                width="32px" height="32px"
+                width="32px" height="32px" alt=""
               />
             </Div2Img>
             <Div2TextBox>
@@ -271,7 +271,7 @@ function Aside(){
             <Div2Img>
               <img
                 src="https://cdn.icon-icons.com/icons2/2699/PNG/512/twilio_logo_icon_168416.png"
-                width="32px" height="32px"
+                width="32px" height="32px" alt=""
               />
             </Div2Img>
             <Div2TextBox>

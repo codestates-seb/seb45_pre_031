@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { styled } from "styled-components";
 import logo from "../../assets/images/logo.png";
 import search from "../../assets/images/search.png";
+import { useState } from "react";
+import SearchInfo from "../features/SearchInfo";
 
 const HeaderContainer = styled.header`
   display: flex;
@@ -18,9 +20,10 @@ const HeaderContainer = styled.header`
   z-index: 999;
   margin: 0 auto;
   gap: 12px;
+  padding: 10px;
 `;
 
-const Logo = styled.div`
+const HeaderLogo = styled.div`
   display: flex;
   align-items: center;
   flex-grow: 0;
@@ -82,16 +85,27 @@ const BtnContatiner = styled.div`
 `;
 
 function Header() {
+  const [ isFocus, setIsFocus ] = useState(false);
+
+  const focusHandler = () => {
+    setIsFocus(!isFocus);
+  };
+
   return (
+    <>
     <HeaderContainer>
-      <Logo>
+      <HeaderLogo>
         <Link to="/">
           <img className="logoImg" src={logo} alt="" />
         </Link>
-      </Logo>
+      </HeaderLogo>
       <SearchContainer>
         <img className="searchImg" src={search} alt="" />
-        <SearchInput type="text" placeholder="Search..." />
+        <SearchInput
+          type="text"
+          placeholder="Search..."
+          onFocus={focusHandler} />
+          {isFocus && <SearchInfo />}
       </SearchContainer>
       <BtnContatiner>
         <Link to="/login">
@@ -102,6 +116,7 @@ function Header() {
         </Link>
       </BtnContatiner>
     </HeaderContainer>
+  </>
   );
 }
 export default Header;
