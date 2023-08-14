@@ -19,7 +19,7 @@ public class Account extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long account_id;
+    private long accountId;
 
     private String displayName;
     private String email;
@@ -36,8 +36,8 @@ public class Account extends BaseTimeEntity {
     @JoinColumn(name = "VOTE_ID")
     private Vote vote;
 
-    public Account(long account_id, String email, String password, List<String> roles) {
-        this.account_id = account_id;
+    public Account(long accountId, String email, String password, List<String> roles) {
+        this.accountId = accountId;
         this.email = email;
         this.password = password;
         this.roles = roles;

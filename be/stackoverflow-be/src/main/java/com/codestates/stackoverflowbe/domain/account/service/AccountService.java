@@ -60,7 +60,7 @@ public class AccountService {
     }
 
     public Page<Account> findAccounts(int page, int size) {
-        return accountRepository.findAll(PageRequest.of(page, size, Sort.by("account_id").descending()));
+        return accountRepository.findAll(PageRequest.of(page, size, Sort.by("accountId").descending()));
     }
 
     private void verifyExistsEmail(String email) {

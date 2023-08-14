@@ -56,4 +56,9 @@ public class AccountController {
         , HttpStatus.OK);
     }
 
+    @GetMapping("is-admin")
+    public String isAdmin() {
+        return "you are a admin";
+    }
+
 }
