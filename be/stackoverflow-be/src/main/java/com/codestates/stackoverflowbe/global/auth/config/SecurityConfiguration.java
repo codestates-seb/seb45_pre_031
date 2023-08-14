@@ -55,7 +55,8 @@ public class SecurityConfiguration {
                 .and()
                 .csrf().disable()
                 .cors(Customizer.withDefaults()) //CORS 처리하는 가장 쉬운 방법인 CorsFilter 사용, CorsConfigurationSource Bean을 제공
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // 세션 정보 저장X
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 정보 저장X
+                .and()
                 .formLogin().disable() // CSR 방식을 사용하기 때문에 formLogin 방식 사용하지 않음
                 .httpBasic().disable() // UsernamePasswordAuthenticationFilter, BasicAuthenticationFilter 등 비활성화
                 .exceptionHandling() // 예외처리 기능
