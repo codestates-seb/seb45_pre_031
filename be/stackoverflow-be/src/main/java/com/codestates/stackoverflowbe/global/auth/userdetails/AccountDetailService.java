@@ -5,7 +5,7 @@ import com.codestates.stackoverflowbe.domain.account.repository.AccountRepositor
 import com.codestates.stackoverflowbe.global.auth.utils.CustomAuthorityUtils;
 import com.codestates.stackoverflowbe.global.exception.BusinessLogicException;
 import com.codestates.stackoverflowbe.global.exception.ExceptionCode;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -36,26 +36,13 @@ public class AccountDetailService implements UserDetailsService {
         return new AccountDetails(findAccount);
     }
 
+    @AllArgsConstructor
     private final class AccountDetails extends Account implements UserDetails {
 
-        public AccountDetails(Account account) { // 리팩토링 필요 (Entity의 Setter를 최대한 지양)
-//            account.builder()
-//                    .account_id(account.getAccount_id())
-//                    .email(account.getEmail())
-//                    .password(account.getPassword())
-//                    .roles(account.getRoles())
-//                    .build();
-//            Account.builder()
-//                    .account_id(account.getAccount_id())
-//                    .email(account.getEmail())
-//                    .password(account.getPassword())
-//                    .roles(account.getRoles())
-//                    .build();
+        public AccountDetails(Account account) {
 
-            setAccount_id(account.getAccount_id());
-            setEmail(account.getEmail());
-            setPassword(account.getPassword());
-            setRoles(account.getRoles());
+            super(account.getAccountId(), account.getEmail(), account.getPassword(),  account.getRoles());
+
         }
 
         @Override
