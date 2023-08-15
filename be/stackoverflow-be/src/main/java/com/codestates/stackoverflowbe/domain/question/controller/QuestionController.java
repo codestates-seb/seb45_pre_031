@@ -2,6 +2,7 @@ package com.codestates.stackoverflowbe.domain.question.controller;
 
 import com.codestates.stackoverflowbe.domain.account.entity.Account;
 import com.codestates.stackoverflowbe.domain.account.service.AccountService;
+import com.codestates.stackoverflowbe.domain.question.dto.QuestionListResponseDto;
 import com.codestates.stackoverflowbe.domain.question.dto.QuestionUpdateDto;
 import com.codestates.stackoverflowbe.domain.question.entity.Question;
 import com.codestates.stackoverflowbe.domain.question.service.QuestionService;
@@ -14,6 +15,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -37,5 +40,11 @@ public class QuestionController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new SingleResponseDto<>(HttpStatusCode.CREATED, "Question created!", createdQuestion));
+    }
+
+    @GetMapping
+    public ResponseEntity<QuestionListResponseDto> getQuestions() {
+        List<Question> questions = questionService.getAllQuestions();
+        return ResponseEntity.ok(new QuestionListResponseDto(HttpStatusCode.OK, "Questions retrieved!", questions));
     }
 }

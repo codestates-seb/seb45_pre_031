@@ -6,6 +6,8 @@ import com.codestates.stackoverflowbe.domain.question.entity.Question;
 import com.codestates.stackoverflowbe.domain.question.repository.QuestionRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class QuestionService {
     // 질문 관련 작업을 처리하는 서비스 클래스
@@ -27,6 +29,9 @@ public class QuestionService {
         // 다른 Question 엔티티의 필드를 설정할 경우 여기에 추가
         //
         return questionRepository.save(newQuestion);
+    }
+    public List<Question> getAllQuestions() {
+        return questionRepository.findAll();
     }
 
     // 기타 로직 메서드는 여기에 추가 가능
