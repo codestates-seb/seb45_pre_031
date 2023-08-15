@@ -19,8 +19,8 @@ import java.util.Map;
 
 @Slf4j
 @Component
+@Getter
 public class JwtTokenizer {
-    @Getter
     @Value("${jwt.key.secret}")
     private String secretKey;
 

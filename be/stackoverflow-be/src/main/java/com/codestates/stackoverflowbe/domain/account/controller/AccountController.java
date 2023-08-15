@@ -34,7 +34,7 @@ public class AccountController {
     public ResponseEntity postMember(@Valid @RequestBody AccountDto.Post accountPostDto) {
         AccountDto.Response accountResponseDto = accountService.createAccount(accountPostDto);
 
-        return new ResponseEntity(new SingleResponseDto<>(HttpStatusCode.CREATED,"member created!",accountResponseDto), HttpStatus.CREATED);
+        return new ResponseEntity(new SingleResponseDto<>(HttpStatusCode.CREATED.getStatusCode(),"member created!",accountResponseDto), HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -44,7 +44,7 @@ public class AccountController {
         List<Account> accounts = accountsPage.getContent();
 
         return new ResponseEntity<>(
-                new MultiResponseDto<>(HttpStatusCode.OK, "get accountsPage", accounts, accountsPage)
+                new MultiResponseDto<>(HttpStatusCode.OK.getStatusCode(), "get accountsPage", accounts, accountsPage)
         , HttpStatus.OK);
     }
 }
