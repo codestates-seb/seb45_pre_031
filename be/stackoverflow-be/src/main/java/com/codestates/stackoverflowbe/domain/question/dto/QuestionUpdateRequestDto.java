@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuestionRequestDto {
+public class QuestionUpdateRequestDto {
     private String title;
     private String body;
 }

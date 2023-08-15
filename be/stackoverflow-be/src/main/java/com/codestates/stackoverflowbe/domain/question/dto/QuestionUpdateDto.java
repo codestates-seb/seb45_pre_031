@@ -9,9 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuestionResponseDto {
-    private Long questionId;
+public class QuestionUpdateDto {
+    // 질문 데이터를 나타내는 DTO (데이터 전송 객체)
     private String title;
     private String body;
-    // 기타 필요한 정보들 추가 가능
 }

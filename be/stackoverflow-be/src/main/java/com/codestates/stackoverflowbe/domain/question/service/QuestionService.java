@@ -1,7 +1,7 @@
 package com.codestates.stackoverflowbe.domain.question.service;
 
 import com.codestates.stackoverflowbe.domain.account.entity.Account;
-import com.codestates.stackoverflowbe.domain.question.dto.QuestionDto;
+import com.codestates.stackoverflowbe.domain.question.dto.QuestionUpdateDto;
 import com.codestates.stackoverflowbe.domain.question.entity.Question;
 import com.codestates.stackoverflowbe.domain.question.repository.QuestionRepository;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ public class QuestionService {
         this.questionRepository = questionRepository;
     }
 
-    public Question createQuestion(QuestionDto questionDto, Account account) {
+    public Question createQuestion(QuestionUpdateDto questionDto, Account account) {
         // 새로운 질문을 생성하고 데이터베이스에 저장
 
         Question newQuestion = new Question();
