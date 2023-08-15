@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Slf4j
-public class UserAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class AccountAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override // 인증 실패시 (AuthenticationException 발생) commence 메서드 동작
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {

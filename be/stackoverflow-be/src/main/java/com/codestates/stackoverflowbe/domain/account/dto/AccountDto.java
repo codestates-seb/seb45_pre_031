@@ -23,6 +23,10 @@ public class AccountDto {
         private String email;
         private String password;
 
+        public Post(String email) {
+            this.email = email;
+        }
+
         public Account toEntity() {
             return Account.builder()
                     .displayName(displayName)
