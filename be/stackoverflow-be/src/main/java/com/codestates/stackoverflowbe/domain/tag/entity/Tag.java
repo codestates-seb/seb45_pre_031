@@ -16,9 +16,11 @@ public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tag_id;
+
+    @Column
     private String tagName;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "QUESTION_ID")
     private Question question;
 }

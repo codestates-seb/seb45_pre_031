@@ -14,7 +14,7 @@ public class MultiResponseDto<T> extends ApiResponse{
     private PageInfo pageInfo;
 
     @Builder
-    public MultiResponseDto(HttpStatusCode status, String message, List<T> data, Page page) {
+    public MultiResponseDto(int status, String message, List<T> data, Page page) {
         super(status, message);
         this.data = data;
         this.pageInfo = new PageInfo(page.getNumber() + 1, page.getSize(), page.getTotalElements(), page.getTotalPages());

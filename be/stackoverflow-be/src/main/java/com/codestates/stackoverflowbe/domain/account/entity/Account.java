@@ -24,18 +24,22 @@ public class Account extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long account_id;
 
+    @Column
     private String displayName;
+
+    @Column
     private String email;
+
+    @Column
     private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
-
     @OneToMany(mappedBy = "account")
-   private List<Answer> answers = new ArrayList<>();
+    private List<Answer> answers = new ArrayList<>();
 
-    @OneToOne()
+    @OneToOne
     @JoinColumn(name = "VOTE_ID")
     private Vote vote;
 }

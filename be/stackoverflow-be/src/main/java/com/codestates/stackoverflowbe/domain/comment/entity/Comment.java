@@ -18,11 +18,12 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long comment_id;
+
+    @Column
     private String body;
 
-
     @ManyToOne
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "ACCOUNT_ID")
     private Account account;
 
     @ManyToOne

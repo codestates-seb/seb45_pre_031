@@ -20,13 +20,16 @@ public class Question extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long question_id;
+    private Long questionId;
 
+    @Column
     private String title;
+
+    @Column
     private String body;
 
     @ManyToOne
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "ACCOUNT_ID")
     private Account account;
 
     @OneToMany(mappedBy = "question")
@@ -38,7 +41,7 @@ public class Question extends BaseTimeEntity {
     @OneToMany(mappedBy = "question")
     private List<Tag> tags;
 
-    @OneToOne()
+    @OneToOne
     @JoinColumn(name = "VOTE_ID")
     private Vote vote;
 
