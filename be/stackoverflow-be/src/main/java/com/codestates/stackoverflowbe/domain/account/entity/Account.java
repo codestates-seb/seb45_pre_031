@@ -6,6 +6,7 @@ import com.codestates.stackoverflowbe.domain.vote.entity.Vote;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class Account extends BaseTimeEntity {
 
     private String displayName;
     private String email;
+    @NotNull
     private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -41,5 +43,9 @@ public class Account extends BaseTimeEntity {
         this.email = email;
         this.password = password;
         this.roles = roles;
+    }
+
+    public Account(String email) {
+        this.email = email;
     }
 }

@@ -2,48 +2,38 @@ package com.codestates.stackoverflowbe.global.auth.config;
 
 import com.codestates.stackoverflowbe.domain.account.service.AccountService;
 import com.codestates.stackoverflowbe.global.auth.filter.JwtVerificationFilter;
-import com.codestates.stackoverflowbe.global.auth.handler.AccountAuthenticationSuccessHandler;
-import com.codestates.stackoverflowbe.global.auth.handler.AccountAccessDeniedHandler;
+import com.codestates.stackoverflowbe.global.auth.handler.*;
 import com.codestates.stackoverflowbe.global.auth.filter.JwtAuthenticationFilter;
-import com.codestates.stackoverflowbe.global.auth.handler.AccountAuthenticationEntryPoint;
-import com.codestates.stackoverflowbe.global.auth.handler.AccountAuthenticationFailureHandler;
 import com.codestates.stackoverflowbe.global.auth.jwt.JwtTokenizer;
 //import com.codestates.stackoverflowbe.global.auth.handler.OAuth2UserSuccessHandler;
 import com.codestates.stackoverflowbe.global.auth.utils.CustomAuthorityUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-
-import java.util.Arrays;
 
 @Configuration
 public class SecurityConfiguration {
 
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
-//    private final AccountService accountService;
+    private final AccountService accountService;
 
     private final CorsFilter corsFilter;
 
-//    @Lazy // accountService의 순환참조 문제 해결
     public SecurityConfiguration(JwtTokenizer jwtTokenizer, CustomAuthorityUtils authorityUtils,
-                                 CorsFilter corsFilter) {
+                                 AccountService accountService, CorsFilter corsFilter) {
         this.jwtTokenizer = jwtTokenizer;
         this.authorityUtils = authorityUtils;
-//        this.accountService = accountService;
+        this.accountService = accountService;
         this.corsFilter = corsFilter;
     }
 
@@ -68,11 +58,14 @@ public class SecurityConfiguration {
                         .antMatchers(HttpMethod.GET, "/accounts/is-admin").hasRole("ADMIN")
                         .antMatchers(HttpMethod.GET, "/accounts").hasRole("ADMIN")
                         .antMatchers(HttpMethod.POST, "/accounts/**").permitAll()
+//                        .antMatchers(HttpMethod.GET, "http://localhost:3000/login").authenticated()
                         .anyRequest().permitAll()
-//                .oauth2Login( oauth2 -> oauth2
-//                        //OAuth2 인증이 성공했을 때 핸들러 처리
-//                        .successHandler(new OAuth2UserSuccessHandler(jwtTokenizer, authorityUtils, accountService)) //OAuth 2.0 로그인이 성공했을 때의 동작을 정의하는 커스텀 핸들러
+                )
+                .oauth2Login(
+                        oauth2 -> oauth2
+                                .successHandler(new OAuth2AccountSuccessHandler(jwtTokenizer, authorityUtils, accountService))
                 );
+
 
         return httpSecurity.build();
     }
@@ -120,7 +113,7 @@ public class SecurityConfiguration {
                     .addFilter(corsFilter)
                     .addFilter(jwtAuthenticationFilter)
                     // OAuth2LoginAuthenticationFilter : OAuth2.0 권한 부여 응답 처리 클래스 뒤에 jwtVerificationFilter 추가 (Oauth)
-                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class);
+                    .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);
         }
     }
 
