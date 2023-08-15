@@ -1,5 +1,6 @@
 package com.codestates.stackoverflowbe.domain.question.entity;
 
+import com.codestates.stackoverflowbe.domain.question.dto.QuestionUpdateRequestDto;
 import com.codestates.stackoverflowbe.global.audit.BaseTimeEntity;
 import com.codestates.stackoverflowbe.domain.comment.entity.Comment;
 import com.codestates.stackoverflowbe.domain.tag.entity.Tag;
@@ -50,6 +51,11 @@ public class Question extends BaseTimeEntity {
     }
     public void setAccount(Account account) {
         this.account = account;
+    }
+    // 질문을 업데이트하는 메서드
+    public void updateQuestion(QuestionUpdateRequestDto updateDto) {
+        this.setTitle(updateDto.getTitle());
+        this.setBody(updateDto.getBody());
     }
 // 필드에 값을 설정하는 메서드
 }
