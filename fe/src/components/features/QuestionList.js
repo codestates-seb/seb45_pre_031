@@ -47,45 +47,44 @@ function QuestionList() {
         </Fiter>
       </FiterContainer>
       <QuestionListContainer>
-        <Question>
-          <div className="leftSide">
-            <LeftSideInfo>
-              <span className="votes">0 votes</span>
-            </LeftSideInfo>
-            <LeftSideInfo>
-              <span className="answersAndViews">0 asnswers</span>
-            </LeftSideInfo>
-            <LeftSideInfo>
-              <span className="answersAndViews">0 views</span>
-            </LeftSideInfo>
-          </div>
-          <div className="rightSide">
-            <QuestionTitle> What is JavaScript? </QuestionTitle>
-            <QuestionSummury>
-              JavaScript is a scripting or programming language that allows you to implement complex features on web
-              pages — every time a web page does more than just sit there and display static information for you to look
-              at — displaying timely content updates, interactive maps, animated 2D/3D graphics, scrolling video
-              jukeboxes, etc. — you can bet that JavaScript is probably involved. It is the third layer of the layer
-              cake of standard web technologies, two of which (HTML and CSS) we have covered in much more detail in
-              other parts of the Learning Area.
-            </QuestionSummury>
-            <TagAndUserInfoContainer>
-              <TagContainer>
-                <Tag>javascript</Tag>
-                <Tag>about</Tag>
-              </TagContainer>
-              <UserInfoContainer>
-                <img className="userAvatar" alt="userAvatar" src={logo} />
-                <div className="userName">
-                  <span>HongGilDong</span>
-                </div>
-                <div className="createdAt">
-                  <span>5 mins ago</span>
-                </div>
-              </UserInfoContainer>
-            </TagAndUserInfoContainer>
-          </div>
-        </Question>
+        {/* {data.question_data.map((question) => (
+          <Question>
+            <div className="leftSide">
+              <LeftSideInfo>
+                <span className="votes">{question.vote_up.length - question.vote_down.length} votes</span>
+              </LeftSideInfo>
+              <LeftSideInfo>
+                <span className="answersAndViews">{question.answers_count} asnswers</span>
+              </LeftSideInfo>
+              <LeftSideInfo>
+                <span className="answersAndViews">{question.views} views</span>
+              </LeftSideInfo>
+            </div>
+            <div className="rightSide">
+              <QuestionTitle> {question.title} </QuestionTitle>
+              <QuestionSummury>{question.bodyHTML}</QuestionSummury>
+              <TagAndUserInfoContainer>
+                <TagContainer>
+                  {question.tags.map((tag) => (
+                    <>
+                      <Tag>{tag}</Tag>
+                      <Tag>{tag}</Tag>
+                    </>
+                  ))}
+                </TagContainer>
+                <UserInfoContainer>
+                  <img className="userAvatar" alt="userAvatar" src={logo} />
+                  <div className="userName">
+                    <span>{question.avatarUrl}</span>
+                  </div>
+                  <div className="createdAt">
+                    <span>5 mins ago</span>
+                  </div>
+                </UserInfoContainer>
+              </TagAndUserInfoContainer>
+            </div>
+          </Question>
+        ))} */}
         <Question>Question2</Question>
         <Question>Question3</Question>
         <Question>Question4</Question>
