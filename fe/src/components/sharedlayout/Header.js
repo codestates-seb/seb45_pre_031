@@ -15,18 +15,33 @@ const HeaderContainer = styled.header`
   min-width: auto;
   width: 100%;
   height: 56px;
-  border-top: 3px solid #f48024;
-  border-bottom: 1px solid #bbc0c4;
-  z-index: 999;
+  border-top: 3px solid hsl(27,90%,55% );
+  border-bottom: 1px solid hsl(210,8%,85%);
+  background-color: hsl(0,0%,100%);
+  left: 0;
+  top: 0;
+  z-index: 5050;
   margin: 0 auto;
   gap: 12px;
   padding: 10px;
 `;
 
+const HeaderElementContainer = styled.div`
+  width: 98rem;
+  max-width: 100%;
+  height: 100%;
+  display: flex;
+  margin: 0 auto;
+  align-items: center;
+`
+
 const HeaderLogo = styled.div`
   display: flex;
   align-items: center;
-  flex-grow: 0;
+  padding: 0 8px;
+  height: 100%;
+  background-color: transparent;
+  cursor: pointer;
 
   img {
     width: 150px;
@@ -39,27 +54,44 @@ const SearchContainer = styled.form`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 10000;
   flex-grow: 1;
-  max-width: 980px;
+  padding: 0 8px;
+  font-size: 13px;
+  font-stretch: 100%;
+  vertical-align: baseline;
+`;
+
+const SearchbarContainer = styled.div`
+  display: block;
+  flex-grow: 1;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
 
   img {
+    vertical-align: bottom;
+    right: auto;
+    left: 0.7em;
+    margin-top: calc(9px + 1px * -1);
     position: absolute;
-    left: 0.5em;
     width: 18px;
     height: 18px;
   }
-`;
-
-const SearchbarContainer = styled. div`
 `
 
 const SearchInput = styled.input`
-  padding-left: 2.5em;
-  height: 30px;
+  padding: 0.6em 0.7em 0.6em 2.4em;
+  margin: 0;
   width: 100%;
   border-radius: 6px;
+  border: 1px solid hsl(210,8%,75%);
+  background-color: hsl(0,0%,100%);
+  color: hsl(210,8%,25%);
   font-size: 13px;
-  border: 1px solid #bbc0c4;
+  font-stretch: 100%;
 
   &:focus {
     border-color: hsl(206, 90%, 69.5%);
@@ -97,28 +129,31 @@ function Header() {
   return (
     <>
     <HeaderContainer>
-      <HeaderLogo>
-        <Link to="/">
-          <img className="logoImg" src={logo} alt="" />
-        </Link>
-      </HeaderLogo>
-      <SearchContainer> {/* form */}
-        <SearchbarContainer></SearchbarContainer>
-        <img className="searchImg" src={search} alt="" />
-        <SearchInput
-          type="text"
-          placeholder="Search..."
-          onFocus={focusHandler} />
-          {isFocus && <SearchInfo />}
-      </SearchContainer>
-      <BtnContatiner>
-        <Link to="/login">
-          <HeaderBtn skyblue>Log in</HeaderBtn>
-        </Link>
-        <Link to="/membership">
-          <HeaderBtn>Sign up</HeaderBtn>
-        </Link>
-      </BtnContatiner>
+      <HeaderElementContainer>
+        <HeaderLogo>
+          <Link to="/">
+            <img className="logoImg" src={logo} alt="" />
+          </Link>
+        </HeaderLogo>
+        <SearchContainer> {/* form */}
+          <SearchbarContainer>
+            <img className="searchImg" src={search} alt="" />
+            <SearchInput
+              type="text"
+              placeholder="Search..."
+              onFocus={focusHandler} />
+          </SearchbarContainer>
+            {isFocus && <SearchInfo />}
+        </SearchContainer>
+        <BtnContatiner>
+          <Link to="/login">
+            <HeaderBtn skyblue>Log in</HeaderBtn>
+          </Link>
+          <Link to="/membership">
+            <HeaderBtn>Sign up</HeaderBtn>
+          </Link>
+        </BtnContatiner>
+      </HeaderElementContainer>
     </HeaderContainer>
   </>
   );
