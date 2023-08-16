@@ -65,3 +65,29 @@ public class VoteDto {
         }
     }
 }
+//=======
+//import lombok.AllArgsConstructor;
+//import lombok.Getter;
+//import lombok.NoArgsConstructor;
+//import lombok.Setter;
+//
+//@Getter
+//@Setter
+//@NoArgsConstructor
+//@AllArgsConstructor
+//public class VoteDto {
+//    private Long voteId;
+//    private Integer voteValue;
+//    // ... 추가 필요한 정보들
+//
+//    @Getter
+//    @Setter
+//    @NoArgsConstructor
+//    @AllArgsConstructor
+//    public static class Response {
+//        private Long voteId;
+//        private Integer voteValue;
+//        // ... 추가 필요한 정보들
+//    }
+//}
+//>>>>>>> 94cfb42a830da7433659ae24ac39eb17cd9b7b6b

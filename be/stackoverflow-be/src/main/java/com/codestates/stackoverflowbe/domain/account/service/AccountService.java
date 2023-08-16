@@ -91,4 +91,8 @@ public class AccountService {
         if(findAccount.isPresent())
             throw  new RuntimeException();
     }
+    public Account findByEmail(String email) {
+        Optional<Account> accountOptional = accountRepository.findByEmail(email);
+        return accountOptional.orElse(null); // 해당 이메일로 찾은 Account가 없으면 null 반환
+    }
 }
