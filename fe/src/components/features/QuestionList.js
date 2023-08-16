@@ -30,6 +30,11 @@ function QuestionList() {
     fetchData();
   }, [tab, pageNumber]);
 
+  const handleTab = (selectedTab) => {
+    setTab(selectedTab);
+  };
+  useEffect(() => console.log(tab), [tab]);
+
   return (
     <StyledQuestionList>
       <HeaderContainer>
@@ -39,11 +44,11 @@ function QuestionList() {
       <FiterContainer>
         <span className="questionCount">25,343,781 quesitons</span>
         <Fiter>
-          <FiterOption>Newest</FiterOption>
-          <FiterOption>Active</FiterOption>
-          <FiterOption>Unanswered</FiterOption>
-          <FiterOption>Score</FiterOption>
-          <FiterOption>Popular</FiterOption>
+          <FiterOption onClick={() => handleTab("newest")}>Newest</FiterOption>
+          <FiterOption onClick={() => handleTab("active")}>Active</FiterOption>
+          <FiterOption onClick={() => handleTab("unanswered")}>Unanswered</FiterOption>
+          <FiterOption onClick={() => handleTab("score")}>Score</FiterOption>
+          <FiterOption onClick={() => handleTab("popular")}>Popular</FiterOption>
         </Fiter>
       </FiterContainer>
       <QuestionListContainer>
@@ -131,7 +136,10 @@ function QuestionList() {
         <Question>Question6</Question>
       </QuestionListContainer>
       <PaginationContainer>
-        <span>pagination</span>
+        <Paginator>1</Paginator>
+        <Paginator>2</Paginator>
+        <Paginator>3</Paginator>
+        <Paginator>4</Paginator>
       </PaginationContainer>
     </StyledQuestionList>
   );
@@ -202,6 +210,7 @@ const QuestionListContainer = styled.ul`
   border-top: 1px solid rgb(214, 217, 220);
   margin-left: -24px;
   list-style: none;
+  margin-bottom: 40px;
 `;
 
 const Question = styled.li`
@@ -305,4 +314,15 @@ const UserInfoContainer = styled.div`
   }
 `;
 
-const PaginationContainer = styled.div``;
+const PaginationContainer = styled.div`
+  margin-top: 20px;
+  margin-bottom: 20px;
+`;
+
+const Paginator = styled.a`
+  padding-left: 8px;
+  padding-right: 8px;
+  border-radius: 6px;
+  border: 1px solid rgb(214, 217, 220);
+  font-size: 12px;
+`;
