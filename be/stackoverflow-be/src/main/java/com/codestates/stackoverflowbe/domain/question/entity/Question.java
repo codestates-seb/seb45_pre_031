@@ -43,6 +43,19 @@ public class Question extends BaseTimeEntity {
     @OneToOne()
     @JoinColumn(name = "VOTE_ID")
     private Vote vote;
+
+    // 추가한 필드 및 메서드
+    private String user_id;
+
+    @Column(columnDefinition = "TEXT")
+    private String bodyHTML;
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+    public void setBodyHTML(String bodyHTML) {
+        this.bodyHTML = bodyHTML;
+    }
     public void setTitle(String title) {
         this.title = title;
     }
@@ -57,5 +70,4 @@ public class Question extends BaseTimeEntity {
         this.setTitle(updateDto.getTitle());
         this.setBody(updateDto.getBody());
     }
-// 필드에 값을 설정하는 메서드
 }

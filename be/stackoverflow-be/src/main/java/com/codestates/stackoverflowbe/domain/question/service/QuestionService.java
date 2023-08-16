@@ -22,6 +22,10 @@ public class QuestionService {
         newQuestion.setTitle(questionDto.getTitle());
         newQuestion.setBody(questionDto.getBody());
         newQuestion.setAccount(account);
+        // user_id, tags, bodyHTML도 설정합니다.
+        newQuestion.setUser_id(questionDto.getUser_id());
+//        newQuestion.setTags(questionDto.getTags());
+        newQuestion.setBodyHTML(questionDto.getBodyHTML());
 
         // 데이터베이스에 저장하고 생성된 질문을 반환합니다.
         return questionRepository.save(newQuestion);

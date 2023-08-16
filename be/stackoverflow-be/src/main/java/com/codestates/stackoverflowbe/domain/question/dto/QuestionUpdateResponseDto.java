@@ -10,8 +10,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class QuestionUpdateResponseDto {
-    private Long questionId;
     private String title;
-    private String body;
+    private String user_id;
+    private String[] tags;
+    private String bodyHTML;
     // 기타 필요한 정보들 추가 가능
 }
