@@ -10,6 +10,7 @@ import com.codestates.stackoverflowbe.domain.question.service.QuestionService;
 import com.codestates.stackoverflowbe.global.response.SingleResponseDto;
 import com.codestates.stackoverflowbe.global.constants.HttpStatusCode;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,6 +32,7 @@ public class QuestionController {
         this.questionService = questionService;
         this.accountService = accountService;
     }
+
     // 질문 생성 요청을 처리하는 메서드
     @PostMapping
     public ResponseEntity<SingleResponseDto<Question>> createQuestion(
@@ -44,6 +46,7 @@ public class QuestionController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new SingleResponseDto<>(HttpStatusCode.CREATED, "Question created!", createdQuestion));
     }
+
     // 질문 목록 조회 요청을 처리하는 메서드
     @GetMapping
     public ResponseEntity<QuestionListResponseDto> getQuestions() {
@@ -52,6 +55,7 @@ public class QuestionController {
         // 질문 목록과 함께 응답 객체를 생성하여 반환합니다.
         return ResponseEntity.ok(new QuestionListResponseDto(HttpStatusCode.OK, "Questions retrieved!", questions));
     }
+
     // 질문 수정 요청을 처리하는 메서드
     @PutMapping("/{questionId}")
     public ResponseEntity<SingleResponseDto<Question>> updateQuestion(
@@ -71,6 +75,8 @@ public class QuestionController {
         // 수정된 질문을 반환합니다.
         return ResponseEntity.ok(new SingleResponseDto<>(HttpStatusCode.OK, "Question updated!", question));
     }
+
+    // 질문 삭제 요청을 처리하는 메서드
     @DeleteMapping("/{questionId}")
     public ResponseEntity<SingleResponseDto<String>> deleteQuestion(
             @PathVariable Long questionId,
@@ -92,6 +98,7 @@ public class QuestionController {
         // 삭제 성공 응답을 반환합니다.
         return ResponseEntity.ok(new SingleResponseDto<>(HttpStatusCode.OK, "Question deleted!", null));
     }
+
     // 사용자별 질문 조회 요청을 처리하는 메서드
     @GetMapping("/user")
     public ResponseEntity<List<Question>> getUserQuestions(@AuthenticationPrincipal UserDetails userDetails) {
@@ -102,18 +109,48 @@ public class QuestionController {
         // 조회한 질문 목록을 반환합니다.
         return ResponseEntity.ok(userQuestions);
     }
+
     // 최신 질문 조회 요청을 처리하는 메서드
-    @GetMapping("/latest")
-    public ResponseEntity<List<Question>> getLatestQuestions() {
-        // 최신 질문 목록을 조회합니다.
-        List<Question> latestQuestions = questionService.getLatestQuestions();
-        // 조회한 질문 목록을 반환합니다.
-        return ResponseEntity.ok(latestQuestions);
+    @GetMapping("/newest")
+    public ResponseEntity<Page<Question>> getNewestQuestions(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size) {
+        // QuestionService를 통해 최신 질문 목록을 가져옵니다.
+        Page<Question> newestQuestions = questionService.getNewestQuestions(page, size);
+        // 최신 질문 페이지를 반환합니다.
+        return ResponseEntity.ok(newestQuestions);
     }
-    // 질문 제목으로 검색하는 요청을 처리하는 메서드
-    @GetMapping("/search")
-    public ResponseEntity<List<Question>> searchByTitle(@RequestParam String title) {
-        List<Question> searchResults = questionService.searchByTitle(title);
-        return ResponseEntity.ok(searchResults);
+
+    // 인기 질문 조회 요청을 처리하는 메서드
+    @GetMapping("/hot")
+    public ResponseEntity<Page<Question>> getHotQuestions(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size) {
+        // QuestionService를 통해 인기 질문 목록을 가져옵니다.
+        Page<Question> hotQuestions = questionService.getHotQuestions(page, size);
+        // 인기 질문 페이지를 반환합니다.
+        return ResponseEntity.ok(hotQuestions);
+    }
+
+    // 지난 주 동안 가장 많이 본 질문 조회 요청을 처리하는 메서드
+    @GetMapping("/week")
+    public ResponseEntity<Page<Question>> getWeekQuestions(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size) {
+        // QuestionService를 통해 지난 주 동안 가장 많이 본 질문 목록을 가져옵니다.
+        Page<Question> weekQuestions = questionService.getWeekQuestions(page, size);
+        // 지난 주의 가장 많이 본 질문 페이지를 반환합니다.
+        return ResponseEntity.ok(weekQuestions);
+    }
+
+    // 지난 달 동안 가장 많이 본 질문 조회 요청을 처리하는 메서드
+    @GetMapping("/month")
+    public ResponseEntity<Page<Question>> getMonthQuestions(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size) {
+        // QuestionService를 통해 지난 달 동안 가장 많이 본 질문 목록을 가져옵니다.
+        Page<Question> monthQuestions = questionService.getMonthQuestions(page, size);
+        // 지난 달의 가장 많이 본 질문 페이지를 반환합니다.
+        return ResponseEntity.ok(monthQuestions);
     }
 }

@@ -46,6 +46,7 @@ public class Question extends BaseTimeEntity {
 
     // 추가한 필드 및 메서드
     private String user_id;
+    private Long viewCount;
 
     @Column(columnDefinition = "TEXT")
     private String bodyHTML;
