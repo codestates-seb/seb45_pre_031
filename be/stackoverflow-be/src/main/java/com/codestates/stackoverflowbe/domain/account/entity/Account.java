@@ -22,7 +22,7 @@ public class Account extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long account_id;
+    private Long accountId;
 
     @Column
     private String displayName;
@@ -39,7 +39,6 @@ public class Account extends BaseTimeEntity {
     @OneToMany(mappedBy = "account")
     private List<Answer> answers = new ArrayList<>();
 
-    @OneToOne
-    @JoinColumn(name = "VOTE_ID")
-    private Vote vote;
+    @OneToMany(mappedBy = "account")
+    private List<Vote> votes = new ArrayList<>();
 }

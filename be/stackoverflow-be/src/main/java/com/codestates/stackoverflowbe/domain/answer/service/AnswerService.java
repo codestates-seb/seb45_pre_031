@@ -3,7 +3,7 @@ package com.codestates.stackoverflowbe.domain.answer.service;
 import com.codestates.stackoverflowbe.domain.answer.dto.AnswerDto;
 import com.codestates.stackoverflowbe.domain.answer.entity.Answer;
 import com.codestates.stackoverflowbe.domain.answer.repository.AnswerRepository;
-import com.codestates.stackoverflowbe.domain.vote.entity.Vote;
+import com.codestates.stackoverflowbe.domain.vote.service.VoteService;
 import com.codestates.stackoverflowbe.global.exception.BusinessLogicException;
 import com.codestates.stackoverflowbe.global.exception.ExceptionCode;
 import org.springframework.data.domain.Page;
@@ -17,21 +17,20 @@ import java.util.Optional;
 @Service
 public class AnswerService {
     private final AnswerRepository answerRepository;
+    private final VoteService voteService;
 
-    public AnswerService(AnswerRepository answerRepository) {
+    public AnswerService(AnswerRepository answerRepository, VoteService voteService) {
         this.answerRepository = answerRepository;
+        this.voteService = voteService;
     }
 
     public AnswerDto.Response createAnswer(AnswerDto.Request requestDto) {
         Answer answer = requestDto.toEntity();
-        answer.setVote(Vote.builder().amount(0).build());
-
         Answer savedAnswer = answerRepository.save(answer);
 
         return AnswerDto.Response.builder()
                 .answerId(savedAnswer.getAnswerId())
                 .body(savedAnswer.getBody())
-                .vote(savedAnswer.getVote())
                 .build();
     }
 
@@ -40,16 +39,16 @@ public class AnswerService {
         Answer findAnswer = findVerifiedAnswer(answer.getAnswerId());
         findAnswer = findAnswer.toBuilder()
                 .body(Optional.ofNullable(answer.getBody()).orElse(findAnswer.getBody()))
-                .vote(Optional.ofNullable(answer.getVote()).orElse(findAnswer.getVote()))
+                .votes(Optional.ofNullable(answer.getVotes()).orElse(findAnswer.getVotes()))
                 .build();
 
-        // 추후에 질문, 댓글, ...
         Answer savedAnswer = answerRepository.save(findAnswer);
 
         return AnswerDto.Response.builder()
                 .answerId(savedAnswer.getAnswerId())
                 .body(savedAnswer.getBody())
-                .vote(savedAnswer.getVote())
+                .upVotes(voteService.getUpVoteAccounts(savedAnswer.getVotes()))
+                .downVotes(voteService.getDownVoteAccounts(savedAnswer.getVotes()))
                 .build();
     }
 
@@ -60,7 +59,8 @@ public class AnswerService {
         return AnswerDto.Response.builder()
                 .answerId(findAnswer.getAnswerId())
                 .body(findAnswer.getBody())
-                .vote(findAnswer.getVote())
+                .upVotes(voteService.getUpVoteAccounts(findAnswer.getVotes()))
+                .downVotes(voteService.getDownVoteAccounts(findAnswer.getVotes()))
                 .build();
     }
 
@@ -77,7 +77,8 @@ public class AnswerService {
                 .map(answer -> AnswerDto.Response.builder()
                         .answerId(answer.getAnswerId())
                         .body(answer.getBody())
-                        .vote(answer.getVote())
+                        .upVotes(voteService.getUpVoteAccounts(answer.getVotes()))
+                        .downVotes(voteService.getDownVoteAccounts(answer.getVotes()))
                         .build());
 
         return pageAnswers;

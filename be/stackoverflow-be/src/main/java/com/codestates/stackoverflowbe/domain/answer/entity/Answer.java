@@ -39,12 +39,10 @@ public class Answer extends BaseTimeEntity {
     @OneToMany(mappedBy = "answer")
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "VOTE_ID")
-    private Vote vote;
+    @OneToMany(mappedBy = "answer")
+    private List<Vote> votes = new ArrayList<>();
 
-    public void setVote(Vote vote) {
-        this.vote = vote;
-        if (vote.getAnswer() != this) vote.setAnswer(this);
+    public void addVote(Vote vote) {
+        votes.add(vote);
     }
 }

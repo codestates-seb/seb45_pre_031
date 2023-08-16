@@ -1,11 +1,11 @@
 package com.codestates.stackoverflowbe.domain.answer.dto;
 
 import com.codestates.stackoverflowbe.domain.answer.entity.Answer;
-import com.codestates.stackoverflowbe.domain.vote.entity.Vote;
 import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Getter
 public class AnswerDto {
@@ -25,18 +25,15 @@ public class AnswerDto {
     public static class Response {
         private long answerId;
         private String body;
-        private Vote vote;
+        private List<String> upVotes;
+        private List<String> downVotes;
 
         @Builder
-        public Response(long answerId, String body, Vote vote) {
+        public Response(long answerId, String body, List<String> upVotes, List<String> downVotes) {
             this.answerId = answerId;
             this.body = body;
-            this.vote = vote;
-        }
-
-        // why????????? 위 response에서 vote가 vote.amount로 나옴
-        public int getVote() {
-            return vote.getAmount();
+            this.upVotes = upVotes;
+            this.downVotes = downVotes;
         }
     }
 }

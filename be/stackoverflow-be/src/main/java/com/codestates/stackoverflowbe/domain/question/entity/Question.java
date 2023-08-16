@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -33,16 +34,14 @@ public class Question extends BaseTimeEntity {
     private Account account;
 
     @OneToMany(mappedBy = "question")
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "question")
-    private List<Comment> answers;
+    private List<Comment> answers = new ArrayList<>();
 
     @OneToMany(mappedBy = "question")
-    private List<Tag> tags;
+    private List<Tag> tags = new ArrayList<>();
 
-    @OneToOne
-    @JoinColumn(name = "VOTE_ID")
-    private Vote vote;
-
+    @OneToMany(mappedBy = "question")
+    private List<Vote> votes = new ArrayList<>();
 }

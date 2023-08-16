@@ -37,7 +37,7 @@ public class AccountDetailService implements UserDetailsService {
 
         public AccountDetails(Account account) {
             account.builder()
-                    .account_id(account.getAccount_id())
+                    .accountId(account.getAccountId())
                     .email(account.getEmail())
                     .password(account.getPassword())
                     .roles(account.getRoles())

@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -39,7 +40,7 @@ public class AnswerController {
                 .buildAndExpand(responseDto.getAnswerId())
                 .toUri();
 
-        return ResponseEntity.created(location).body(SingleResponseDto.<AnswerDto.Response>builder().status(HttpStatusCode.CREATED.getStatusCode()).message(HttpStatusCode.CREATED.getMessage()).data(responseDto).build());
+        return ResponseEntity.created(location).build();
     }
 
     @Operation(summary = "Update Answer API", description = "Update Answer With Answer Id, Body")
@@ -58,7 +59,7 @@ public class AnswerController {
         return ResponseEntity.ok(SingleResponseDto.<AnswerDto.Response>builder().status(HttpStatusCode.OK.getStatusCode()).message(HttpStatusCode.OK.getMessage()).data(responseDto).build());
     }
 
-    @Operation(summary = "Get Answers API", description = "Get Answers With Answer Id, Page, Size")
+    @Operation(summary = "Get Answers API", description = "Get Answers With Question Id, Page, Size")
     @GetMapping
     public ResponseEntity<MultiResponseDto<AnswerDto.Response>> getAnswers(@Positive @RequestParam int page, @Positive @RequestParam int size, @Positive @RequestParam long questionId) {
 //        int size = 15;
@@ -69,7 +70,7 @@ public class AnswerController {
 
     @Operation(summary = "Delete Answers API", description = "Delete Answers With Answer Id")
     @DeleteMapping
-    public ResponseEntity deleteAnswer(@PathVariable("answer-id") @Positive long answerId) {
+    public ResponseEntity<HttpStatus> deleteAnswer(@PathVariable("answer-id") @Positive long answerId) {
         answerService.deleteAnswer(answerId);
 
         return ResponseEntity.noContent().build();
