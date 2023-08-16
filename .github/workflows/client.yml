@@ -22,18 +22,10 @@ jobs:
         run: CI=false npm run build
         working-directory: ./fe
 
-      - name: SHOW AWS CLI VERSION
-        run: |
-          aws --version
-
-      - name: Sync Bucket
+      - name: Deploy (Upload Build File To S3)
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_EC2_METADATA_DISABLED: true
         run: |
-          aws s3 sync \
-            --region ap-northeast-2 \
-            build s3://seveneleven-stackoverflow-s3 \
-            --delete
+          aws s3 cp --recursive --region ap-northeast-2 build s3://seveneleven-stackoverflow-s3
         working-directory: ./fe
