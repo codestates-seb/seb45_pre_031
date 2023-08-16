@@ -3,6 +3,9 @@ package com.codestates.stackoverflowbe.global.auth.userdetails;
 import com.codestates.stackoverflowbe.domain.account.entity.Account;
 import com.codestates.stackoverflowbe.domain.account.repository.AccountRepository;
 import com.codestates.stackoverflowbe.global.auth.utils.CustomAuthorityUtils;
+import com.codestates.stackoverflowbe.global.exception.BusinessLogicException;
+import com.codestates.stackoverflowbe.global.exception.ExceptionCode;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -28,20 +31,16 @@ public class AccountDetailService implements UserDetailsService {
         Optional<Account> optionalAccount = accountRepository.findByEmail(username);
         Account findAccount =
                 optionalAccount.orElseThrow(
-                        () -> new RuntimeException()); //🌟 리팩토링 필요 사용자 정의 예외로 추후 변경
+                        () -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
 
         return new AccountDetails(findAccount);
     }
 
+    @AllArgsConstructor
     private final class AccountDetails extends Account implements UserDetails {
 
         public AccountDetails(Account account) {
-            account.builder()
-                    .accountId(account.getAccountId())
-                    .email(account.getEmail())
-                    .password(account.getPassword())
-                    .roles(account.getRoles())
-                    .build();
+            super(account.getAccountId(), account.getEmail(), account.getPassword(), account.getRoles());
         }
 
         @Override
@@ -54,7 +53,7 @@ public class AccountDetailService implements UserDetailsService {
             return getEmail();
         }
 
-        //🔥 코드 개선 필요
+        //🔥 코드 개선 필요?
         @Override
         public boolean isAccountNonExpired() {
             return true;
