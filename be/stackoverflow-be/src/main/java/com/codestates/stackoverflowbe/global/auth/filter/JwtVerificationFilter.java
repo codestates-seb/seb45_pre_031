@@ -2,6 +2,8 @@ package com.codestates.stackoverflowbe.global.auth.filter;
 
 import com.codestates.stackoverflowbe.global.auth.jwt.JwtTokenizer;
 import com.codestates.stackoverflowbe.global.auth.utils.CustomAuthorityUtils;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,8 +30,17 @@ public class JwtVerificationFilter extends OncePerRequestFilter { // request 당
     @Override // 다음 필터 사이에 동작할 로직으로 JWT 검증 및 인증컨텍스트 저장을 수행한다.
     protected void doFilterInternal(HttpServletRequest request
             , HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        Map<String, Object> claims = verifyJws(request); // JWT 검증
-        setAuthenticationToContext(claims);
+        try {
+            Map<String, Object> claims = verifyJws(request); // JWT 검증
+            setAuthenticationToContext(claims);
+        //jwt 검증에 실패할 경우 발생하는 예외를 HttpServletRequest의 속성(Attribute)으로 추가
+        } catch (SignatureException se) {
+            request.setAttribute("exception", se);
+        } catch (ExpiredJwtException ee) {
+            request.setAttribute("exception", ee);
+        } catch (Exception e) {
+            request.setAttribute("exception", e);
+        }
 
         filterChain.doFilter(request, response);
     }

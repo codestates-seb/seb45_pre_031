@@ -14,22 +14,22 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Slf4j
-public class UserAuthenticationFailureHandler implements AuthenticationFailureHandler {
+public class AccountAuthenticationFailureHandler implements AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) throws IOException, ServletException {
         log.error("Authentication failed! : {}", exception.getMessage());
 
-//        sendErrorResponse(response);
+        sendErrorResponse(response);
     }
 
-//    private void sendErrorResponse(HttpServletResponse response) throws IOException {
-//        Gson gson = new Gson();
-//        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED);
-//        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-//        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-//        response.getWriter().write(gson.toJson(errorResponse, ErrorResponse.class));
-//    }
+    private void sendErrorResponse(HttpServletResponse response) throws IOException {
+        Gson gson = new Gson();
+        ErrorResponse errorResponse = ErrorResponse.of(HttpStatus.UNAUTHORIZED);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.getWriter().write(gson.toJson(errorResponse, ErrorResponse.class));
+    }
 
 
 }
