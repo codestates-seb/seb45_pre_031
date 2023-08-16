@@ -6,8 +6,59 @@ import GoogleLoginBtn from "../components/features/GoogleLoginBtn";
 import { loginSuccess, loginFailure } from "../redux/actions/loginAction";
 
 
+const LoginPageContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  max-width: 100%;
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  background-color: hsl(210,8%,95%);
+`
+
+const ContentContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 24px;
+`
+
+const ItemsContainer = styled.div`
+  display: block;
+  margin: 0;
+  padding: 0;
+`
+
+const LogoContainer = styled.div`
+  display: block;
+  text-align: center;
+  margin-bottom: 24px;
+
+  > img {
+    width: 32px;
+    height: 37px;
+  }
+`
+
+const SocialLoginContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-basis: auto;
+  flex-grow: 1;
+  flex-shrink: 1;
+  margin-bottom: 16px;
+`
 
 const FormContainer = styled.div`
+  display: block;
+  margin-bottom: 24px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 24px;
+  background-color: hsl(0,0%,100%);
+  border-radius: 8px;
+  box-shadow: 0 10px 24px hsla(0,0%,0%,0.05), 0 20px 48px hsla(0, 0%, 0%, 0.05), 0 1px 4px hsla(0, 0%, 0%, 0.1);
 
   > form {
     display: flex;
@@ -81,23 +132,34 @@ function LoginPage (props) {
   };
 
 
-  return (<div>LoginPage
-    <GoogleLoginBtn />
-    <FormContainer>
-      <form>
-        <InputEmail
-          value={username}
-          onChange={onUsernameHandler}/>
-        <InputPassword
-          value={password}
-          onChange={onPasswordHandler}/>
-        <BtnContainer>
-          <LoginBtn
-            onClick={onLoginHadler}>Log in</LoginBtn>
-        </BtnContainer>
-      </form>
-    </FormContainer>
-  </div>)
+  return (
+    <LoginPageContainer>
+      <ContentContainer>
+        <ItemsContainer>
+          <LogoContainer>
+            <img src="https://media.discordapp.net/attachments/1138344984454631504/1138711197278015569/image.png?width=612&height=708" alt="" />
+          </LogoContainer>
+          <SocialLoginContainer>
+            <GoogleLoginBtn />
+          </SocialLoginContainer>
+          <FormContainer>
+            <form>
+              <InputEmail
+                value={username}
+                onChange={onUsernameHandler}/>
+              <InputPassword
+                value={password}
+                onChange={onPasswordHandler}/>
+              <BtnContainer>
+                <LoginBtn
+                  onClick={onLoginHadler}>Log in</LoginBtn>
+              </BtnContainer>
+            </form>
+          </FormContainer>
+        </ItemsContainer>
+      </ContentContainer>
+    </LoginPageContainer>
+  )
 }
 
 export default LoginPage;
