@@ -123,10 +123,10 @@ function SearchInfo () {
                 <BtnLinkContainer>
                     <BtnLinkElementContainer>
                         <AskBtnContainer>
-
+                            Ask a question
                         </AskBtnContainer>
                         <SearchHelpContiner>
-
+                            Search Help
                         </SearchHelpContiner>
                     </BtnLinkElementContainer>
                 </BtnLinkContainer>
