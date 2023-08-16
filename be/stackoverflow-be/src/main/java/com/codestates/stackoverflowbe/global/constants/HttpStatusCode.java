@@ -2,6 +2,7 @@ package com.codestates.stackoverflowbe.global.constants;
 
 import lombok.Getter;
 
+@Getter
 public enum HttpStatusCode {
     OK(200, "OK"),
     CREATED(201, "CREATED"),
@@ -13,9 +14,7 @@ public enum HttpStatusCode {
     INTERNAL_SERER_ERROR(500, "INTERNAL_SERVER_ERROR"),
     NOT_IMPLEMETED(501, "NOT IMPLEMETED");
 
-    @Getter
     private final int statusCode;
-    @Getter
     private final String message;
 
     HttpStatusCode(int statusCode, String message) {

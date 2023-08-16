@@ -6,6 +6,7 @@ import com.codestates.stackoverflowbe.domain.vote.entity.Vote;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,11 +15,16 @@ import java.util.List;
 public class AccountDto {
 
     @Getter
+    @Setter
     @AllArgsConstructor
     public static class Post {
         private String displayName;
         private String email;
         private String password;
+
+        public Post(String email) {
+            this.email = email;
+        }
 
         public Account toEntity() {
             return Account.builder()
@@ -45,7 +51,6 @@ public class AccountDto {
 
         private String displayName;
         private String email;
-        private String password;
 
         private List<String> roles;
         private List<Answer> answers;
