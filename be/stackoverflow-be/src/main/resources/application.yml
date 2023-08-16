@@ -1,20 +1,13 @@
 spring:
-#  h2:
-#    console:
-#      enabled: true
-#      path: /h2
-#  datasource:
-#    url: jdbc:h2:mem:stackoverflow
-
+  h2:
+    console:
+      enabled: true
+      path: /h2
   datasource:
-    url: jdbc:mysql://localhost:3306/stackoverflow?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
-    username: smiledk
-    password: 1112
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:h2:mem:stackoverflow
 
   jpa:
-    database-platform: org.hibernate.dialect.MySQL8Dialect
-    database: mysql
+    database: h2
     show-sql: true
     hibernate:
       ddl-auto: create
@@ -60,5 +53,6 @@ springdoc:
   default-produces-media-type: application/json
   paths-to-match:
     - /v1/**
+
 server:
   port: 8888
