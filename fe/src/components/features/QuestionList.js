@@ -21,7 +21,7 @@ function QuestionList() {
         if (response.data.success) {
           setData(response.data);
         } else {
-          // 실패한 경우
+          console.error("Failed to fetch questions:", response.data.message);
         }
       } catch (error) {
         console.error("Error fetching questions:", error);
