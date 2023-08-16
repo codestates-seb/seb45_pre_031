@@ -31,9 +31,24 @@ function QuestionList() {
   }, [tab, pageNumber]);
 
   const handleTab = (selectedTab) => {
+    setPageNumber(1);
     setTab(selectedTab);
   };
-  useEffect(() => console.log(tab), [tab]);
+
+  const handlePage = (selectedPage) => {
+    setPageNumber(selectedPage);
+  };
+
+  const handlePageInput = (e) => {
+    if (e.key === "Enter") {
+      const inputValue = parseInt(e.target.value);
+      if (!isNaN(inputValue)) {
+        setPageNumber(inputValue);
+      }
+    }
+  };
+
+  useEffect(() => console.log("tab:", tab, "page:", pageNumber), [tab, pageNumber]);
 
   return (
     <StyledQuestionList>
@@ -136,10 +151,15 @@ function QuestionList() {
         <Question>Question6</Question>
       </QuestionListContainer>
       <PaginationContainer>
-        <Paginator>1</Paginator>
-        <Paginator>2</Paginator>
-        <Paginator>3</Paginator>
-        <Paginator>4</Paginator>
+        <Paginator>Prev</Paginator>
+        <Paginator onClick={() => handlePage(1)}>1</Paginator>
+        <Paginator onClick={() => handlePage(2)}>2</Paginator>
+        <Paginator onClick={() => handlePage(3)}>3</Paginator>
+        <Paginator onClick={() => handlePage(4)}>4</Paginator>
+        <Paginator onClick={() => handlePage(5)}>5</Paginator>
+        <PageInput onKeyUp={handlePageInput} />
+        <Paginator onClick={() => handlePage(1592)}>1592</Paginator>
+        <Paginator>Next</Paginator>
       </PaginationContainer>
     </StyledQuestionList>
   );
@@ -292,6 +312,7 @@ const Tag = styled.li`
     background-color: hsl(205deg 53% 88%);
   }
 `;
+
 const UserInfoContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -315,14 +336,33 @@ const UserInfoContainer = styled.div`
 `;
 
 const PaginationContainer = styled.div`
+  display: flex;
+  flex-direction: row;
   margin-top: 20px;
   margin-bottom: 20px;
 `;
 
-const Paginator = styled.a`
-  padding-left: 8px;
-  padding-right: 8px;
+const Paginator = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 10px 6px 10px;
   border-radius: 6px;
+
+  margin-right: 6px;
+  border: 1px solid rgb(214, 217, 220);
+  font-size: 12px;
+  &:hover {
+    background-color: hsl(210, 8%, 97.5%);
+  }
+`;
+
+const PageInput = styled.input`
+  display: flex;
+  padding: 6px 10px 6px 10px;
+  border-radius: 6px;
+  width: 48px;
+  margin-right: 6px;
   border: 1px solid rgb(214, 217, 220);
   font-size: 12px;
 `;
