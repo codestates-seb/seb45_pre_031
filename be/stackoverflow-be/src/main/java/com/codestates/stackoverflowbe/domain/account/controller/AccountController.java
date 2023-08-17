@@ -49,7 +49,6 @@ public class AccountController {
 
     }
 
-    @PostMapping("/authenticate")
 
     @Operation(summary = "Get All Member", description = "전체 계정 조회 기능")
     @GetMapping
