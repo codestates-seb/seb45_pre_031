@@ -7,7 +7,7 @@ import { loginSuccess, loginFailure, emailMismatchError, passwordMismatchError }
 import PasswordModal from "../components/features/PasswordModal";
 
 function LoginPage () {
-  const LOCAL_SERVER_ADRESS = process.env.REACT_APP_SEVER_ADRESS;
+  const LOCAL_SERVER_ADRESS = process.env.REACT_APP_LOCAL_SEVER_ADRESS;
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
