@@ -2,6 +2,7 @@ package com.codestates.stackoverflowbe.domain.question.service;
 
 import com.codestates.stackoverflowbe.domain.account.entity.Account;
 import com.codestates.stackoverflowbe.domain.question.dto.QuestionUpdateDto;
+import com.codestates.stackoverflowbe.domain.question.dto.QuestionUpdateRequestDto;
 import com.codestates.stackoverflowbe.domain.question.entity.Question;
 import com.codestates.stackoverflowbe.domain.question.repository.QuestionRepository;
 import com.codestates.stackoverflowbe.domain.tag.entity.Tag;
@@ -118,6 +119,17 @@ public class QuestionService {
     public List<Question> getUnansweredQuestions() {
         List<Question> questions = questionRepository.findAllByAnswersIsEmpty();
         return questions;
+    }
+    public Question updateQuestion(Long questionId, QuestionUpdateRequestDto updateDto) {
+        // 질문을 찾습니다.
+        Question question = questionRepository.findById(questionId).orElse(null);
+        if (question == null) {
+            return null; // 혹은 예외 처리를 추가하십시오.
+        }
+
+        // 질문을 업데이트합니다.
+        question.updateQuestion(updateDto);
+        return questionRepository.save(question);
     }
 }
 

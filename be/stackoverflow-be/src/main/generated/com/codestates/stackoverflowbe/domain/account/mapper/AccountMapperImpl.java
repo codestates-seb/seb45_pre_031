@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-08-14T17:45:04+0900",
+    date = "2023-08-18T01:14:52+0900",
     comments = "version: 1.5.1.Final, compiler: javac, environment: Java 11.0.20 (Azul Systems, Inc.)"
 )
 @Component
@@ -25,10 +25,9 @@ public class AccountMapperImpl implements AccountMapper {
 
         List<String> roles = null;
         List<Answer> answers = null;
-        Long account_id = null;
+        Long accountId = null;
         String displayName = null;
         String email = null;
-        Vote vote = null;
 
         List<String> list = account.getRoles();
         if ( list != null ) {
@@ -38,12 +37,13 @@ public class AccountMapperImpl implements AccountMapper {
         if ( list1 != null ) {
             answers = new ArrayList<Answer>( list1 );
         }
-        account_id = account.getAccount_id();
+        accountId = account.getAccountId();
         displayName = account.getDisplayName();
         email = account.getEmail();
-        vote = account.getVote();
 
-        AccountDto.Response response = new AccountDto.Response( account_id, displayName, email, roles, answers, vote );
+        Vote vote = null;
+
+        AccountDto.Response response = new AccountDto.Response( accountId, displayName, email, roles, answers, vote );
 
         return response;
     }

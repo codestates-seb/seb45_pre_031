@@ -70,6 +70,17 @@ public class QuestionController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new SingleResponseDto<>(HttpStatusCode.CREATED.getStatusCode(), "Question created!", createdQuestion));
     }
+    // 질문의 상세 정보를 조회하는 메서드
+    @GetMapping("/{questionId}")
+    public ResponseEntity<SingleResponseDto<Question>> getQuestionDetail(@PathVariable Long questionId) {
+        // QuestionService를 통해 특정 ID에 해당하는 질문을 조회합니다.
+        Question question = questionService.findQuestionById(questionId);
+        if (question == null) {
+            return ResponseEntity.notFound().build();
+        }
+        // 조회한 질문을 반환합니다.
+        return ResponseEntity.ok(new SingleResponseDto<>(HttpStatusCode.OK, "Question retrieved!", question));
+    }
 
     // 질문 목록 조회 요청을 처리하는 메서드
     @Operation(summary = "Get All Question", description = "전체 질문 조회 기능")
@@ -82,57 +93,35 @@ public class QuestionController {
     }
     // 질문 수정 요청을 처리하는 메서드
     @Operation(summary = "Put Question", description = "질문 수정 기능")
-    @PutMapping("/{questionId}")
+    @PatchMapping("/{questionId}")
     public ResponseEntity<SingleResponseDto<Question>> updateQuestion(
             @PathVariable Long questionId,
-            @RequestBody QuestionUpdateRequestDto updateDto,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        // 질문을 찾습니다.
-        Question question = questionService.findQuestionById(questionId);
-        if (question == null) {
+            @RequestBody QuestionUpdateRequestDto updateDto) {
+        // 질문을 수정합니다.
+        Question updatedQuestion = questionService.updateQuestion(questionId, updateDto);
+        if (updatedQuestion == null) {
             return ResponseEntity.notFound().build();
         }
-        // 사용자 정보를 가져옵니다.
-        Account account = accountService.findByEmail(userDetails.getUsername());
-        // 질문을 수정합니다.
-        question.updateQuestion(updateDto);
-        questionService.saveQuestion(question);
+
         // 수정된 질문을 반환합니다.
-        return ResponseEntity.ok(new SingleResponseDto<>(HttpStatusCode.OK.getStatusCode(), "Question updated!", question));
+        return ResponseEntity.ok(new SingleResponseDto<>(HttpStatusCode.OK.getStatusCode(), "Question updated!", updatedQuestion));
     }
+
+
     // 질문 삭제 요청을 처리하는 메서드
     @Operation(summary = "Delete Question", description = "질문 삭제 기능")
     @DeleteMapping("/{questionId}")
-    public ResponseEntity<SingleResponseDto<String>> deleteQuestion(
-            @PathVariable Long questionId,
-            @AuthenticationPrincipal UserDetails userDetails) {
-        // 질문을 찾습니다.
-        Question question = questionService.findQuestionById(questionId);
-        if (question == null) {
-            return ResponseEntity.notFound().build();
-        }
-        // 사용자 정보를 가져옵니다.
-        Account account = accountService.findByEmail(userDetails.getUsername());
-        // 질문 작성자와 현재 로그인한 사용자가 일치하는지 확인합니다.
-        if (!question.getAccount().equals(account)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(new SingleResponseDto<>(HttpStatusCode.FORBIDDEN.getStatusCode(), "You don't have permission to delete this question.", null));
-        }
+    public ResponseEntity<SingleResponseDto<String>> deleteQuestion(@PathVariable Long questionId) {
         // 질문을 삭제합니다.
-        questionService.deleteQuestion(question);
-        // 삭제 성공 응답을 반환합니다.
-        return ResponseEntity.ok(new SingleResponseDto<>(HttpStatusCode.OK.getStatusCode(), "Question deleted!", null));
-    }
-    // 질문의 상세 정보를 조회하는 메서드
-    @GetMapping("/{questionId}")
-    public ResponseEntity<SingleResponseDto<Question>> getQuestionDetail(@PathVariable Long questionId) {
-        // QuestionService를 통해 특정 ID에 해당하는 질문을 조회합니다.
         Question question = questionService.findQuestionById(questionId);
         if (question == null) {
             return ResponseEntity.notFound().build();
         }
-        // 조회한 질문을 반환합니다.
-        return ResponseEntity.ok(new SingleResponseDto<>(HttpStatusCode.OK, "Question retrieved!", question));
+
+        questionService.deleteQuestion(question);
+
+        // 삭제 성공 응답을 반환합니다.
+        return ResponseEntity.ok(new SingleResponseDto<>(HttpStatusCode.OK.getStatusCode(), "Question deleted!", "Question successfully deleted."));
     }
     // 사용자별 질문 조회 요청을 처리하는 메서드
     @Operation(summary = "Get User's Question", description = "사용자 별 질문 조회 기능")
