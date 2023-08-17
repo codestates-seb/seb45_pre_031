@@ -59,10 +59,8 @@ public class SecurityConfiguration {
                 .apply(new CustomFilterConfigurer()) // 커스터마이징한 필터 추가
                 .and() // 허용되는 HttpMethod와 역할 설정
                 .authorizeHttpRequests( authorize -> authorize
-                        .antMatchers(HttpMethod.GET, "/accounts/is-admin").hasRole("ADMIN")
-                        .antMatchers(HttpMethod.GET, "/accounts").hasRole("ADMIN")
-                        .antMatchers(HttpMethod.POST, "/accounts/**").permitAll()
-//                        .antMatchers(HttpMethod.GET, "http://localhost:3000/login").authenticated()
+                        .antMatchers(HttpMethod.GET, "/v1/accounts/**").hasRole("ADMIN")
+                        .antMatchers(HttpMethod.POST, "/v1/accounts/**").permitAll()
                         .anyRequest().permitAll()
                 )
                 .oauth2Login(

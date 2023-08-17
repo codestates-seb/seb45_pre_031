@@ -31,7 +31,7 @@ public class AccountAuthenticationSuccessHandler implements AuthenticationSucces
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-        log.info("Authenticated successfully !");
+        log.info("# Authenticated successfully !");
 //        String username = authentication.getName();
 //        Optional<Account> optionalAccount = accountRepository.findByEmail(username);
 //        Account account = optionalAccount.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
