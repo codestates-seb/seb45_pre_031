@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,19 +42,27 @@ public class AccountService {
 
     //POST(회원 등록) : DB에 데이터 저장
     public AccountDto.Response createAccount(AccountDto.Post accountPostDto) {
-        verifyExistsEmail(accountPostDto.getEmail());
+//        verifyExistsEmail(accountPostDto.getEmail());
         //PostDto로 입력된 이메일 정보를 기반으로 권한 생성
         List<String> roles = authorityUtils.createRoles(accountPostDto.getEmail());
 
         String encryptedPassword = passwordEncoder.encode(accountPostDto.getPassword());
 //        Account beSavedAccount = accountPostDto.toEntity();
 //        beSavedAccount = beSavedAccount.builder().roles(roles).password(encryptedPassword).build();
+
         Account beSavedAccount = new Account(
                 accountPostDto.getDisplayName(),
                 accountPostDto.getEmail(),
                 encryptedPassword, // 암호화된 비밀번호로 등록
                 roles           // 권한
         );
+
+//        Account beSavedAccount = Account.builder()
+//                .displayName(accountPostDto.getDisplayName())
+//                .email(accountPostDto.getEmail())
+//                .password(encryptedPassword)
+//                .roles(roles)
+//                .build();
 
         Account savedAccount = accountRepository.save(beSavedAccount);
 
@@ -135,5 +144,10 @@ public class AccountService {
         Optional<Account> findAccount = accountRepository.findByEmail(email);
         if(findAccount.isPresent())
             throw  new BusinessLogicException(ExceptionCode.MEMBER_EXISTS);
+    }
+    public Account findByEmail(String email) {
+        Optional<Account> accountOptional = accountRepository.findByEmail(email);
+        return accountOptional.orElseThrow(() ->
+                new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND)); // 해당 이메일로 찾은 Account가 없으면 null 반환
     }
 }
