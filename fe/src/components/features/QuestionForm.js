@@ -25,8 +25,7 @@ function QuestionForm() {
           <span className="instruction">
             The body of your question contains your problem details and results. Minimum 220 characters.
           </span>
-          <ReactQuill theme="snow" value={value} onChange={setValue} />
-          <BodyInput></BodyInput>
+          <StyledReactQuill theme="snow" value={value} onChange={setValue} />
         </BodyForm>
         <TagsForm>
           <span className="title">Tags</span>
@@ -106,6 +105,7 @@ const TitleForm = styled.div`
 `;
 
 const BodyForm = styled(TitleForm)`
+  min-height: 500px;
   margin-top: 12px;
 `;
 
@@ -117,7 +117,9 @@ const SubmitContainer = styled.div`
   display: flex;
   flex-direction: row;
   margin-top: 12px;
+  margin-bottom: 30px;
 `;
+
 const Btn = styled.button`
   height: 38px;
   padding: 10.5px;
@@ -147,7 +149,9 @@ const Input = styled.input`
 `;
 
 const TitleInput = styled(Input)``;
-const BodyInput = styled(Input)`
-  min-height: 260px;
-`;
+
 const TagsInput = styled(Input)``;
+
+const StyledReactQuill = styled(ReactQuill)`
+  height: 360px;
+`;
