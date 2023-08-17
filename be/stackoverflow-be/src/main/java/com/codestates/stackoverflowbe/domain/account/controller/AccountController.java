@@ -6,7 +6,6 @@ import com.codestates.stackoverflowbe.domain.account.service.AccountService;
 import com.codestates.stackoverflowbe.global.constants.HttpStatusCode;
 import com.codestates.stackoverflowbe.global.response.MultiResponseDto;
 import com.codestates.stackoverflowbe.global.response.SingleResponseDto;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -22,7 +21,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @Validated
-@RequestMapping("/accounts")
+@RequestMapping("/v1/accounts")
 public class AccountController {
     private final AccountService accountService;
 
@@ -31,34 +30,44 @@ public class AccountController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity postMember(@Valid @RequestBody AccountDto.Post accountPostDto) {
+    public ResponseEntity postAccount(@Valid @RequestBody AccountDto.Post accountPostDto) {
         AccountDto.Response accountResponseDto = accountService.createAccount(accountPostDto);
 
-        return new ResponseEntity(new SingleResponseDto<>(HttpStatusCode.CREATED,"member created!",accountResponseDto), HttpStatus.CREATED);
+        return new ResponseEntity(new SingleResponseDto<>(HttpStatusCode.CREATED.getStatusCode(),HttpStatusCode.CREATED.getMessage(), accountResponseDto), HttpStatus.CREATED);
     }
 
-//    @GetMapping("/login")
-//    public String getLogin() {
-//        return "redirect:/login.html";
-//    }
-//
-//    @PostMapping("/authenticate")
+    @GetMapping("/{accountId}")
+    ResponseEntity getAccount(@Positive @PathVariable("accountId") long accountId) {
+        AccountDto.Response accountResponse= accountService.findAccount(accountId);
+        return ResponseEntity.ok(new SingleResponseDto<>(HttpStatusCode.CREATED.getStatusCode(), HttpStatusCode.CREATED.getMessage(), accountResponse));
+    }
 
 
     @GetMapping
-    public ResponseEntity getMembers(@Positive @RequestParam int page,
-                                     @Positive @RequestParam int size) {
+    public ResponseEntity getAccounts(@Positive @RequestParam int page,
+                                      @Positive @RequestParam int size) {
         Page<Account> accountsPage = accountService.findAccounts(page-1, size);
         List<Account> accounts = accountsPage.getContent();
 
         return new ResponseEntity<>(
-                new MultiResponseDto<>(HttpStatusCode.OK, "get accountsPage", accounts, accountsPage)
+                new MultiResponseDto<>(HttpStatusCode.OK.getStatusCode(), HttpStatusCode.OK.getMessage(), accounts, accountsPage)
         , HttpStatus.OK);
     }
 
-    @GetMapping("is-admin")
-    public String isAdmin() {
-        return "you are a admin";
+    @PatchMapping("/{accountId}")
+    public ResponseEntity patchAccount(@Valid @RequestBody AccountDto.Patch accountPatchDto,
+                                       @Positive @PathVariable("accountId") long accountId) {
+            AccountDto.Response responseDto = accountService.updateAccount(accountPatchDto, accountId);
+
+            return ResponseEntity.ok(SingleResponseDto.builder().status(HttpStatusCode.OK.getStatusCode())
+                    .message(HttpStatusCode.OK.getMessage()).data(responseDto).build());
     }
+
+    @DeleteMapping("/{accountId}")
+    public ResponseEntity deleteAccount(@Valid @PathVariable("accountId") long accountId) {
+            accountService.deleteAccount(accountId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 
 }

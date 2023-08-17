@@ -1,5 +1,6 @@
 package com.codestates.stackoverflowbe.domain.vote.entity;
 
+import com.codestates.stackoverflowbe.domain.account.entity.Account;
 import com.codestates.stackoverflowbe.domain.answer.entity.Answer;
 import com.codestates.stackoverflowbe.global.audit.BaseTimeEntity;
 import com.codestates.stackoverflowbe.domain.question.entity.Question;
@@ -22,13 +23,14 @@ public class Vote extends BaseTimeEntity {
 
     private int amount;
 
+    @ManyToOne
+    @JoinColumn(name = "ACCOUNT_ID")
+    private Account account;
 
     @OneToOne
     private Answer answer;
 
     @OneToOne
     private Question question;
-
-
 
 }

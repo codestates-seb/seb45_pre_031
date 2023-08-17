@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ApiResponse {
     @Schema(example = "OK")
-    private HttpStatusCode status;
+    private int status;
 
     @Schema(example = "7eleven")
     private String message;
