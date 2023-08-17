@@ -103,7 +103,21 @@ function LoginPage () {
     } catch (error) {
       console.error("Error during login:", error);
     }
+  };
 
+  const googleLoginHandler = async () => {
+    const googleLoginUrl = "http://localhost:8080/oauth2/authorization/google";
+
+    // 로그인 팝업
+    const popup = window.open(googleLoginUrl, "_blank");
+
+    // 팝업 닫힘 처리
+    const popupCloseInterval = setInterval(() => {
+      if (popup.closed) {
+        clearInterval(popupCloseInterval);
+        navigate("/");
+      }
+    }, 1000);
   };
 
   return (
@@ -113,7 +127,8 @@ function LoginPage () {
           <img src="https://media.discordapp.net/attachments/1138344984454631504/1138711197278015569/image.png?width=612&height=708" alt="" />
         </LoginLogoContiner>
         <LoginBtnContainer>
-          <GoogleLoginBtn>
+          <GoogleLoginBtn
+            onClick={googleLoginHandler}>
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1024px-Google_%22G%22_Logo.svg.png" alt="" />
             Log in with Google</GoogleLoginBtn>
         </LoginBtnContainer>
@@ -163,7 +178,7 @@ function LoginPage () {
         </LoginFormContainer>
         <LoginTextBelowContainer>
             Don't have an accout?
-            <a>Sign up</a>
+            <a href="/membership">Sign up</a>
         </LoginTextBelowContainer>
       </LoginContentContainet>
     </LoginPageContainer>
@@ -353,6 +368,11 @@ const LoginTextBelowContainer = styled.div`
 
   > a {
     color: rgb(0, 116, 204);
+    text-decoration: none;
+
+    &:hover {
+      color: hsl(206,100%,52%);
+    }
   }
 `;
 
