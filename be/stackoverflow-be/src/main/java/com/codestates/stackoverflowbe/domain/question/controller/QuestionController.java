@@ -40,22 +40,6 @@ public class QuestionController {
         this.accountService = accountService;
     }
 
-
-    @Operation(summary = "asdf")
-    @PostMapping("/test")
-    public ResponseEntity<Question> createTestQuestion(@RequestBody QuestionUpdateDto questionPostDto,
-                                                       @RequestParam String email) {
-        Account account = accountService.findByEmail(email);
-        Question question = questionService.createQuestion(questionPostDto, account);
-
-        URI location = UriComponentsBuilder.newInstance()
-                .path("/{id}")
-                .buildAndExpand(question)
-                .toUri();
-
-        return ResponseEntity.created(location).build();
-    }
-
     // 질문 생성 요청을 처리하는 메서드
     @Operation(summary = "Post Question", description = "질문 생성 기능")
     @PostMapping

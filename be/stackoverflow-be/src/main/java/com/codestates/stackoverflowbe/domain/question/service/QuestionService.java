@@ -6,6 +6,8 @@ import com.codestates.stackoverflowbe.domain.question.entity.Question;
 import com.codestates.stackoverflowbe.domain.question.repository.QuestionRepository;
 import com.codestates.stackoverflowbe.domain.tag.entity.Tag;
 import com.codestates.stackoverflowbe.domain.tag.repository.TagRepository;
+import com.codestates.stackoverflowbe.global.exception.BusinessLogicException;
+import com.codestates.stackoverflowbe.global.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,24 +29,12 @@ public class QuestionService {
     // 새로운 질문 생성
     public Question createQuestion(QuestionUpdateDto questionDto, Account account) {
         // 새로운 질문 엔티티를 생성하고 정보를 설정합니다.
-
-        List<Tag> tags = new ArrayList<>();
-        tags.add(Tag.builder()
-                .tagName("tag1")
-                .build());
-
-        tags.add(Tag.builder()
-                .tagName("tag2")
-                .build());
-
         Question newQuestion = new Question();
         newQuestion.setTitle(questionDto.getTitle());
         newQuestion.setBody(questionDto.getBody());
         newQuestion.setExpectContents(questionDto.getExpectContents());
         newQuestion.setAccount(account);
         newQuestion.setViewCount(0L);
-        newQuestion.setTags(tags);
-
 
         // 데이터베이스에 질문을 저장하고 반환합니다.
         return questionRepository.save(newQuestion);
@@ -57,7 +47,8 @@ public class QuestionService {
 
     // 특정 ID에 해당하는 질문 조회
     public Question findQuestionById(Long questionId) {
-        return questionRepository.findById(questionId).orElse(null);
+        return questionRepository.findById(questionId).orElseThrow(() ->
+                new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
     }
 
     // 질문 저장

@@ -45,7 +45,8 @@ public class AnswerController {
 
     @Operation(summary = "Update Answer API", description = "답변 수정 기능")
     @PatchMapping("/{answer-id}")
-    public ResponseEntity<HttpStatus> patchAnswer(@PathVariable("answer-id") @Positive long answerId, @Valid @RequestBody AnswerDto.Request requestDto) {
+    public ResponseEntity<HttpStatus> patchAnswer(@PathVariable("answer-id") @Positive long answerId,
+                                                  @Valid @RequestBody AnswerDto.Request requestDto) {
         answerService.updateAnswer(answerId, requestDto);
 
         return ResponseEntity.ok().build();

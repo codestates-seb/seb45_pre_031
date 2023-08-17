@@ -81,6 +81,10 @@ public class Question extends BaseTimeEntity {
         votes.add(vote);
     }
 
+    public void addTag(Tag tag) {
+        tags.add(tag);
+    }
+
     // 질문을 업데이트하는 메서드
     public void updateQuestion(QuestionUpdateRequestDto updateDto) {
         this.setTitle(updateDto.getTitle());
