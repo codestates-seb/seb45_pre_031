@@ -28,6 +28,8 @@ import java.util.Map;
 //OAuth2 인증이 성공한 이후 동작 (SimpleUrlAuthenticationSuccessHandler : 인증 성공했을 때 URL 지정 등 역할 수행)
 public class OAuth2AccountSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
+    private static String URL_S3_ENDPOINT = "http://seveneleven-stackoverflow-s3.s3-website.ap-northeast-2.amazonaws.com";
+
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
     private final AccountService accountService;
@@ -43,11 +45,15 @@ public class OAuth2AccountSuccessHandler extends SimpleUrlAuthenticationSuccessH
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         //OAuth2인증이 성공
+        log.info("# OAuth2AccountSuccessHandler success!");
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         String email = (String) oAuth2User.getAttributes().get("email");
+        String name = (String) oAuth2User.getAttributes().get("name");
+        System.out.println("name: " + name);
+
         List<String> authorities = authorityUtils.createRoles(email);
 
-        saveAccount(email); // email을 DB에 저장하여 관리하며 매핑하기
+        saveAccount(email, name); // email을 DB에 저장하여 관리하며 매핑하기
         redirect(request, response, email, authorities);
 //        String profile = (String) oAuth2User.getAttributes().get("profile");
 //        Account account = buildOAuth2Account(email, profile);
@@ -55,8 +61,9 @@ public class OAuth2AccountSuccessHandler extends SimpleUrlAuthenticationSuccessH
     }
 
 
-    private void saveAccount(String email) {
+    private void saveAccount(String email, String displayName) {
         AccountDto.Post accountPostDto = new AccountDto.Post(email);
+        accountPostDto.setDisplayName(displayName);
         //OAuth 전용 DB 저장 로직
         accountService.createAccountOAuth2(accountPostDto);
     }
@@ -69,7 +76,7 @@ public class OAuth2AccountSuccessHandler extends SimpleUrlAuthenticationSuccessH
         String refreshToken = delegateRefreshToken(username);
 
         //FE 애플리케이션 쪽의 URI 생성.
-        String uri = createURI(accessToken, refreshToken).toString();
+        String uri = createURI(request, accessToken, refreshToken).toString();
         //SimpleUrlAuthenticationSuccessHandler에서 제공하는 sendRedirect() 메서드를 이용해 Frontend 애플리케이션 쪽으로 리다이렉트
         getRedirectStrategy().sendRedirect(request, response, uri);
 
@@ -100,19 +107,29 @@ public class OAuth2AccountSuccessHandler extends SimpleUrlAuthenticationSuccessH
 
         return refreshToken;
     }
-    private Object createURI(String accessToken, String refreshToken) {
+    private Object createURI(HttpServletRequest request, String accessToken, String refreshToken) {
         // HTTP 요청의 쿼리 파라미터나 헤더를 구성하기 위한 Map
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("access_token", accessToken);
         queryParams.add("refresh_token", refreshToken);
 
+        String requestScheme = request.getScheme();
+        String requestHost = request.getServerName();
+        int requestPort = request.getServerPort();
+
+
         //http://localhost/receive-token.html?access_token=XXX&refresh_token=YYY 형식으로 받도록 함.
         return UriComponentsBuilder
                 .newInstance()
-                .scheme("http")
-                .host("localhost")
+                .scheme(requestScheme)
+//                .host("localhost")
+                .port(3000)
 //                .port(80)
-                .path("/receive-token.html") // 이후 URI 수정
+//                .path("/receive-token.html")
+//                .path("/login") // 이후 URI 수정
+                .host(requestHost) //"http://seveneleven-stackoverflow-s3.s3-website.ap-northeast-2.amazonaws.com"
+                .path("/login")
+//                .port(requestPort) //S3는 80포트
                 .queryParams(queryParams)
                 .build()
                 .toUri();
