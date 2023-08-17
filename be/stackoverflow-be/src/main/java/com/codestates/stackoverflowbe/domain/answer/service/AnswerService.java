@@ -3,7 +3,7 @@ package com.codestates.stackoverflowbe.domain.answer.service;
 import com.codestates.stackoverflowbe.domain.answer.dto.AnswerDto;
 import com.codestates.stackoverflowbe.domain.answer.entity.Answer;
 import com.codestates.stackoverflowbe.domain.answer.repository.AnswerRepository;
-import com.codestates.stackoverflowbe.domain.comment.repository.CommentRepository;
+import com.codestates.stackoverflowbe.domain.comment.repository.QuestionCommentRepository;
 import com.codestates.stackoverflowbe.domain.question.entity.Question;
 import com.codestates.stackoverflowbe.domain.question.service.QuestionService;
 import com.codestates.stackoverflowbe.domain.vote.repository.VoteRepository;
@@ -22,14 +22,14 @@ import java.util.Optional;
 public class AnswerService {
     private final AnswerRepository answerRepository;
     private final QuestionService questionService;
-    private final CommentRepository commentRepository;
+    private final QuestionCommentRepository questionCommentRepository;
     private final VoteRepository voteRepository;
     private final VoteService voteService;
 
-    public AnswerService(AnswerRepository answerRepository, QuestionService questionService, CommentRepository commentRepository, VoteRepository voteRepository, VoteService voteService) {
+    public AnswerService(AnswerRepository answerRepository, QuestionService questionService, QuestionCommentRepository questionCommentRepository, VoteRepository voteRepository, VoteService voteService) {
         this.answerRepository = answerRepository;
         this.questionService = questionService;
-        this.commentRepository = commentRepository;
+        this.questionCommentRepository = questionCommentRepository;
         this.voteRepository = voteRepository;
         this.voteService = voteService;
     }
@@ -75,7 +75,7 @@ public class AnswerService {
     public void deleteAnswer(long answerId) {
         Answer findAnswer = findVerifiedAnswer(answerId);
         voteRepository.deleteAll(findAnswer.getVotes());
-        commentRepository.deleteAll(findAnswer.getComments());
+        questionCommentRepository.deleteAll(findAnswer.getQuestionComments());
         answerRepository.delete(findAnswer);
     }
 

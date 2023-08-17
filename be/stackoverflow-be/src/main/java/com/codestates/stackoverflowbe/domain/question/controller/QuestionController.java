@@ -59,7 +59,7 @@ public class QuestionController {
     // 질문 생성 요청을 처리하는 메서드
     @Operation(summary = "Post Question", description = "질문 생성 기능")
     @PostMapping
-    public ResponseEntity<SingleResponseDto<Question>> createQuestion(@RequestBody QuestionUpdateDto questionDto) {
+    public ResponseEntity<SingleResponseDto<?>> createQuestion(@RequestBody QuestionUpdateDto questionDto) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         // 요청을 보낸 사용자의 정보를 가져옵니다.
@@ -68,7 +68,7 @@ public class QuestionController {
         Question createdQuestion = questionService.createQuestion(questionDto, account);
         // 생성된 질문을 담은 응답 객체를 생성하여 반환합니다.
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new SingleResponseDto<>(HttpStatusCode.CREATED.getStatusCode(), "Question created!", createdQuestion));
+                .body(new SingleResponseDto<>(HttpStatusCode.CREATED.getStatusCode(), "Question created!", "TEST"));
     }
 
     // 질문 목록 조회 요청을 처리하는 메서드
