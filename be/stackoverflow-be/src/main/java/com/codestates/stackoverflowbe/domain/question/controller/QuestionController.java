@@ -16,10 +16,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
+import java.security.Principal;
 import java.util.List;
 
 @Tag(name = "Question", description = "질문 기능")
@@ -36,13 +40,30 @@ public class QuestionController {
         this.accountService = accountService;
     }
 
+
+    @Operation(summary = "asdf")
+    @PostMapping("/test")
+    public ResponseEntity<Question> createTestQuestion(@RequestBody QuestionUpdateDto questionPostDto,
+                                                       @RequestParam String email) {
+        Account account = accountService.findByEmail(email);
+        Question question = questionService.createQuestion(questionPostDto, account);
+
+        URI location = UriComponentsBuilder.newInstance()
+                .path("/{id}")
+                .buildAndExpand(question)
+                .toUri();
+
+        return ResponseEntity.created(location).build();
+    }
+
     // 질문 생성 요청을 처리하는 메서드
     @Operation(summary = "Post Question", description = "질문 생성 기능")
     @PostMapping
-    public ResponseEntity<SingleResponseDto<Question>> createQuestion(@RequestBody QuestionUpdateDto questionDto,
-                                                                      @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<SingleResponseDto<Question>> createQuestion(@RequestBody QuestionUpdateDto questionDto) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         // 요청을 보낸 사용자의 정보를 가져옵니다.
-        Account account = accountService.findByEmail(userDetails.getUsername());
+        Account account = accountService.findByEmail((String) principal);
         // QuestionService를 통해 새로운 질문을 생성하고 저장합니다.
         Question createdQuestion = questionService.createQuestion(questionDto, account);
         // 생성된 질문을 담은 응답 객체를 생성하여 반환합니다.

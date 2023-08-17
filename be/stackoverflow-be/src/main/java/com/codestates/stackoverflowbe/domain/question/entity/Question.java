@@ -64,9 +64,19 @@ public class Question extends BaseTimeEntity {
     public void setBody(String body) {
         this.body = body;
     }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
     public void setAccount(Account account) {
         this.account = account;
     }
+
+    public void setViewCount(Long viewCount) {
+        this.viewCount = viewCount;
+    }
+
     public void addVote(Vote vote) {
         votes.add(vote);
     }

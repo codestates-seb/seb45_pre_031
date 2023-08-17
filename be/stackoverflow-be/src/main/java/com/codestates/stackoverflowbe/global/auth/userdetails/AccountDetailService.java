@@ -43,6 +43,8 @@ public class AccountDetailService implements UserDetailsService {
             super(account.getAccountId(), account.getEmail(), account.getPassword(), account.getRoles());
         }
 
+
+
         @Override
         public Collection<? extends GrantedAuthority> getAuthorities() {
             return authorityUtils.createAuthorities(this.getRoles());

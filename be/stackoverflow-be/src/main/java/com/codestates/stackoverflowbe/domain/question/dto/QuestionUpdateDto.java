@@ -1,5 +1,6 @@
 package com.codestates.stackoverflowbe.domain.question.dto;
 
+import com.codestates.stackoverflowbe.domain.tag.entity.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,5 @@ import java.util.List;
 public class QuestionUpdateDto {
     private String title;
     private String body;
-    private String user_id;
-    private List<String> tags;
     private String expectContents;
 }

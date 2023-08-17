@@ -4,6 +4,9 @@ import com.codestates.stackoverflowbe.domain.account.entity.Account;
 import com.codestates.stackoverflowbe.domain.question.dto.QuestionUpdateDto;
 import com.codestates.stackoverflowbe.domain.question.entity.Question;
 import com.codestates.stackoverflowbe.domain.question.repository.QuestionRepository;
+import com.codestates.stackoverflowbe.domain.tag.entity.Tag;
+import com.codestates.stackoverflowbe.domain.tag.repository.TagRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,24 +15,36 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class QuestionService {
     private final QuestionRepository questionRepository;
-
-    public QuestionService(QuestionRepository questionRepository) {
-        this.questionRepository = questionRepository;
-    }
+    private final TagRepository tagRepository;
 
     // 새로운 질문 생성
     public Question createQuestion(QuestionUpdateDto questionDto, Account account) {
         // 새로운 질문 엔티티를 생성하고 정보를 설정합니다.
+
+        List<Tag> tags = new ArrayList<>();
+        tags.add(Tag.builder()
+                .tagName("tag1")
+                .build());
+
+        tags.add(Tag.builder()
+                .tagName("tag2")
+                .build());
+
         Question newQuestion = new Question();
         newQuestion.setTitle(questionDto.getTitle());
         newQuestion.setBody(questionDto.getBody());
-        newQuestion.setAccount(account);
         newQuestion.setExpectContents(questionDto.getExpectContents());
+        newQuestion.setAccount(account);
+        newQuestion.setViewCount(0L);
+        newQuestion.setTags(tags);
+
 
         // 데이터베이스에 질문을 저장하고 반환합니다.
         return questionRepository.save(newQuestion);
@@ -86,6 +101,7 @@ public class QuestionService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("viewCount").descending());
         return questionRepository.findByCreatedAtAfterOrderByViewCountDesc(monthAgo, pageable);
     }
+
     // 질문 목록을 Active: 수정 시간 최신순으로 가져오는 메서드
     public List<Question> getActiveQuestions() {
         List<Question> questions = questionRepository.findAllByOrderByModifiedAtDesc();

@@ -10,8 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TagDto {
-    private Long tagId;
-    private String name;
+    private String tagName;
     // ... 추가 필요한 정보들
 
     @Getter
