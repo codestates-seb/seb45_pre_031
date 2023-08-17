@@ -20,7 +20,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/v1/answer")
-@Tag(name = "Answer", description = "Answer Controller")
+@Tag(name = "Answer", description = "답변 기능")
 public class AnswerController {
     private final static String ANSWER_DEFAULT_URL = "/v1/answer";
     private final AnswerService answerService;
@@ -29,9 +29,9 @@ public class AnswerController {
         this.answerService = answerService;
     }
 
-    @Operation(summary = "Create Answer API", description = "Create Answer With Body", responses = {@ApiResponse(responseCode = "201", description = "CREATED")})
+    @Operation(summary = "Create Answer API", description = "답변 생성 기능", responses = {@ApiResponse(responseCode = "201", description = "CREATED")})
     @PostMapping
-    public ResponseEntity<SingleResponseDto<AnswerDto.Response>> postAnswer(@Valid @RequestBody AnswerDto.Request requestDto) {
+    public ResponseEntity<HttpStatus> postAnswer(@Valid @RequestBody AnswerDto.Request requestDto) {
         AnswerDto.Response responseDto = answerService.createAnswer(requestDto);
 
         URI location = UriComponentsBuilder
@@ -43,15 +43,15 @@ public class AnswerController {
         return ResponseEntity.created(location).build();
     }
 
-    @Operation(summary = "Update Answer API", description = "Update Answer With Answer Id, Body")
+    @Operation(summary = "Update Answer API", description = "답변 수정 기능")
     @PatchMapping("/{answer-id}")
-    public ResponseEntity<SingleResponseDto<AnswerDto.Response>> patchAnswer(@PathVariable("answer-id") @Positive long answerId, @Valid @RequestBody AnswerDto.Request requestDto) {
+    public ResponseEntity<HttpStatus> patchAnswer(@PathVariable("answer-id") @Positive long answerId, @Valid @RequestBody AnswerDto.Request requestDto) {
         AnswerDto.Response responseDto = answerService.updateAnswer(answerId, requestDto);
 
-        return ResponseEntity.ok(SingleResponseDto.<AnswerDto.Response>builder().status(HttpStatusCode.OK.getStatusCode()).message(HttpStatusCode.OK.getMessage()).data(responseDto).build());
+        return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "Get Answer API", description = "Get Answer With Answer Id")
+    @Operation(summary = "Get Answer API", description = "답변 조회 기능")
     @GetMapping("/{answer-id}")
     public ResponseEntity<SingleResponseDto<AnswerDto.Response>> getAnswer(@PathVariable("answer-id") @Positive long answerId) {
         AnswerDto.Response responseDto = answerService.findAnswer(answerId);
@@ -59,7 +59,7 @@ public class AnswerController {
         return ResponseEntity.ok(SingleResponseDto.<AnswerDto.Response>builder().status(HttpStatusCode.OK.getStatusCode()).message(HttpStatusCode.OK.getMessage()).data(responseDto).build());
     }
 
-    @Operation(summary = "Get Answers API", description = "Get Answers With Question Id, Page, Size")
+    @Operation(summary = "Get Answers API", description = "전체 답변 조회 기능")
     @GetMapping
     public ResponseEntity<MultiResponseDto<AnswerDto.Response>> getAnswers(@Positive @RequestParam int page, @Positive @RequestParam int size, @Positive @RequestParam long questionId) {
 //        int size = 15;
@@ -68,7 +68,7 @@ public class AnswerController {
         return ResponseEntity.ok(MultiResponseDto.<AnswerDto.Response>builder().status(HttpStatusCode.OK.getStatusCode()).message(HttpStatusCode.OK.getMessage()).data(pageResponseDtos.getContent()).page(pageResponseDtos).build());
     }
 
-    @Operation(summary = "Delete Answers API", description = "Delete Answers With Answer Id")
+    @Operation(summary = "Delete Answers API", description = "답변 삭제 기능")
     @DeleteMapping
     public ResponseEntity<HttpStatus> deleteAnswer(@PathVariable("answer-id") @Positive long answerId) {
         answerService.deleteAnswer(answerId);

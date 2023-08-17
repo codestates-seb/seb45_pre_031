@@ -39,22 +39,19 @@ public class AccountService {
     }
 
     public AccountDto.Response createAccount(AccountDto.Post accountPostDto) {
-        verifyExistsEmail(accountPostDto.getEmail());
+//        verifyExistsEmail(accountPostDto.getEmail());
         //PostDto로 입력된 이메일 정보를 기반으로 권한 생성
         List<String> roles = authorityUtils.createRoles(accountPostDto.getEmail());
 
         String encryptedPassword = passwordEncoder.encode(accountPostDto.getPassword());
 //        Account beSavedAccount = accountPostDto.toEntity();
 //        beSavedAccount = beSavedAccount.builder().roles(roles).password(encryptedPassword).build();
-        Account beSavedAccount = new Account(
-                0L, // id 지정하지 않음 (AUTO_INCREMENT)
-                accountPostDto.getDisplayName(),
-                accountPostDto.getEmail(),
-                encryptedPassword, // 암호화된 비밀번호로 등록
-                roles,             // 이메일 정보에 따른 권한 등록
-                null,   //답변 목록 null
-                null              //투표 목록 null
-        );
+        Account beSavedAccount = Account.builder()
+                .displayName(accountPostDto.getDisplayName())
+                .email(accountPostDto.getEmail())
+                .password(encryptedPassword)
+                .roles(roles)
+                .build();
 
         Account savedAccount = accountRepository.save(beSavedAccount);
 

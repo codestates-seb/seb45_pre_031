@@ -9,6 +9,8 @@ import com.codestates.stackoverflowbe.domain.question.entity.Question;
 import com.codestates.stackoverflowbe.domain.question.service.QuestionService;
 import com.codestates.stackoverflowbe.global.response.SingleResponseDto;
 import com.codestates.stackoverflowbe.global.constants.HttpStatusCode;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -20,10 +22,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Question", description = "질문 기능")
 @Slf4j
 @RestController
 @Validated
-@RequestMapping("/questions")
+@RequestMapping("/v1/questions")
 public class QuestionController {
     private final QuestionService questionService;
     private final AccountService accountService;
@@ -34,6 +37,7 @@ public class QuestionController {
     }
 
     // 질문 생성 요청을 처리하는 메서드
+    @Operation(summary = "Post Question", description = "질문 생성 기능")
     @PostMapping
     public ResponseEntity<SingleResponseDto<Question>> createQuestion(
             @RequestBody QuestionUpdateDto questionDto,
@@ -44,10 +48,11 @@ public class QuestionController {
         Question createdQuestion = questionService.createQuestion(questionDto, account);
         // 생성된 질문을 담은 응답 객체를 생성하여 반환합니다.
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new SingleResponseDto<>(HttpStatusCode.CREATED, "Question created!", createdQuestion));
+                .body(new SingleResponseDto<>(HttpStatusCode.CREATED.getStatusCode(), "Question created!", createdQuestion));
     }
 
     // 질문 목록 조회 요청을 처리하는 메서드
+    @Operation(summary = "Get All Question", description = "전체 질문 조회 기능")
     @GetMapping
     public ResponseEntity<QuestionListResponseDto> getQuestions() {
         // QuestionService를 통해 모든 질문 목록을 가져옵니다.
@@ -57,6 +62,7 @@ public class QuestionController {
     }
 
     // 질문 수정 요청을 처리하는 메서드
+    @Operation(summary = "Put Question", description = "질문 수정 기능")
     @PutMapping("/{questionId}")
     public ResponseEntity<SingleResponseDto<Question>> updateQuestion(
             @PathVariable Long questionId,
@@ -73,10 +79,11 @@ public class QuestionController {
         question.updateQuestion(updateDto);
         questionService.saveQuestion(question);
         // 수정된 질문을 반환합니다.
-        return ResponseEntity.ok(new SingleResponseDto<>(HttpStatusCode.OK, "Question updated!", question));
+        return ResponseEntity.ok(new SingleResponseDto<>(HttpStatusCode.OK.getStatusCode(), "Question updated!", question));
     }
 
     // 질문 삭제 요청을 처리하는 메서드
+    @Operation(summary = "Delete Question", description = "질문 삭제 기능")
     @DeleteMapping("/{questionId}")
     public ResponseEntity<SingleResponseDto<String>> deleteQuestion(
             @PathVariable Long questionId,
@@ -91,15 +98,16 @@ public class QuestionController {
         // 질문 작성자와 현재 로그인한 사용자가 일치하는지 확인합니다.
         if (!question.getAccount().equals(account)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(new SingleResponseDto<>(HttpStatusCode.FORBIDDEN, "You don't have permission to delete this question.", null));
+                    .body(new SingleResponseDto<>(HttpStatusCode.FORBIDDEN.getStatusCode(), "You don't have permission to delete this question.", null));
         }
         // 질문을 삭제합니다.
         questionService.deleteQuestion(question);
         // 삭제 성공 응답을 반환합니다.
-        return ResponseEntity.ok(new SingleResponseDto<>(HttpStatusCode.OK, "Question deleted!", null));
+        return ResponseEntity.ok(new SingleResponseDto<>(HttpStatusCode.OK.getStatusCode(), "Question deleted!", null));
     }
 
     // 사용자별 질문 조회 요청을 처리하는 메서드
+    @Operation(summary = "Get User's Question", description = "사용자 별 질문 조회 기능")
     @GetMapping("/user")
     public ResponseEntity<List<Question>> getUserQuestions(@AuthenticationPrincipal UserDetails userDetails) {
         // 현재 로그인한 사용자의 정보를 가져옵니다.
@@ -111,6 +119,7 @@ public class QuestionController {
     }
 
     // 최신 질문 조회 요청을 처리하는 메서드
+    @Operation(summary = "Get Question Sorted By CreatedAt", description = "최신순 질문 조회 기능")
     @GetMapping("/newest")
     public ResponseEntity<Page<Question>> getNewestQuestions(
             @RequestParam(defaultValue = "0") int page,
@@ -122,6 +131,7 @@ public class QuestionController {
     }
 
     // 인기 질문 조회 요청을 처리하는 메서드
+    @Operation(summary = "Get Question Sorted By Views", description = "조회순 질문 조회 기능")
     @GetMapping("/hot")
     public ResponseEntity<Page<Question>> getHotQuestions(
             @RequestParam(defaultValue = "0") int page,
@@ -133,6 +143,7 @@ public class QuestionController {
     }
 
     // 지난 주 동안 가장 많이 본 질문 조회 요청을 처리하는 메서드
+    @Operation(summary = "Get Question Sorted By CreatedAt For Last Week", description = "지난주동안 작성된 질문 최신순 조회 기능")
     @GetMapping("/week")
     public ResponseEntity<Page<Question>> getWeekQuestions(
             @RequestParam(defaultValue = "0") int page,
@@ -144,6 +155,7 @@ public class QuestionController {
     }
 
     // 지난 달 동안 가장 많이 본 질문 조회 요청을 처리하는 메서드
+    @Operation(summary = "Get Question Sorted By Views For Last Month", description = "지난달동안 작성된 질문 조회순 조회 기능")
     @GetMapping("/month")
     public ResponseEntity<Page<Question>> getMonthQuestions(
             @RequestParam(defaultValue = "0") int page,

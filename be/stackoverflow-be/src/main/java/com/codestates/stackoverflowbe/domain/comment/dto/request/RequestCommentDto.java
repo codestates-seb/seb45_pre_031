@@ -7,6 +7,9 @@ import lombok.Getter;
 public class RequestCommentDto {
 
     private String content;
+    private Long accountId;
+    private Long answerId;
+    private Long questionId;
 
     public Comment toEntity() {
         return Comment.builder()
