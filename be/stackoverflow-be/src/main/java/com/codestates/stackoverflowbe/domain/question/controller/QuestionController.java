@@ -60,7 +60,6 @@ public class QuestionController {
         // 질문 목록과 함께 응답 객체를 생성하여 반환합니다.
         return ResponseEntity.ok(new QuestionListResponseDto(HttpStatusCode.OK, "Questions retrieved!", questions));
     }
-
     // 질문 수정 요청을 처리하는 메서드
     @Operation(summary = "Put Question", description = "질문 수정 기능")
     @PutMapping("/{questionId}")
@@ -81,7 +80,6 @@ public class QuestionController {
         // 수정된 질문을 반환합니다.
         return ResponseEntity.ok(new SingleResponseDto<>(HttpStatusCode.OK.getStatusCode(), "Question updated!", question));
     }
-
     // 질문 삭제 요청을 처리하는 메서드
     @Operation(summary = "Delete Question", description = "질문 삭제 기능")
     @DeleteMapping("/{questionId}")
@@ -105,7 +103,17 @@ public class QuestionController {
         // 삭제 성공 응답을 반환합니다.
         return ResponseEntity.ok(new SingleResponseDto<>(HttpStatusCode.OK.getStatusCode(), "Question deleted!", null));
     }
-
+    // 질문의 상세 정보를 조회하는 메서드
+    @GetMapping("/{questionId}")
+    public ResponseEntity<SingleResponseDto<Question>> getQuestionDetail(@PathVariable Long questionId) {
+        // QuestionService를 통해 특정 ID에 해당하는 질문을 조회합니다.
+        Question question = questionService.findQuestionById(questionId);
+        if (question == null) {
+            return ResponseEntity.notFound().build();
+        }
+        // 조회한 질문을 반환합니다.
+        return ResponseEntity.ok(new SingleResponseDto<>(HttpStatusCode.OK, "Question retrieved!", question));
+    }
     // 사용자별 질문 조회 요청을 처리하는 메서드
     @Operation(summary = "Get User's Question", description = "사용자 별 질문 조회 기능")
     @GetMapping("/user")
@@ -117,7 +125,6 @@ public class QuestionController {
         // 조회한 질문 목록을 반환합니다.
         return ResponseEntity.ok(userQuestions);
     }
-
     // 최신 질문 조회 요청을 처리하는 메서드
     @Operation(summary = "Get Question Sorted By CreatedAt", description = "최신순 질문 조회 기능")
     @GetMapping("/newest")
@@ -129,7 +136,6 @@ public class QuestionController {
         // 최신 질문 페이지를 반환합니다.
         return ResponseEntity.ok(newestQuestions);
     }
-
     // 인기 질문 조회 요청을 처리하는 메서드
     @Operation(summary = "Get Question Sorted By Views", description = "조회순 질문 조회 기능")
     @GetMapping("/hot")
@@ -141,7 +147,6 @@ public class QuestionController {
         // 인기 질문 페이지를 반환합니다.
         return ResponseEntity.ok(hotQuestions);
     }
-
     // 지난 주 동안 가장 많이 본 질문 조회 요청을 처리하는 메서드
     @Operation(summary = "Get Question Sorted By CreatedAt For Last Week", description = "지난주동안 작성된 질문 최신순 조회 기능")
     @GetMapping("/week")
@@ -153,7 +158,6 @@ public class QuestionController {
         // 지난 주의 가장 많이 본 질문 페이지를 반환합니다.
         return ResponseEntity.ok(weekQuestions);
     }
-
     // 지난 달 동안 가장 많이 본 질문 조회 요청을 처리하는 메서드
     @Operation(summary = "Get Question Sorted By Views For Last Month", description = "지난달동안 작성된 질문 조회순 조회 기능")
     @GetMapping("/month")
@@ -164,5 +168,25 @@ public class QuestionController {
         Page<Question> monthQuestions = questionService.getMonthQuestions(page, size);
         // 지난 달의 가장 많이 본 질문 페이지를 반환합니다.
         return ResponseEntity.ok(monthQuestions);
+    }
+    // 질문 목록 조회 요청을 처리하는 메서드 (Active: 수정 시간 최신순으로)
+    @GetMapping("/active")
+    public ResponseEntity<QuestionListResponseDto> getActiveQuestions() {
+        List<Question> activeQuestions = questionService.getActiveQuestions();
+        return ResponseEntity.ok(new QuestionListResponseDto(HttpStatusCode.OK, "Active questions retrieved!", activeQuestions));
+    }
+
+    // 질문 목록 조회 요청을 처리하는 메서드 (Score: Score 순으로)
+    @GetMapping("/score")
+    public ResponseEntity<QuestionListResponseDto> getScoreQuestions() {
+        List<Question> scoreQuestions = questionService.getScoreQuestions();
+        return ResponseEntity.ok(new QuestionListResponseDto(HttpStatusCode.OK, "Scored questions retrieved!", scoreQuestions));
+    }
+
+    // 질문 목록 조회 요청을 처리하는 메서드 (Unanswered: 답변이 없는 질문 필터)
+    @GetMapping("/unanswered")
+    public ResponseEntity<QuestionListResponseDto> getUnansweredQuestions() {
+        List<Question> unansweredQuestions = questionService.getUnansweredQuestions();
+        return ResponseEntity.ok(new QuestionListResponseDto(HttpStatusCode.OK, "Unanswered questions retrieved!", unansweredQuestions));
     }
 }
