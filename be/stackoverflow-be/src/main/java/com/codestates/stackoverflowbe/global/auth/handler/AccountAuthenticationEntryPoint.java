@@ -17,7 +17,7 @@ public class AccountAuthenticationEntryPoint implements AuthenticationEntryPoint
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
         Exception exception = (Exception) request.getAttribute("exception");
-        ErrorResponder.sendErrorResponse(response, HttpStatus.UNAUTHORIZED); // 인증 실패를 나타내는 FORBIDDEN
+        ErrorResponder.sendErrorResponse(response, HttpStatus.UNAUTHORIZED); // 인증 실패를 나타내는 UNAUTHORIZED
 
         logExceptionMessage(authException, exception);
 

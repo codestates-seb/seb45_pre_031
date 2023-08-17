@@ -24,12 +24,14 @@ public class Vote {
     @Column
     private boolean upVote;
 
-    @Column
-    private boolean downVote;
 
     @ManyToOne
     @JoinColumn(name = "ACCOUNT_ID")
     private Account account;
+
+    @Column
+    private boolean downVote;
+
 
     @ManyToOne
     @JoinColumn(name = "QUESTION_ID")
@@ -42,4 +44,5 @@ public class Vote {
     public void setAnswer(Answer answer) {
         this.answer = answer;
     }
+
 }
