@@ -1,86 +1,101 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { styled } from "styled-components";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { loginSuccess, loginFailure } from "../redux/actions/loginAction";
+import { loginSuccess, loginFailure, emailMismatchError, passwordMismatchError } from "../redux/actions/loginAction";
 
 function LoginPage () {
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [ username, setUsername ] = useState('');
-  const [ password, setPassword ] = useState('');
+  const [ email, setEmail ] = useState("");
+  const [ password, setPassword ] = useState("");
+  const [ emailError, setEmailError ] = useState(false);
+  const [ passwordError, setPasswordError ] = useState(false);
+  const [emailMismatchError, setEmailMismatchError] = useState("");
+  const [passwordMismatchError, setPasswordMismatchError] = useState("");
 
-  // 입력 시, onChange 발생 -> state 변경 -> value 변경
-  const onUsernameHandler = (event) => {
-    setUsername(event.currentTarget.value);
-  };
+  const loginError = useSelector(state => state.login.error);
 
-  const onPasswordHandler = (event) => {
-    setPassword(event.currentTarget.value);
-  };
+  const onEmailHandler = (e) => {
+    setEmail(e.currentTarget.value);
+    if (emailError) {
+      setEmailError(false); // 값 입력 시 에러 스타일 clear
+    }
+  }
 
-  const onLoginHadler = async (event) => {
+  const onPasswordHandler = (e) => {
+    setPassword(e.currentTarget.value);
+    if (passwordError) {
+      setPasswordError(false); // 값 입력 시 에러 스타일 clear
+    }
+  }
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$/;
+    return emailRegex.test(email);
+  }
+
+  const validatePassword = (password) => {
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    return passwordRegex.test(password);
+  }
+
+  const loginHanler = async (e) => {
     // page refresh 방지
-    event.preventDefault();
+    e.preventDefault();
 
-    // 서버 요청
+    // 이메일 input 값이 비어있거나 형식에 맞지 않게 입력 받을 경우 error 메시지 표출
+    if (email === "") {
+      setEmailError("Email cannot be empty.");
+    } else if (!validateEmail(email)) {
+      setEmailError("The email is not a valid email address.");
+    }
+
+    // 비밀번호 input 값이 비어있거나 형식에 맞지 않게 입력 받을 경우 error 메시지 표출
+    if (password === "") {
+      setPasswordError("Password cannot be empty.");
+    } else if (!validatePassword(password)) {
+      setPasswordError("The password is not a valid password.");
+    }
+
+    // 유효한 이메일과 비밀번호를 입력할 경우 서버로 전송
     try {
-      const response = await axios.post("http://localhost:8080/v1/accounts/authenticate", {
-        username,
-        password,
-      });
-
+      const response = await axios.post("/v1/accounts/authenticate", { email, password });
       if (response.data.success) {
-        // 서버에서 받은 토큰
+        // 서버에서 토큰을 받음
         const accessToken = response.data.accessToken;
         const refreshToken = response.data.refreshToken;
 
-        // 로컬 스토리지에 토큰 저장
+        // 토큰을 로컬 스토리지에 저장
         localStorage.setItem("access_token", accessToken);
         localStorage.setItem("refresh_token", refreshToken);
 
-        // 로그인 성공 처리
-        dispatch(loginSuccess(accessToken));
+        // 토큰을 헤더에 포함시켜서 요청
+        axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.accessToken}`;
 
-        // 로그인 성공 후 리다이렉션 처리
-        navigate("/");
+         // 로그인 성공 처리
+         dispatch(loginSuccess(accessToken));
 
+         // 로그인 성공 후 리다이렉션 처리
+         navigate("/");
+
+      } else if (response.data.errorType === "email_not_found") {
+        dispatch(emailMismatchError("No user found with matching email."));
+        setPasswordMismatchError("");
+      } else if (response.data.errorType === "password_mismatch") {
+        dispatch(passwordMismatchError("Password dose not match."));
+        setEmailMismatchError("");
       } else {
         dispatch(loginFailure(response.data.message));
       }
     } catch (error) {
       console.error("Error during login:", error);
-      dispatch(loginFailure("An error occurred during login."));
     }
+
   };
-
-  const onGoogleLoginHandler = () => {
-    // Google 로그인 URL
-    const googleLoginUrl = "http://localhost:8080/oauth2/authorization/google";
-
-    // Google 로그인 팝업
-    window.open(googleLoginUrl, "_blank");
-  };
-
-  useEffect(() => {
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const accessToken = urlSearchParams.get("access_token");
-    const refreshToken = urlSearchParams.get("refresh_token");
-
-    if (accessToken && refreshToken) {
-      // 로컬 스토리지에 토큰 저장
-      localStorage.setItem("access_token", accessToken);
-      localStorage.setItem("refresh_token", refreshToken);
-
-      // 로그인 성공 처리
-      dispatch(loginSuccess(accessToken));
-
-      // 로그인 성공 후 리다이렉션 처리
-      navigate("/");
-    }
-  });
 
   return (
     <LoginPageContainer>
@@ -89,18 +104,26 @@ function LoginPage () {
           <img src="https://media.discordapp.net/attachments/1138344984454631504/1138711197278015569/image.png?width=612&height=708" alt="" />
         </LoginLogoContiner>
         <LoginBtnContainer>
-          <GoogleLoginBtn
-            onClick={onGoogleLoginHandler}>
+          <GoogleLoginBtn>
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1024px-Google_%22G%22_Logo.svg.png" alt="" />
             Log in with Google</GoogleLoginBtn>
         </LoginBtnContainer>
         <LoginFormContainer>
           <LoginForm>
             <LoginInputForm className="login-email-form">
-              <LoginLabel>Email</LoginLabel>
+              <div>
+                <LoginLabel>Email</LoginLabel>
+              </div>
               <LoginInput
-                className="login-email-input"
-                onClick={onUsernameHandler} />
+                className={`login-email-input ${emailError || emailMismatchError ? "error" : ""}`}
+                type="email"
+                value={email}
+                onChange={onEmailHandler}
+                />
+                {emailError &&
+                  <ErrorText>{emailError}</ErrorText>}
+                {emailMismatchError &&
+                  <ErrorText>{emailMismatchError}</ErrorText>}
             </LoginInputForm>
             <LoginInputForm className="login-password-form">
               <div>
@@ -108,12 +131,19 @@ function LoginPage () {
                 <p>Forgot password?</p>
               </div>
               <LoginInput
-                className="login-password-input"
-                onChange={onPasswordHandler} />
+                className={`login-password-input ${passwordError || passwordMismatchError ? "error" : ""}`}
+                type="password"
+                value={password}
+                onChange={onPasswordHandler}
+                />
+                {passwordError &&
+                  <ErrorText>{passwordError}</ErrorText>}
+                {passwordMismatchError &&
+                  <ErrorText>{passwordMismatchError}</ErrorText>}
             </LoginInputForm>
             <LoginBtnContainer>
               <LoginBtn
-                onClick={onLoginHadler}>Log in</LoginBtn>
+                onClick={loginHanler}>Log in</LoginBtn>
             </LoginBtnContainer>
           </LoginForm>
         </LoginFormContainer>
@@ -126,6 +156,7 @@ function LoginPage () {
 
   );
 };
+
 
 const LoginPageContainer = styled.section`
   width: 100%;
@@ -171,6 +202,10 @@ const LoginForm = styled.form`
 const LoginInputForm = styled.div`
   width: 100%;
 
+  > div {
+    margin-bottom: 4px;
+  }
+
   &.login-password-form {
 
     > div {
@@ -205,7 +240,16 @@ const LoginInput = styled.input`
     box-shadow: 0 0 0 4px hsla(206, 100%, 40%, 0.15);
     outline: none;
   }
+
+  &.error {
+    border: 1px solid hsl(358,68%,59%);
+
+    &:focus {
+      box-shadow: 0 0 0 4px hsla(358,62%,47%,0.15);
+    }
+  }
 `;
+
 
 const LoginBtnContainer = styled.div`
   width: 100%;
@@ -295,6 +339,12 @@ const LoginTextBelowContainer = styled.div`
   > a {
     color: rgb(0, 116, 204);
   }
+`;
+
+const ErrorText = styled.p`
+  font-size: 12px;
+  color: hsl(358, 68%, 59%);
+  margin-top: 4px;
 `;
 
 export default LoginPage;
