@@ -235,7 +235,7 @@ function LoginPage (props) {
           <SocialLoginContainer>
             <GoogleLoginButton
               onClick={onGoogleLoginHandler}>
-                Google로 로그인
+                구글로 로그인
             </GoogleLoginButton>
           </SocialLoginContainer>
           <FormContainer>
