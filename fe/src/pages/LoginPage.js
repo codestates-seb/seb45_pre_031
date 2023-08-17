@@ -7,6 +7,7 @@ import { loginSuccess, loginFailure, emailMismatchError, passwordMismatchError }
 import PasswordModal from "../components/features/PasswordModal";
 
 function LoginPage () {
+  const LOCAL_SERVER_ADRESS = process.env.REACT_APP_SEVER_ADRESS;
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -72,7 +73,7 @@ function LoginPage () {
 
     // 유효한 이메일과 비밀번호를 입력할 경우 서버로 전송
     try {
-      const response = await axios.post("/v1/accounts/authenticate", { email, password });
+      const response = await axios.post(`${LOCAL_SERVER_ADRESS}/v1/accounts/authenticate`, { email, password });
       if (response.data.success) {
         // 서버에서 토큰을 받음
         const accessToken = response.data.accessToken;
@@ -106,7 +107,7 @@ function LoginPage () {
   };
 
   const googleLoginHandler = async () => {
-    const googleLoginUrl = "http://localhost:8080/oauth2/authorization/google";
+    const googleLoginUrl = `${LOCAL_SERVER_ADRESS}/oauth2/authorization/google`;
 
     // 로그인 팝업
     const popup = window.open(googleLoginUrl, "_blank");
@@ -115,7 +116,21 @@ function LoginPage () {
     const popupCloseInterval = setInterval(() => {
       if (popup.closed) {
         clearInterval(popupCloseInterval);
-        navigate("/");
+        const urlParams = new URLSearchParams(popup.location.search);
+        const accessToken = urlParams.get("access_token");
+        const refreshToken = urlParams.get("refresh_token");
+
+        if (accessToken && refreshToken) {
+          localStorage.setItem("access_token", accessToken);
+          localStorage.setItem("refresh_token", refreshToken);
+
+          axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+          dispatch(loginSuccess(accessToken));
+
+          navigate("/");
+        } else {
+          dispatch(loginFailure("Google 로그인 중에 오류가 발생했습니다."));
+        }
       }
     }, 1000);
   };
@@ -279,7 +294,6 @@ const LoginInput = styled.input`
     }
   }
 `;
-
 
 const LoginBtnContainer = styled.div`
   width: 100%;
