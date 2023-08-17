@@ -29,7 +29,7 @@ public class AnswerController {
         this.answerService = answerService;
     }
 
-    @Operation(summary = "Create Answer API", description = "답변 생성 기능", responses = {@ApiResponse(responseCode = "201", description = "CREATED")})
+    @Operation(summary = "Create Answer API", description = "답변 생성 기능")
     @PostMapping
     public ResponseEntity<HttpStatus> postAnswer(@Valid @RequestBody AnswerDto.Request requestDto) {
         AnswerDto.Response responseDto = answerService.createAnswer(requestDto);

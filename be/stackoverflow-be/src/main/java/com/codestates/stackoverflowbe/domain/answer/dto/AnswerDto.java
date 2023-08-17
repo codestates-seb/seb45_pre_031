@@ -11,6 +11,8 @@ import java.util.List;
 public class AnswerDto {
     @Getter
     public static class Request {
+        private Long questionId;
+
         @NotBlank(message = "답변은 공백이 아니어야 합니다.")
         private String body;
 

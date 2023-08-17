@@ -33,7 +33,7 @@ public class VoteService {
         Answer findAnswer = answerRepository.findById(requestDto.getAnswerId()).orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.VOTE_NOT_FOUND));
 
-        List<Vote> votes = findAnswer.getVotes();
+//        List<Vote> votes = findAnswer.getVotes();
         Vote vote = Vote.builder()
                 .upVote(requestDto.isUpVote())
                 .downVote(requestDto.isDownVote())
