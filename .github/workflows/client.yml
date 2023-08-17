@@ -2,7 +2,7 @@ name: Client Update
 
 on:
   push:
-    branches: [main, dev]
+    branches: [main, dev, dev-fe, feat/fe-login]
 
 jobs:
   build:
