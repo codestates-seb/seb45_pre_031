@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { styled } from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import axios from "axios";
 import { loginSuccess, loginFailure, emailMismatchError, passwordMismatchError } from "../redux/actions/loginAction";
+import PasswordModal from "../components/features/PasswordModal";
 
 function LoginPage () {
 
@@ -14,10 +15,18 @@ function LoginPage () {
   const [ password, setPassword ] = useState("");
   const [ emailError, setEmailError ] = useState(false);
   const [ passwordError, setPasswordError ] = useState(false);
-  const [emailMismatchError, setEmailMismatchError] = useState("");
-  const [passwordMismatchError, setPasswordMismatchError] = useState("");
+  const [ emailMismatchErrorText, setEmailMismatchErrorText] = useState("");
+  const [ passwordMismatchErrorText, setPasswordMismatchErrorText] = useState("");
+  const [ isModalOpen, setIsModalOpen ] = useState(false);
 
-  const loginError = useSelector(state => state.login.error);
+  const modalHandler = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  }
+
 
   const onEmailHandler = (e) => {
     setEmail(e.currentTarget.value);
@@ -84,10 +93,10 @@ function LoginPage () {
 
       } else if (response.data.errorType === "email_not_found") {
         dispatch(emailMismatchError("No user found with matching email."));
-        setPasswordMismatchError("");
+        setPasswordMismatchErrorText("");
       } else if (response.data.errorType === "password_mismatch") {
         dispatch(passwordMismatchError("Password dose not match."));
-        setEmailMismatchError("");
+        setEmailMismatchErrorText("");
       } else {
         dispatch(loginFailure(response.data.message));
       }
@@ -115,31 +124,36 @@ function LoginPage () {
                 <LoginLabel>Email</LoginLabel>
               </div>
               <LoginInput
-                className={`login-email-input ${emailError || emailMismatchError ? "error" : ""}`}
+                className={`login-email-input ${emailError || emailMismatchErrorText ? "error" : ""}`}
                 type="email"
                 value={email}
                 onChange={onEmailHandler}
                 />
                 {emailError &&
                   <ErrorText>{emailError}</ErrorText>}
-                {emailMismatchError &&
-                  <ErrorText>{emailMismatchError}</ErrorText>}
+                {emailMismatchErrorText &&
+                  <ErrorText>{emailMismatchErrorText}</ErrorText>}
             </LoginInputForm>
             <LoginInputForm className="login-password-form">
               <div>
                 <LoginLabel>Password</LoginLabel>
-                <p>Forgot password?</p>
+                <p onClick={modalHandler}>Forgot password?</p>
+                {isModalOpen ?
+                  <PasswordModal
+                    isModalOpen={isModalOpen}
+                    closeModal={closeModal}
+                    /> : null}
               </div>
               <LoginInput
-                className={`login-password-input ${passwordError || passwordMismatchError ? "error" : ""}`}
+                className={`login-password-input ${passwordError || passwordMismatchErrorText ? "error" : ""}`}
                 type="password"
                 value={password}
                 onChange={onPasswordHandler}
                 />
                 {passwordError &&
                   <ErrorText>{passwordError}</ErrorText>}
-                {passwordMismatchError &&
-                  <ErrorText>{passwordMismatchError}</ErrorText>}
+                {passwordMismatchErrorText &&
+                  <ErrorText>{passwordMismatchErrorText}</ErrorText>}
             </LoginInputForm>
             <LoginBtnContainer>
               <LoginBtn
@@ -216,6 +230,7 @@ const LoginInputForm = styled.div`
       > p {
         font-size: 12px;
         color: rgb(0, 116, 204);
+        cursor: pointer;
       }
     }
   }
