@@ -87,6 +87,23 @@ public class QuestionService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("viewCount").descending());
         return questionRepository.findByCreatedAtAfterOrderByViewCountDesc(monthAgo, pageable);
     }
+    // 질문 목록을 Active: 수정 시간 최신순으로 가져오는 메서드
+    public List<Question> getActiveQuestions() {
+        List<Question> questions = questionRepository.findAllByOrderByUpdatedAtDesc();
+        return questions;
+    }
+
+    // 질문 목록을 Score: Score 순으로 가져오는 메서드
+    public List<Question> getScoreQuestions() {
+        List<Question> questions = questionRepository.findAllByOrderByScoreDesc();
+        return questions;
+    }
+
+    // 답변이 없는 질문 목록을 가져오는 메서드
+    public List<Question> getUnansweredQuestions() {
+        List<Question> questions = questionRepository.findAllByAnswersIsEmpty();
+        return questions;
+    }
 }
 
 

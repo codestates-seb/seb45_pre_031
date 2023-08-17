@@ -15,4 +15,9 @@ public class SingleResponseDto<T> extends ApiResponse {
         super(status, message);
         this.data = data;
     }
+    @Builder
+    public SingleResponseDto(HttpStatusCode status, String message, T data) {
+        super(status.getStatusCode(), message);
+        this.data = data;
+    }
 }

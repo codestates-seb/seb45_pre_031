@@ -55,7 +55,6 @@ public class QuestionController {
         // 질문 목록과 함께 응답 객체를 생성하여 반환합니다.
         return ResponseEntity.ok(new QuestionListResponseDto(HttpStatusCode.OK, "Questions retrieved!", questions));
     }
-
     // 질문 수정 요청을 처리하는 메서드
     @PutMapping("/{questionId}")
     public ResponseEntity<SingleResponseDto<Question>> updateQuestion(
@@ -75,7 +74,6 @@ public class QuestionController {
         // 수정된 질문을 반환합니다.
         return ResponseEntity.ok(new SingleResponseDto<>(HttpStatusCode.OK, "Question updated!", question));
     }
-
     // 질문 삭제 요청을 처리하는 메서드
     @DeleteMapping("/{questionId}")
     public ResponseEntity<SingleResponseDto<String>> deleteQuestion(
@@ -98,7 +96,17 @@ public class QuestionController {
         // 삭제 성공 응답을 반환합니다.
         return ResponseEntity.ok(new SingleResponseDto<>(HttpStatusCode.OK, "Question deleted!", null));
     }
-
+    // 질문의 상세 정보를 조회하는 메서드
+    @GetMapping("/{questionId}")
+    public ResponseEntity<SingleResponseDto<Question>> getQuestionDetail(@PathVariable Long questionId) {
+        // QuestionService를 통해 특정 ID에 해당하는 질문을 조회합니다.
+        Question question = questionService.findQuestionById(questionId);
+        if (question == null) {
+            return ResponseEntity.notFound().build();
+        }
+        // 조회한 질문을 반환합니다.
+        return ResponseEntity.ok(new SingleResponseDto<>(HttpStatusCode.OK, "Question retrieved!", question));
+    }
     // 사용자별 질문 조회 요청을 처리하는 메서드
     @GetMapping("/user")
     public ResponseEntity<List<Question>> getUserQuestions(@AuthenticationPrincipal UserDetails userDetails) {
@@ -109,7 +117,6 @@ public class QuestionController {
         // 조회한 질문 목록을 반환합니다.
         return ResponseEntity.ok(userQuestions);
     }
-
     // 최신 질문 조회 요청을 처리하는 메서드
     @GetMapping("/newest")
     public ResponseEntity<Page<Question>> getNewestQuestions(
@@ -120,7 +127,6 @@ public class QuestionController {
         // 최신 질문 페이지를 반환합니다.
         return ResponseEntity.ok(newestQuestions);
     }
-
     // 인기 질문 조회 요청을 처리하는 메서드
     @GetMapping("/hot")
     public ResponseEntity<Page<Question>> getHotQuestions(
@@ -131,7 +137,6 @@ public class QuestionController {
         // 인기 질문 페이지를 반환합니다.
         return ResponseEntity.ok(hotQuestions);
     }
-
     // 지난 주 동안 가장 많이 본 질문 조회 요청을 처리하는 메서드
     @GetMapping("/week")
     public ResponseEntity<Page<Question>> getWeekQuestions(
@@ -142,7 +147,6 @@ public class QuestionController {
         // 지난 주의 가장 많이 본 질문 페이지를 반환합니다.
         return ResponseEntity.ok(weekQuestions);
     }
-
     // 지난 달 동안 가장 많이 본 질문 조회 요청을 처리하는 메서드
     @GetMapping("/month")
     public ResponseEntity<Page<Question>> getMonthQuestions(
@@ -152,5 +156,25 @@ public class QuestionController {
         Page<Question> monthQuestions = questionService.getMonthQuestions(page, size);
         // 지난 달의 가장 많이 본 질문 페이지를 반환합니다.
         return ResponseEntity.ok(monthQuestions);
+    }
+    // 질문 목록 조회 요청을 처리하는 메서드 (Active: 수정 시간 최신순으로)
+    @GetMapping("/active")
+    public ResponseEntity<QuestionListResponseDto> getActiveQuestions() {
+        List<Question> activeQuestions = questionService.getActiveQuestions();
+        return ResponseEntity.ok(new QuestionListResponseDto(HttpStatusCode.OK, "Active questions retrieved!", activeQuestions));
+    }
+
+    // 질문 목록 조회 요청을 처리하는 메서드 (Score: Score 순으로)
+    @GetMapping("/score")
+    public ResponseEntity<QuestionListResponseDto> getScoreQuestions() {
+        List<Question> scoreQuestions = questionService.getScoreQuestions();
+        return ResponseEntity.ok(new QuestionListResponseDto(HttpStatusCode.OK, "Scored questions retrieved!", scoreQuestions));
+    }
+
+    // 질문 목록 조회 요청을 처리하는 메서드 (Unanswered: 답변이 없는 질문 필터)
+    @GetMapping("/unanswered")
+    public ResponseEntity<QuestionListResponseDto> getUnansweredQuestions() {
+        List<Question> unansweredQuestions = questionService.getUnansweredQuestions();
+        return ResponseEntity.ok(new QuestionListResponseDto(HttpStatusCode.OK, "Unanswered questions retrieved!", unansweredQuestions));
     }
 }

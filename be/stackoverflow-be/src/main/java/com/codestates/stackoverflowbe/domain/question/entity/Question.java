@@ -71,4 +71,5 @@ public class Question extends BaseTimeEntity {
         this.setTitle(updateDto.getTitle());
         this.setBody(updateDto.getBody());
     }
+
 }

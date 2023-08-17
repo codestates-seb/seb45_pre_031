@@ -1,3 +1,10 @@
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
 ### STS ###
 .apt_generated
 .classpath
@@ -15,7 +22,7 @@ bin/
 *.iws
 *.iml
 *.ipr
-out/              # 이 부분을 추가해주시면 됩니다.
+out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 

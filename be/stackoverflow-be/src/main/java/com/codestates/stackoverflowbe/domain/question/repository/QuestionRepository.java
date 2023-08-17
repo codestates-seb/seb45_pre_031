@@ -16,4 +16,9 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     Page<Question> findAllByOrderByCreatedAtDesc(Pageable pageable); // Newest
     Page<Question> findAllByOrderByViewCountDesc(Pageable pageable); // Hot
     Page<Question> findByCreatedAtAfterOrderByViewCountDesc(LocalDateTime createdAt, Pageable pageable); // Week, Month
+    List<Question> findAllByAnswersIsEmpty();
+
+    List<Question> findAllByOrderByUpdatedAtDesc();
+
+    List<Question> findAllByOrderByScoreDesc();
 }
