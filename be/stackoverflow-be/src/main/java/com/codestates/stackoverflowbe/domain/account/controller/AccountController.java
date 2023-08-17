@@ -50,6 +50,7 @@ public class AccountController {
         List<Account> accounts = accountsPage.getContent();
 
         return new ResponseEntity<>(
+
                 new MultiResponseDto<>(HttpStatusCode.OK.getStatusCode(), HttpStatusCode.OK.getMessage(), accounts, accountsPage)
         , HttpStatus.OK);
     }

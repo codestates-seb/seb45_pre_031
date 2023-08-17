@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class ApiResponse {
-    @Schema(example = "OK")
+
+    @Schema(example = "200")
     private int status;
 
     @Schema(example = "7eleven")
