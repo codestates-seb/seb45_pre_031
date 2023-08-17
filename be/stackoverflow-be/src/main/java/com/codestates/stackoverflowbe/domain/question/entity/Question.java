@@ -48,20 +48,15 @@ public class Question extends BaseTimeEntity {
     private List<Vote> votes = new ArrayList<>();
 
     // 추가한 필드 및 메서드
-    @Column
-    private String user_id;
 
     @Column
     private Long viewCount;
 
     @Column(columnDefinition = "TEXT")
-    private String bodyHTML;
+    private String expectContents;
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
-    }
-    public void setBodyHTML(String bodyHTML) {
-        this.bodyHTML = bodyHTML;
+    public void setExpectContents(String expectContents) {
+        this.expectContents = expectContents;
     }
     public void setTitle(String title) {
         this.title = title;
@@ -72,6 +67,10 @@ public class Question extends BaseTimeEntity {
     public void setAccount(Account account) {
         this.account = account;
     }
+    public void addVote(Vote vote) {
+        votes.add(vote);
+    }
+
     // 질문을 업데이트하는 메서드
     public void updateQuestion(QuestionUpdateRequestDto updateDto) {
         this.setTitle(updateDto.getTitle());

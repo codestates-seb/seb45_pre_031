@@ -46,24 +46,17 @@ public class AnswerController {
     @Operation(summary = "Update Answer API", description = "답변 수정 기능")
     @PatchMapping("/{answer-id}")
     public ResponseEntity<HttpStatus> patchAnswer(@PathVariable("answer-id") @Positive long answerId, @Valid @RequestBody AnswerDto.Request requestDto) {
-        AnswerDto.Response responseDto = answerService.updateAnswer(answerId, requestDto);
+        answerService.updateAnswer(answerId, requestDto);
 
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "Get Answer API", description = "답변 조회 기능")
-    @GetMapping("/{answer-id}")
-    public ResponseEntity<SingleResponseDto<AnswerDto.Response>> getAnswer(@PathVariable("answer-id") @Positive long answerId) {
-        AnswerDto.Response responseDto = answerService.findAnswer(answerId);
-
-        return ResponseEntity.ok(SingleResponseDto.<AnswerDto.Response>builder().status(HttpStatusCode.OK.getStatusCode()).message(HttpStatusCode.OK.getMessage()).data(responseDto).build());
-    }
-
     @Operation(summary = "Get Answers API", description = "전체 답변 조회 기능")
     @GetMapping
-    public ResponseEntity<MultiResponseDto<AnswerDto.Response>> getAnswers(@Positive @RequestParam int page, @Positive @RequestParam int size, @Positive @RequestParam long questionId) {
-//        int size = 15;
-        Page<AnswerDto.Response> pageResponseDtos = answerService.findAnswers(page - 1, size, questionId);
+    public ResponseEntity<MultiResponseDto<AnswerDto.Response>> getAnswers(@Positive @RequestParam(defaultValue = "0") int page,
+                                                                           @Positive @RequestParam(defaultValue = "15") int size,
+                                                                           @RequestBody AnswerDto.Request requestDto) {
+        Page<AnswerDto.Response> pageResponseDtos = answerService.findAnswers(page - 1, size, requestDto.getQuestionId());
 
         return ResponseEntity.ok(MultiResponseDto.<AnswerDto.Response>builder().status(HttpStatusCode.OK.getStatusCode()).message(HttpStatusCode.OK.getMessage()).data(pageResponseDtos.getContent()).page(pageResponseDtos).build());
     }

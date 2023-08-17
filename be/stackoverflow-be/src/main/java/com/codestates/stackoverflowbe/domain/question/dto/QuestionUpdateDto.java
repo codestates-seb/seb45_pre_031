@@ -16,5 +16,5 @@ public class QuestionUpdateDto {
     private String body;
     private String user_id;
     private List<String> tags;
-    private String bodyHTML;
+    private String expectContents;
 }

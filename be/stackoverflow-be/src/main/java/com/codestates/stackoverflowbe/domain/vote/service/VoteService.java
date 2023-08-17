@@ -2,6 +2,8 @@ package com.codestates.stackoverflowbe.domain.vote.service;
 
 import com.codestates.stackoverflowbe.domain.answer.entity.Answer;
 import com.codestates.stackoverflowbe.domain.answer.repository.AnswerRepository;
+import com.codestates.stackoverflowbe.domain.question.entity.Question;
+import com.codestates.stackoverflowbe.domain.question.repository.QuestionRepository;
 import com.codestates.stackoverflowbe.domain.vote.dto.VoteDto;
 import com.codestates.stackoverflowbe.domain.vote.entity.Vote;
 import com.codestates.stackoverflowbe.domain.vote.repository.VoteRepository;
@@ -10,67 +12,70 @@ import com.codestates.stackoverflowbe.global.exception.ExceptionCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Transactional
 @Service
 public class VoteService {
     private final VoteRepository voteRepository;
-    // questionRepository 필요
+    private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
 
-    public VoteService(VoteRepository voteRepository, AnswerRepository answerRepository) {
+    public VoteService(VoteRepository voteRepository, QuestionRepository questionRepository, AnswerRepository answerRepository) {
         this.voteRepository = voteRepository;
+        this.questionRepository = questionRepository;
         this.answerRepository = answerRepository;
     }
 
-    public void voteQuestion(VoteDto.QuestionRequest requestDto) {
+    public void voteWriting(VoteDto.Request requestDto) {
+        Question findQuestion = new Question();
+        Answer findAnswer = new Answer();
+        List<Vote> findVotes = new ArrayList<>();
 
-    }
+        if (Optional.ofNullable(requestDto.getQuestionId()).isPresent()) {
+            findQuestion = questionRepository.findById(requestDto.getQuestionId()).orElseThrow(() ->
+                    new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
+            findVotes = findQuestion.getVotes();
+        }
 
-    public void voteAnswer(VoteDto.AnswerRequest requestDto) {
-        Answer findAnswer = answerRepository.findById(requestDto.getAnswerId()).orElseThrow(() ->
-                new BusinessLogicException(ExceptionCode.VOTE_NOT_FOUND));
+        if (Optional.ofNullable(requestDto.getAnswerId()).isPresent()) {
+            findAnswer = answerRepository.findById(requestDto.getAnswerId()).orElseThrow(() ->
+                    new BusinessLogicException(ExceptionCode.ANSWER_NOT_FOUND));
+            findVotes = findAnswer.getVotes();
+        }
 
-//        List<Vote> votes = findAnswer.getVotes();
         Vote vote = Vote.builder()
-                .upVote(requestDto.isUpVote())
-                .downVote(requestDto.isDownVote())
+                .question(findQuestion)
+                .answer(findAnswer)
+                .upVote(requestDto.getUpVote())
+                .downVote(requestDto.getDownVote())
                 .build();
-//        verifyVotes(requestDto.getAccountId(), votes, vote);
+        verifyVotes(requestDto.getAccountId(), findVotes, vote);
 
-        findAnswer.addVote(vote);
-        vote.setAnswer(findAnswer);
-        voteRepository.save(vote);
+        Vote savedVote = voteRepository.save(vote);
+        findQuestion.addVote(savedVote);
+        findAnswer.addVote(savedVote);
     }
 
-    public VoteDto.Response getVote(long voteId) {
-        Vote findVote = voteRepository.findById(voteId).orElseThrow(() ->
-                new BusinessLogicException(ExceptionCode.VOTE_NOT_FOUND));
+    public VoteDto.Response getVotes(VoteDto.Request requestDto) {
+        List<Vote> findVotes = new ArrayList<>();
+
+        if (Optional.ofNullable(requestDto.getQuestionId()).isPresent()) {
+            Question findQuestion = questionRepository.findById(requestDto.getQuestionId()).orElseThrow(() ->
+                    new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
+            findVotes = voteRepository.findByQuestion(findQuestion.getQuestionId());
+        }
+
+        if (Optional.ofNullable(requestDto.getAnswerId()).isPresent()) {
+            Answer findAnswer = answerRepository.findById(requestDto.getAnswerId()).orElseThrow(() ->
+                    new BusinessLogicException(ExceptionCode.ANSWER_NOT_FOUND));
+            findVotes = voteRepository.findByAnswer(findAnswer.getAnswerId());
+        }
 
         return VoteDto.Response.builder()
-                .voteId(findVote.getVoteId())
-                .upVote(findVote.isUpVote())
-                .downVote(findVote.isDownVote())
-                .build();
-    }
-
-    public VoteDto.QuestionResponse getQuestionVotes(long questionId) {
-        List<Vote> findVotes = voteRepository.findByQuestion(questionId);
-
-        return VoteDto.QuestionResponse.builder()
-                .questionId(questionId)
-                .upVotes(getUpVoteAccounts(findVotes))
-                .downVotes(getDownVoteAccounts(findVotes))
-                .build();
-    }
-
-    public VoteDto.AnswerResponse getAnswerVotes(long answerId) {
-        List<Vote> findVotes = voteRepository.findByAnswer(answerId);
-
-        return VoteDto.AnswerResponse.builder()
-                .answerId(answerId)
                 .upVotes(getUpVoteAccounts(findVotes))
                 .downVotes(getDownVoteAccounts(findVotes))
                 .build();

@@ -15,7 +15,7 @@ import javax.validation.constraints.Positive;
 
 @RestController
 @RequestMapping("/v1/vote")
-@Tag(name = "Vote", description = "Vote Controller")
+@Tag(name = "Vote", description = "투표 기능")
 public class VoteController {
     private final static String VOTE_DEFAULT_URL = "/v1/vote";
     private final VoteService voteService;
@@ -24,47 +24,23 @@ public class VoteController {
         this.voteService = voteService;
     }
 
-    @Operation(summary = "Vote Question API", description = "Vote Question With Question Id")
-    @PostMapping("/voteQuestion")
-    public ResponseEntity<HttpStatus> voteQuestion(@Valid @RequestBody VoteDto.QuestionRequest requestDto) {
-        voteService.voteQuestion(requestDto);
+    @Operation(summary = "Vote Writing API", description = "추천/비추천 투표 기능")
+    @PostMapping("/voteWriting")
+    public ResponseEntity<HttpStatus> voteWriting(@Valid @RequestBody VoteDto.Request requestDto) {
+        voteService.voteWriting(requestDto);
 
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "Vote Answer API", description = "Vote Answer With Answer Id")
-    @PostMapping("/voteAnswer")
-    public ResponseEntity<HttpStatus> voteAnswer(@Valid @RequestBody VoteDto.AnswerRequest requestDto) {
-        voteService.voteAnswer(requestDto);
-
-        return ResponseEntity.ok().build();
-    }
-
-    @Operation(summary = "Get Vote API", description = "Get Vote With Vote Id")
-    @GetMapping("/{vote-id}")
-    public ResponseEntity<SingleResponseDto<VoteDto.Response>> getVote(@PathVariable("vote-id") @Positive long voteId) {
-        VoteDto.Response responseDto = voteService.getVote(voteId);
+    @Operation(summary = "Get All Votes API", description = "글의 모든 투표 조회 기능")
+    @GetMapping("/VotesResult")
+    public ResponseEntity<SingleResponseDto<VoteDto.Response>> getQuestionVotes(@Positive @RequestBody VoteDto.Request requestDto) {
+        VoteDto.Response responseDto = voteService.getVotes(requestDto);
 
         return ResponseEntity.ok(SingleResponseDto.<VoteDto.Response>builder().status(HttpStatusCode.OK.getStatusCode()).message(HttpStatusCode.OK.getMessage()).data(responseDto).build());
     }
 
-    @Operation(summary = "Get Question Votes API", description = "Get Question Votes With Question Id")
-    @GetMapping("/questionVoteResult")
-    public ResponseEntity<SingleResponseDto<VoteDto.QuestionResponse>> getQuestionVotes(@Positive @RequestParam long questionId) {
-        VoteDto.QuestionResponse responseDto = voteService.getQuestionVotes(questionId);
-
-        return ResponseEntity.ok(SingleResponseDto.<VoteDto.QuestionResponse>builder().status(HttpStatusCode.OK.getStatusCode()).message(HttpStatusCode.OK.getMessage()).data(responseDto).build());
-    }
-
-    @Operation(summary = "Get Answer Votes API", description = "Get Answer Votes With Question Id")
-    @GetMapping("/answerVoteResult")
-    public ResponseEntity<SingleResponseDto<VoteDto.AnswerResponse>> getAnswerVotes(@Positive @RequestParam long answerId) {
-        VoteDto.AnswerResponse responseDto = voteService.getAnswerVotes(answerId);
-
-        return ResponseEntity.ok(SingleResponseDto.<VoteDto.AnswerResponse>builder().status(HttpStatusCode.OK.getStatusCode()).message(HttpStatusCode.OK.getMessage()).data(responseDto).build());
-    }
-
-    @Operation(summary = "Cancel Vote API", description = "Cancel Vote With Vote Id")
+    @Operation(summary = "Cancel Vote API", description = "투표 취소 기능")
     @DeleteMapping
     public ResponseEntity<HttpStatus> deleteAnswer(@PathVariable("vote-id") @Positive long voteId) {
         voteService.deleteVote(voteId);

@@ -29,8 +29,7 @@ public class QuestionService {
         newQuestion.setTitle(questionDto.getTitle());
         newQuestion.setBody(questionDto.getBody());
         newQuestion.setAccount(account);
-        newQuestion.setUser_id(questionDto.getUser_id());
-        newQuestion.setBodyHTML(questionDto.getBodyHTML());
+        newQuestion.setExpectContents(questionDto.getExpectContents());
 
         // 데이터베이스에 질문을 저장하고 반환합니다.
         return questionRepository.save(newQuestion);
@@ -89,15 +88,15 @@ public class QuestionService {
     }
     // 질문 목록을 Active: 수정 시간 최신순으로 가져오는 메서드
     public List<Question> getActiveQuestions() {
-        List<Question> questions = questionRepository.findAllByOrderByUpdatedAtDesc();
+        List<Question> questions = questionRepository.findAllByOrderByModifiedAtDesc();
         return questions;
     }
 
     // 질문 목록을 Score: Score 순으로 가져오는 메서드
-    public List<Question> getScoreQuestions() {
-        List<Question> questions = questionRepository.findAllByOrderByScoreDesc();
-        return questions;
-    }
+//    public List<Question> getScoreQuestions() {
+//        List<Question> questions = questionRepository.findAllByOrderByScoreDesc();
+//        return questions;
+//    }
 
     // 답변이 없는 질문 목록을 가져오는 메서드
     public List<Question> getUnansweredQuestions() {

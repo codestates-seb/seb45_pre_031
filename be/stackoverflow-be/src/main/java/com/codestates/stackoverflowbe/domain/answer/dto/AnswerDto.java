@@ -27,15 +27,11 @@ public class AnswerDto {
     public static class Response {
         private long answerId;
         private String body;
-        private List<String> upVotes;
-        private List<String> downVotes;
 
         @Builder
-        public Response(long answerId, String body, List<String> upVotes, List<String> downVotes) {
+        public Response(long answerId, String body) {
             this.answerId = answerId;
             this.body = body;
-            this.upVotes = upVotes;
-            this.downVotes = downVotes;
         }
     }
 }
