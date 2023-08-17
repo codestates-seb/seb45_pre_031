@@ -1,6 +1,11 @@
 import styled from "styled-components";
+import { useState } from "react";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 function QuestionForm() {
+  const [value, setValue] = useState("");
+
   return (
     <StyledQuestionForm>
       <HeaderContainer>
@@ -20,6 +25,7 @@ function QuestionForm() {
           <span className="instruction">
             The body of your question contains your problem details and results. Minimum 220 characters.
           </span>
+          <ReactQuill theme="snow" value={value} onChange={setValue} />
           <BodyInput></BodyInput>
         </BodyForm>
         <TagsForm>
