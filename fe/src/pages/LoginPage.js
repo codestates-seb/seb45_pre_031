@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
@@ -125,6 +125,17 @@ const InputContainer = styled.div`
 const BtnContainer = styled.div`
 `
 
+const GoogleLoginButton = styled.button`
+  width: 100%;
+  padding: 8px 0.8em;
+  border-radius: 6px;
+  border: none;
+  white-space: nowrap;
+  cursor: pointer;
+  color: black;
+  background-color: #ffffff; /* Google 로그인 색상 */
+`;
+
 const LoginBtn = styled.button`
   width: 100%;
   padding: 8px 0.8em;
@@ -169,7 +180,7 @@ function LoginPage (props) {
       });
 
       if (response.data.success) {
-        // 서버에서 받은 jwt 토큰
+        // 서버에서 받은 토큰
         const accessToken = response.data.accessToken;
         const refreshToken = response.data.refreshToken;
 
@@ -192,6 +203,32 @@ function LoginPage (props) {
     }
   };
 
+  const onGoogleLoginHandler = () => {
+    // Google 로그인 URL을 작성합니다.
+    const googleLoginUrl = "http://localhost:8080/oauth2/authorization/google";
+
+    // Google 로그인 팝업을 엽니다.
+    window.open(googleLoginUrl, "_blank");
+  };
+
+  useEffect(() => {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const accessToken = urlSearchParams.get("access_token");
+    const refreshToken = urlSearchParams.get("refresh_token");
+
+    if (accessToken && refreshToken) {
+      // 로컬 스토리지에 토큰 저장
+      localStorage.setItem("access_token", accessToken);
+      localStorage.setItem("refresh_token", refreshToken);
+
+      // 로그인 성공 처리
+      dispatch(loginSuccess(accessToken));
+
+      // 로그인 성공 후 리다이렉션 처리
+      navigate("/");
+    }
+  }, []);
+
   return (
     <LoginPageContainer>
       <ContentContainer>
@@ -200,7 +237,10 @@ function LoginPage (props) {
             <img src="https://media.discordapp.net/attachments/1138344984454631504/1138711197278015569/image.png?width=612&height=708" alt="" />
           </LogoContainer>
           <SocialLoginContainer>
-
+            <GoogleLoginButton
+              onClick={onGoogleLoginHandler}>
+                Google로 로그인
+            </GoogleLoginButton>
           </SocialLoginContainer>
           <FormContainer>
             <form id="login-form">
