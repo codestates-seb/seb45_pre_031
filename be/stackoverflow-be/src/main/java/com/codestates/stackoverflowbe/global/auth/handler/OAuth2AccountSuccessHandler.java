@@ -43,11 +43,15 @@ public class OAuth2AccountSuccessHandler extends SimpleUrlAuthenticationSuccessH
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         //OAuth2인증이 성공
+        log.info("# OAuth2AccountSuccessHandler success!");
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         String email = (String) oAuth2User.getAttributes().get("email");
+        String name = (String) oAuth2User.getAttributes().get("name");
+        System.out.println("name: " + name);
+
         List<String> authorities = authorityUtils.createRoles(email);
 
-        saveAccount(email); // email을 DB에 저장하여 관리하며 매핑하기
+        saveAccount(email, name); // email을 DB에 저장하여 관리하며 매핑하기
         redirect(request, response, email, authorities);
 //        String profile = (String) oAuth2User.getAttributes().get("profile");
 //        Account account = buildOAuth2Account(email, profile);
@@ -55,8 +59,9 @@ public class OAuth2AccountSuccessHandler extends SimpleUrlAuthenticationSuccessH
     }
 
 
-    private void saveAccount(String email) {
+    private void saveAccount(String email, String displayName) {
         AccountDto.Post accountPostDto = new AccountDto.Post(email);
+        accountPostDto.setDisplayName(displayName);
         //OAuth 전용 DB 저장 로직
         accountService.createAccountOAuth2(accountPostDto);
     }
@@ -111,8 +116,10 @@ public class OAuth2AccountSuccessHandler extends SimpleUrlAuthenticationSuccessH
                 .newInstance()
                 .scheme("http")
                 .host("localhost")
+                .port(3000)
 //                .port(80)
-                .path("/receive-token.html") // 이후 URI 수정
+//                .path("/receive-token.html")
+                .path("/login") // 이후 URI 수정
                 .queryParams(queryParams)
                 .build()
                 .toUri();
