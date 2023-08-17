@@ -204,10 +204,10 @@ function LoginPage (props) {
   };
 
   const onGoogleLoginHandler = () => {
-    // Google 로그인 URL을 작성합니다.
+    // Google 로그인 URL
     const googleLoginUrl = "http://localhost:8080/oauth2/authorization/google";
 
-    // Google 로그인 팝업을 엽니다.
+    // Google 로그인 팝업
     window.open(googleLoginUrl, "_blank");
   };
 
@@ -227,7 +227,7 @@ function LoginPage (props) {
       // 로그인 성공 후 리다이렉션 처리
       navigate("/");
     }
-  }, []);
+  });
 
   return (
     <LoginPageContainer>
