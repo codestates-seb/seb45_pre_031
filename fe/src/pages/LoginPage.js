@@ -1,154 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
 import { styled } from "styled-components";
+import { useDispatch } from "react-redux";
+import axios from "axios";
 import { loginSuccess, loginFailure } from "../redux/actions/loginAction";
 
-
-const LoginPageContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-basis: auto;
-  flex-shrink: 0;
-  flex-grow: 1;
-  position: relative;
-  max-width: 100%;
-  width: 100%;
-  height: 100vh;
-  margin: 0;
-  background-color: hsl(210,8%,95%);
-  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI Adjusted","Segoe UI","Liberation Sans",sans-serif;
-`
-
-const ContentContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  max-width: 1264px;
-  margin: 0;
-  background-color: transparent;
-  padding: 24px;
-
-  &::before {
-    content: "";
-    display: table;
-  }
-`
-
-const ItemsContainer = styled.div`
-  display: block;
-  margin: 0;
-  padding: 0;
-`
-
-const LogoContainer = styled.div`
-  display: block;
-  text-align: center;
-  margin-bottom: 24px;
-
-  > img {
-    width: 32px;
-    height: 37px;
-  }
-`
-
-const SocialLoginContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-basis: auto;
-  flex-grow: 1;
-  flex-shrink: 1;
-  margin-bottom: 16px;
-`
-
-const FormContainer = styled.div`
-  display: block;
-  margin-bottom: 24px;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 24px;
-  background-color: hsl(0,0%,100%);
-  border-radius: 8px;
-  box-shadow: 0 10px 24px hsla(0,0%,0%,0.05), 0 20px 48px hsla(0, 0%, 0%, 0.05), 0 1px 4px hsla(0, 0%, 0%, 0.1);
-  max-width: 24rem;
-  width: 230px;
-
-  > form {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    flex: 1 0 auto;
-    margin: calc(12 / 2 * -1);
-    text-align: left;
-  }
-`
-
-const Input = styled.input`
-  width: 100%;
-  margin: 0;
-  background-color: hsl(0,0%,100%);
-  border: 1px solid hsl(210,8%,75%);
-  border-radius: 6px;
-  padding: 8px 9px;
-
-  &:focus {
-    border-color: hsl(206, 90%, 69.5%);
-    box-shadow: 0 0 0 4px hsla(206, 100%, 40%, 0.15);
-    outline: none;
-  }
-`
-
-const InputContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-  margin: 6px 0px;
-
-  &.input-password {
-
-    > div {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-  }
-
-  > div > span {
-    font-size: 10px;
-  }
-
-
-`
-
-const BtnContainer = styled.div`
-`
-
-const GoogleLoginButton = styled.button`
-  width: 100%;
-  padding: 8px 0.8em;
-  border-radius: 6px;
-  border: none;
-  white-space: nowrap;
-  cursor: pointer;
-  color: black;
-  background-color: #ffffff; /* Google 로그인 색상 */
-`;
-
-const LoginBtn = styled.button`
-  width: 100%;
-  padding: 8px 0.8em;
-  border-radius: 6px;
-  border: none;
-  white-space: nowrap;
-  cursor: pointer;
-  color: white;
-  background-color: hsl(206,100%,52%);
-`
-
-
-function LoginPage (props) {
+function LoginPage () {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -227,46 +84,217 @@ function LoginPage (props) {
 
   return (
     <LoginPageContainer>
-      <ContentContainer>
-        <ItemsContainer>
-          <LogoContainer>
-            <img src="https://media.discordapp.net/attachments/1138344984454631504/1138711197278015569/image.png?width=612&height=708" alt="" />
-          </LogoContainer>
-          <SocialLoginContainer>
-            <GoogleLoginButton
-              onClick={onGoogleLoginHandler}>
-                구글로 로그인
-            </GoogleLoginButton>
-          </SocialLoginContainer>
-          <FormContainer>
-            <form id="login-form">
-               <InputContainer className="input-email">
-                <label>Email</label>
-                <Input
-                type="email"
-                value={username}
-                onChange={onUsernameHandler}/>
-              </InputContainer>
-              <InputContainer className="input-password">
-                <div>
-                  <label>Password</label>
-                  <span>Forgot password?</span>
-                </div>
-                <Input
-                  type="password"
-                  value={password}
-                  onChange={onPasswordHandler}/>
-              </InputContainer>
-              <BtnContainer>
-                <LoginBtn
-                  onClick={onLoginHadler}>Log in</LoginBtn>
-              </BtnContainer>
-            </form>
-          </FormContainer>
-        </ItemsContainer>
-      </ContentContainer>
+      <LoginContentContainet>
+        <LoginLogoContiner>
+          <img src="https://media.discordapp.net/attachments/1138344984454631504/1138711197278015569/image.png?width=612&height=708" alt="" />
+        </LoginLogoContiner>
+        <LoginBtnContainer>
+          <GoogleLoginBtn
+            onClick={onGoogleLoginHandler}>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1024px-Google_%22G%22_Logo.svg.png" alt="" />
+            Log in with Google</GoogleLoginBtn>
+        </LoginBtnContainer>
+        <LoginFormContainer>
+          <LoginForm>
+            <LoginInputForm className="login-email-form">
+              <LoginLabel>Email</LoginLabel>
+              <LoginInput
+                className="login-email-input"
+                onClick={onUsernameHandler} />
+            </LoginInputForm>
+            <LoginInputForm className="login-password-form">
+              <div>
+                <LoginLabel>Password</LoginLabel>
+                <p>Forgot password?</p>
+              </div>
+              <LoginInput
+                className="login-password-input"
+                onChange={onPasswordHandler} />
+            </LoginInputForm>
+            <LoginBtnContainer>
+              <LoginBtn
+                onClick={onLoginHadler}>Log in</LoginBtn>
+            </LoginBtnContainer>
+          </LoginForm>
+        </LoginFormContainer>
+        <LoginTextBelowContainer>
+            Don't have an accout?
+            <a>Sign up</a>
+        </LoginTextBelowContainer>
+      </LoginContentContainet>
     </LoginPageContainer>
-  )
-}
+
+  );
+};
+
+const LoginPageContainer = styled.section`
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(241, 242, 243);
+`;
+
+const LoginContentContainet = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+`;
+
+const LoginFormContainer = styled.div`
+  width: 290px;
+  box-shadow: 0 10px 24px hsla(0,0%,0%,0.05), 0 20px 48px hsla(0, 0%, 0%, 0.05), 0 1px 4px hsla(0, 0%, 0%, 0.1);
+  padding: 24px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 24px;
+  background-color: white;
+  border-radius: 6px;
+  box-sizing: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const LoginForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+`;
+
+const LoginInputForm = styled.div`
+  width: 100%;
+
+  &.login-password-form {
+
+    > div {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      > p {
+        font-size: 12px;
+        color: rgb(0, 116, 204);
+      }
+    }
+  }
+`;
+
+const LoginLabel = styled.label`
+  font-size: 15px;
+  font-family: inherit;
+  font-weight: 600;
+`;
+
+const LoginInput = styled.input`
+  width: 100%;
+  margin: 0;
+  background-color: hsl(0,0%,100%);
+  border: 1px solid hsl(210,8%,75%);
+  border-radius: 6px;
+  padding: 8px 9px;
+
+  &:focus {
+    border-color: hsl(206, 90%, 69.5%);
+    box-shadow: 0 0 0 4px hsla(206, 100%, 40%, 0.15);
+    outline: none;
+  }
+`;
+
+const LoginBtnContainer = styled.div`
+  width: 100%;
+`;
+
+const LoginBtn = styled.button`
+  width: 100%;
+  margin: 0;
+  padding: 10px;
+  border-radius: 6px;
+  color: white;
+  font-size: 13px;
+  border: none;
+  white-space: nowrap;
+  background-color: hsl(206,100%,52%);
+
+  &:hover {
+    background-color: hsl(206,100%,40%);
+  }
+
+  &:active {
+    background-color: hsl(209,100%,37.5%);
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 4px hsla(206, 100%, 40%, 0.15);
+    outline: none;
+  }
+`;
+
+const GoogleLoginBtn = styled.button`
+  width: 100%;
+  margin: 0;
+  margin-top: 8px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 6px;
+  color: rgb(59, 64, 69);
+  font-size: 13px;
+  border: 1px solid hsl(210,8%,85%);
+  white-space: nowrap;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+
+  &:hover {
+    background-color: hsl(210,8%,97.5%);
+  }
+
+  &:active {
+    background-color: hsl(210,8%,95%);
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 4px hsla(210,8%,15%,0.1);
+    outline: none;
+  }
+
+  > img {
+    display: block;
+    margin: 0;
+    padding: 0;
+    width: 18px;
+    height: 18px;
+  }
+`;
+
+const LoginLogoContiner = styled.div`
+  display: block;
+  text-align: center;
+
+  > img {
+    width: 32px;
+    height: 37px;
+  }
+`;
+
+const LoginTextBelowContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+
+  > a {
+    color: rgb(0, 116, 204);
+  }
+`;
 
 export default LoginPage;
