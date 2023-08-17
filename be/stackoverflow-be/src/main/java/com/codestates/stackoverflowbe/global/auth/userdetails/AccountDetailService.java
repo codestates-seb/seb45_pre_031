@@ -40,10 +40,10 @@ public class AccountDetailService implements UserDetailsService {
     private final class AccountDetails extends Account implements UserDetails {
 
         public AccountDetails(Account account) {
-
-            super(account.getAccountId(), account.getEmail(), account.getPassword(),  account.getRoles());
-
+            super(account.getAccountId(), account.getEmail(), account.getPassword(), account.getRoles());
         }
+
+
 
         @Override
         public Collection<? extends GrantedAuthority> getAuthorities() {

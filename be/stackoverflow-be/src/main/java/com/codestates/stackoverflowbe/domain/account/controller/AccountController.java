@@ -6,6 +6,8 @@ import com.codestates.stackoverflowbe.domain.account.service.AccountService;
 import com.codestates.stackoverflowbe.global.constants.HttpStatusCode;
 import com.codestates.stackoverflowbe.global.response.MultiResponseDto;
 import com.codestates.stackoverflowbe.global.response.SingleResponseDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -19,10 +21,11 @@ import javax.validation.constraints.Positive;
 import java.util.List;
 
 
+@Tag(name = "Account", description = "계정 기능")
 @Slf4j
 @RestController
 @Validated
-@RequestMapping("/accounts")
+@RequestMapping("/v1/accounts")
 public class AccountController {
     private final AccountService accountService;
 
@@ -30,6 +33,7 @@ public class AccountController {
         this.accountService = accountService;
     }
 
+    @Operation(summary = "Post Account", description = "계정 생성 기능")
     @PostMapping("/signup")
     public ResponseEntity postMember(@Valid @RequestBody AccountDto.Post accountPostDto) {
         AccountDto.Response accountResponseDto = accountService.createAccount(accountPostDto);
@@ -37,14 +41,15 @@ public class AccountController {
         return new ResponseEntity(new SingleResponseDto<>(HttpStatusCode.CREATED.getStatusCode(),"member created!",accountResponseDto), HttpStatus.CREATED);
     }
 
-//    @GetMapping("/login")
-//    public String getLogin() {
-//        return "redirect:/login.html";
-//    }
-//
-//    @PostMapping("/authenticate")
+    @Operation(summary = "Login Member", description = "로그인 기능")
+    @GetMapping("/login")
+    public String getLogin() {
+        return "redirect:/login.html";
+    }
 
+    @PostMapping("/authenticate")
 
+    @Operation(summary = "Get All Member", description = "전체 계정 조회 기능")
     @GetMapping
     public ResponseEntity getMembers(@Positive @RequestParam int page,
                                      @Positive @RequestParam int size) {

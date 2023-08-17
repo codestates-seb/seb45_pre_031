@@ -1,0 +1,64 @@
+spring:
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2
+#  datasource:
+#    url: jdbc:h2:mem:stackoverflow
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/stackoverflow?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+    username: smiledk
+    password: 1112
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    database: mysql
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${G_CLIENT_ID}
+            client-secret: ${G_CLIENT_SECRET}
+            redirect-uri: http://localhost:8080/login/oauth2/code/google
+            scope:
+              - email
+              - profile
+jwt:
+  key:
+    secret: ${JWT_SECRET_KEY}               # 민감한 정보는 시스템 환경 변수에서 로드
+  access-token-expiration-minutes: 30
+  refresh-token-expiration-minutes: 420
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor: trace
+
+# swagger
+springdoc:
+  swagger-ui:
+    path: /swagger
+    operationsSorter: alpha
+    tags-sorter: alpha
+    disable-swagger-default-url: true
+    display-request-duration: true
+  api-docs:
+    path: /api-docs
+  show-actuator: true
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  paths-to-match:
+    - /v1/**
+server:
+  port: 8888

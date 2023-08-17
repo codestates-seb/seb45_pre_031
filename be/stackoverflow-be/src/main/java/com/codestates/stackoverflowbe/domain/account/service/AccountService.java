@@ -5,6 +5,8 @@ import com.codestates.stackoverflowbe.domain.account.entity.Account;
 import com.codestates.stackoverflowbe.domain.account.mapper.AccountMapper;
 import com.codestates.stackoverflowbe.domain.account.repository.AccountRepository;
 import com.codestates.stackoverflowbe.global.auth.utils.CustomAuthorityUtils;
+import com.codestates.stackoverflowbe.global.exception.BusinessLogicException;
+import com.codestates.stackoverflowbe.global.exception.ExceptionCode;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,22 +42,19 @@ public class AccountService {
     }
 
     public AccountDto.Response createAccount(AccountDto.Post accountPostDto) {
-        verifyExistsEmail(accountPostDto.getEmail());
+//        verifyExistsEmail(accountPostDto.getEmail());
         //PostDto로 입력된 이메일 정보를 기반으로 권한 생성
         List<String> roles = authorityUtils.createRoles(accountPostDto.getEmail());
 
         String encryptedPassword = passwordEncoder.encode(accountPostDto.getPassword());
 //        Account beSavedAccount = accountPostDto.toEntity();
 //        beSavedAccount = beSavedAccount.builder().roles(roles).password(encryptedPassword).build();
-        Account beSavedAccount = new Account(
-                0L, // id 지정하지 않음 (AUTO_INCREMENT)
-                accountPostDto.getDisplayName(),
-                accountPostDto.getEmail(),
-                encryptedPassword, // 암호화된 비밀번호로 등록
-                roles,             // 이메일 정보에 따른 권한 등록
-                null,   //답변 목록 null
-                null              //투표 목록 null
-        );
+        Account beSavedAccount = Account.builder()
+                .displayName(accountPostDto.getDisplayName())
+                .email(accountPostDto.getEmail())
+                .password(encryptedPassword)
+                .roles(roles)
+                .build();
 
         Account savedAccount = accountRepository.save(beSavedAccount);
 
@@ -90,5 +90,10 @@ public class AccountService {
         Optional<Account> findAccount = accountRepository.findByEmail(email);
         if(findAccount.isPresent())
             throw  new RuntimeException();
+    }
+    public Account findByEmail(String email) {
+        Optional<Account> accountOptional = accountRepository.findByEmail(email);
+        return accountOptional.orElseThrow(() ->
+                new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND)); // 해당 이메일로 찾은 Account가 없으면 null 반환
     }
 }

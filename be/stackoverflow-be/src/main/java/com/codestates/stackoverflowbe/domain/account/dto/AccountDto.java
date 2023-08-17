@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -17,6 +16,7 @@ public class AccountDto {
     @Getter
     @Setter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class Post {
         private String displayName;
         private String email;
@@ -47,7 +47,7 @@ public class AccountDto {
     @Getter
     @AllArgsConstructor
     public static class Response {
-        private Long account_id;
+        private Long accountId;
 
         private String displayName;
         private String email;
