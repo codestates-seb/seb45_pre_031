@@ -6,6 +6,47 @@ import search from "../../assets/images/search.png";
 import { useState } from "react";
 import SearchInfo from "../features/SearchInfo";
 
+function Header() {
+  const [ isFocus, setIsFocus ] = useState(false);
+
+  const focusHandler = () => {
+    setIsFocus(!isFocus);
+  };
+
+  return (
+    <>
+    <HeaderContainer>
+      <HeaderElementContainer>
+        <HeaderLogo>
+          <Link to="/">
+            <img className="logoImg" src={logo} alt="" />
+          </Link>
+        </HeaderLogo>
+        <SearchContainer> {/* form */}
+          <SearchbarContainer>
+            <img className="searchImg" src={search} alt="" />
+            <SearchInput
+              type="text"
+              placeholder="Search..."
+              onFocus={focusHandler} />
+          </SearchbarContainer>
+            {isFocus && <SearchInfo />}
+        </SearchContainer>
+        <BtnContatiner>
+          <Link to="/login">
+            <LoginBtn>Log in</LoginBtn>
+          </Link>
+          <Link to="/membership">
+            <SignupBtn>Sign up</SignupBtn>
+          </Link>
+        </BtnContatiner>
+      </HeaderElementContainer>
+    </HeaderContainer>
+  </>
+  );
+}
+export default Header;
+
 const HeaderContainer = styled.header`
   display: flex;
   flex-direction: row;
@@ -100,16 +141,51 @@ const SearchInput = styled.input`
   }
 `;
 
-const HeaderBtn = styled.button`
+const LoginBtn = styled.button`
   padding: 8px 0.8em;
   border-radius: 6px;
   border: none;
   white-space: nowrap;
   cursor: pointer;
+  color: hsl(205,47%,42%);
+  background-color: hsl(205,46%,92%);
 
-  color: ${(props) => (props.skyblue ? "hsl(205,47%,42%)" : "white")};
-  background-color: ${(props) => (props.skyblue ? "hsl(205,46%,92%)" : "hsl(206,100%,52%)")};
+  &:hover {
+    background-color: hsl(205,57%,81%);
+  }
+
+  &:active {
+    background-color: hsl(205,56%,76%);
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 4px hsla(206, 100%, 40%, 0.15);
+    outline: none;
+  }
 `;
+
+const SignupBtn = styled.button`
+  padding: 8px 0.8em;
+  border-radius: 6px;
+  border: none;
+  white-space: nowrap;
+  cursor: pointer;
+  color: white;
+  background-color: hsl(206,100%,52%);
+
+  &:hover {
+    background-color: hsl(206,100%,40%);
+  }
+
+  &:active {
+    background-color: hsl(209,100%,37.5%);
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 4px hsla(206, 100%, 40%, 0.15);
+    outline: none;
+  }
+`
 
 const BtnContatiner = styled.div`
   display: flex;
@@ -118,44 +194,3 @@ const BtnContatiner = styled.div`
   flex-grow: 0;
   gap: 6px;
 `;
-
-function Header() {
-  const [ isFocus, setIsFocus ] = useState(false);
-
-  const focusHandler = () => {
-    setIsFocus(!isFocus);
-  };
-
-  return (
-    <>
-    <HeaderContainer>
-      <HeaderElementContainer>
-        <HeaderLogo>
-          <Link to="/">
-            <img className="logoImg" src={logo} alt="" />
-          </Link>
-        </HeaderLogo>
-        <SearchContainer> {/* form */}
-          <SearchbarContainer>
-            <img className="searchImg" src={search} alt="" />
-            <SearchInput
-              type="text"
-              placeholder="Search..."
-              onFocus={focusHandler} />
-          </SearchbarContainer>
-            {isFocus && <SearchInfo />}
-        </SearchContainer>
-        <BtnContatiner>
-          <Link to="/login">
-            <HeaderBtn skyblue>Log in</HeaderBtn>
-          </Link>
-          <Link to="/membership">
-            <HeaderBtn>Sign up</HeaderBtn>
-          </Link>
-        </BtnContatiner>
-      </HeaderElementContainer>
-    </HeaderContainer>
-  </>
-  );
-}
-export default Header;
