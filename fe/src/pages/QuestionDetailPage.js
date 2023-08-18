@@ -229,6 +229,8 @@ function QuestionDetailPage() {
 
   const [newAnswerValue, setNewAnswerValue] = useState('');
 
+  const { question_id } = useParams();
+
   return(
     <div>
       <DivAllContainer>
