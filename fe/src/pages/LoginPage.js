@@ -87,7 +87,7 @@ function LoginPage () {
         axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.accessToken}`;
 
          // 로그인 성공 처리
-         dispatch(loginSuccess(accessToken));
+         dispatch(loginSuccess(accessToken, response.data.userInfo));
 
          // 로그인 성공 후 리다이렉션 처리
          navigate("/");
