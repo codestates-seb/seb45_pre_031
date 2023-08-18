@@ -16,17 +16,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class QuestionCommentResponseDto {
 
-//    private Long questionCommentId;
-
     private String content;
 
-    private Long accountId;
+    private Account accountId;
 
-    private String displayName;
+    private Account displayName;
 
-    private String email;
+    private Account email;
 
-    private long questionId;
+    private Answer answerId;
 
     private LocalDateTime createAt;
 
