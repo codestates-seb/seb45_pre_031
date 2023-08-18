@@ -12,23 +12,39 @@ function QuestionList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/question?tab=${tab}&page=${pageNumber}`, {
-          headers: {
-            // 필요 헤더
-          },
-        });
+        const response = await axios.get(`http://localhost:8080/question?tab=${tab}&page=${pageNumber}`);
 
         if (response.data.success) {
           setData(response.data);
         } else {
-          // 실패한 경우
+          console.error("Server responded with an error:", response.data.message || "Unknown server error");
         }
       } catch (error) {
-        console.error("Error fetching questions:", error);
+        console.error("Error while trying to fetch questions:", error);
       }
     };
     fetchData();
   }, [tab, pageNumber]);
+
+  const handleTab = (selectedTab) => {
+    setPageNumber(1);
+    setTab(selectedTab);
+  };
+
+  const handlePage = (selectedPage) => {
+    setPageNumber(selectedPage);
+  };
+
+  const handlePageInput = (e) => {
+    if (e.key === "Enter") {
+      const inputValue = parseInt(e.target.value);
+      if (!isNaN(inputValue)) {
+        setPageNumber(inputValue);
+      }
+    }
+  };
+
+  useEffect(() => console.log("tab:", tab, "page:", pageNumber), [tab, pageNumber]);
 
   return (
     <StyledQuestionList>
@@ -39,52 +55,53 @@ function QuestionList() {
       <FiterContainer>
         <span className="questionCount">25,343,781 quesitons</span>
         <Fiter>
-          <FiterOption>Newest</FiterOption>
-          <FiterOption>Active</FiterOption>
-          <FiterOption>Unanswered</FiterOption>
-          <FiterOption>Score</FiterOption>
-          <FiterOption>Popular</FiterOption>
+          <FiterOption onClick={() => handleTab("newest")}>Newest</FiterOption>
+          <FiterOption onClick={() => handleTab("active")}>Active</FiterOption>
+          <FiterOption onClick={() => handleTab("unanswered")}>Unanswered</FiterOption>
+          <FiterOption onClick={() => handleTab("score")}>Score</FiterOption>
+          <FiterOption onClick={() => handleTab("popular")}>Popular</FiterOption>
         </Fiter>
       </FiterContainer>
       <QuestionListContainer>
-        {/* {data.question_data.map((question) => (
-          <Question>
-            <div className="leftSide">
-              <LeftSideInfo>
-                <span className="votes">{question.vote_up.length - question.vote_down.length} votes</span>
-              </LeftSideInfo>
-              <LeftSideInfo>
-                <span className="answersAndViews">{question.answers_count} asnswers</span>
-              </LeftSideInfo>
-              <LeftSideInfo>
-                <span className="answersAndViews">{question.views} views</span>
-              </LeftSideInfo>
-            </div>
-            <div className="rightSide">
-              <QuestionTitle> {question.title} </QuestionTitle>
-              <QuestionSummury>{question.bodyHTML}</QuestionSummury>
-              <TagAndUserInfoContainer>
-                <TagContainer>
-                  {question.tags.map((tag) => (
-                    <>
-                      <Tag>{tag}</Tag>
-                      <Tag>{tag}</Tag>
-                    </>
-                  ))}
-                </TagContainer>
-                <UserInfoContainer>
-                  <img className="userAvatar" alt="userAvatar" src={logo} />
-                  <div className="userName">
-                    <span>{question.avatarUrl}</span>
-                  </div>
-                  <div className="createdAt">
-                    <span>5 mins ago</span>
-                  </div>
-                </UserInfoContainer>
-              </TagAndUserInfoContainer>
-            </div>
-          </Question>
-        ))} */}
+        {data &&
+          data.question_data.map((question) => (
+            <Question>
+              <div className="leftSide">
+                <LeftSideInfo>
+                  <span className="votes">{question.vote_up.length - question.vote_down.length} votes</span>
+                </LeftSideInfo>
+                <LeftSideInfo>
+                  <span className="answersAndViews">{question.answers_count} asnswers</span>
+                </LeftSideInfo>
+                <LeftSideInfo>
+                  <span className="answersAndViews">{question.views} views</span>
+                </LeftSideInfo>
+              </div>
+              <div className="rightSide">
+                <QuestionTitle> {question.title} </QuestionTitle>
+                <QuestionSummury>{question.bodyHTML}</QuestionSummury>
+                <TagAndUserInfoContainer>
+                  <TagContainer>
+                    {question.tags.map((tag) => (
+                      <>
+                        <Tag>{tag}</Tag>
+                        <Tag>{tag}</Tag>
+                      </>
+                    ))}
+                  </TagContainer>
+                  <UserInfoContainer>
+                    <img className="userAvatar" alt="userAvatar" src={logo} />
+                    <div className="userName">
+                      <span>{question.avatarUrl}</span>
+                    </div>
+                    <div className="createdAt">
+                      <span>5 mins ago</span>
+                    </div>
+                  </UserInfoContainer>
+                </TagAndUserInfoContainer>
+              </div>
+            </Question>
+          ))}
         <Question>
           <div className="leftSide">
             <LeftSideInfo>
@@ -131,7 +148,15 @@ function QuestionList() {
         <Question>Question6</Question>
       </QuestionListContainer>
       <PaginationContainer>
-        <span>pagination</span>
+        <Paginator>Prev</Paginator>
+        <Paginator onClick={() => handlePage(1)}>1</Paginator>
+        <Paginator onClick={() => handlePage(2)}>2</Paginator>
+        <Paginator onClick={() => handlePage(3)}>3</Paginator>
+        <Paginator onClick={() => handlePage(4)}>4</Paginator>
+        <Paginator onClick={() => handlePage(5)}>5</Paginator>
+        <PageInput onKeyUp={handlePageInput} />
+        <Paginator onClick={() => handlePage(1592)}>1592</Paginator>
+        <Paginator>Next</Paginator>
       </PaginationContainer>
     </StyledQuestionList>
   );
@@ -202,6 +227,7 @@ const QuestionListContainer = styled.ul`
   border-top: 1px solid rgb(214, 217, 220);
   margin-left: -24px;
   list-style: none;
+  margin-bottom: 40px;
 `;
 
 const Question = styled.li`
@@ -283,6 +309,7 @@ const Tag = styled.li`
     background-color: hsl(205deg 53% 88%);
   }
 `;
+
 const UserInfoContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -305,4 +332,34 @@ const UserInfoContainer = styled.div`
   }
 `;
 
-const PaginationContainer = styled.div``;
+const PaginationContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+  margin-bottom: 20px;
+`;
+
+const Paginator = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 10px 6px 10px;
+  border-radius: 6px;
+
+  margin-right: 6px;
+  border: 1px solid rgb(214, 217, 220);
+  font-size: 12px;
+  &:hover {
+    background-color: hsl(210, 8%, 97.5%);
+  }
+`;
+
+const PageInput = styled.input`
+  display: flex;
+  padding: 6px 10px 6px 10px;
+  border-radius: 6px;
+  width: 48px;
+  margin-right: 6px;
+  border: 1px solid rgb(214, 217, 220);
+  font-size: 12px;
+`;

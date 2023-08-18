@@ -6,14 +6,15 @@ import backgroundimg from "../assets/images/background.svg";
 
 function QuestionFormPage() {
   return (
-    <StyledQuestionFormPage>
-      <div className="top">
-        <QuestionForm></QuestionForm>
-      </div>
-      <div className="bottom">
-        <Footer></Footer>
-      </div>
-    </StyledQuestionFormPage>
+    <div>
+      <StyledQuestionFormPage>
+        <div className="top">
+          <QuestionForm></QuestionForm>
+        </div>
+        <div className="bottom"></div>
+      </StyledQuestionFormPage>
+      <Footer></Footer>
+    </div>
   );
 }
 

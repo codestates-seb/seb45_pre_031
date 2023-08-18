@@ -7,16 +7,18 @@ import styled from "styled-components";
 
 function QuestionListPage() {
   return (
-    <StyledQuestionListPage>
-      <div className="top">
-        <NavBar></NavBar>
-        <QuestionList></QuestionList>
-        <Aside></Aside>
-      </div>
-      <div className="bottom">
-        <Footer></Footer>
-      </div>
-    </StyledQuestionListPage>
+    <div>
+      <StyledQuestionListPage>
+        <div className="top">
+          <NavBar></NavBar>
+          <QuestionList></QuestionList>
+          <Aside></Aside>
+        </div>
+        <div className="bottom"></div>
+      </StyledQuestionListPage>
+
+      <Footer></Footer>
+    </div>
   );
 }
 
