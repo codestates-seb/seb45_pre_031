@@ -6,6 +6,9 @@ import com.codestates.stackoverflowbe.domain.account.service.AccountService;
 import com.codestates.stackoverflowbe.global.constants.HttpStatusCode;
 import com.codestates.stackoverflowbe.global.response.MultiResponseDto;
 import com.codestates.stackoverflowbe.global.response.SingleResponseDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -18,6 +21,7 @@ import javax.validation.constraints.Positive;
 import java.util.List;
 
 
+@Tag(name = "Account", description = "계정 기능")
 @Slf4j
 @RestController
 @Validated
@@ -29,6 +33,7 @@ public class AccountController {
         this.accountService = accountService;
     }
 
+    @Operation(summary = "Post Account", description = "계정 생성 기능")
     @PostMapping("/signup")
     public ResponseEntity postAccount(@Valid @RequestBody AccountDto.Post accountPostDto) {
         AccountDto.Response accountResponseDto = accountService.createAccount(accountPostDto);
@@ -36,13 +41,16 @@ public class AccountController {
         return new ResponseEntity(new SingleResponseDto<>(HttpStatusCode.CREATED.getStatusCode(),HttpStatusCode.CREATED.getMessage(), accountResponseDto), HttpStatus.CREATED);
     }
 
+
     @GetMapping("/{accountId}")
     ResponseEntity getAccount(@Positive @PathVariable("accountId") long accountId) {
         AccountDto.Response accountResponse= accountService.findAccount(accountId);
         return ResponseEntity.ok(new SingleResponseDto<>(HttpStatusCode.CREATED.getStatusCode(), HttpStatusCode.CREATED.getMessage(), accountResponse));
+
     }
 
 
+    @Operation(summary = "Get All Member", description = "전체 계정 조회 기능")
     @GetMapping
     public ResponseEntity getAccounts(@Positive @RequestParam int page,
                                       @Positive @RequestParam int size) {

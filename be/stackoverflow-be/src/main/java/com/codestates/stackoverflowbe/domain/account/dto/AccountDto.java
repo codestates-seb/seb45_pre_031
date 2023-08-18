@@ -5,7 +5,6 @@ import com.codestates.stackoverflowbe.domain.answer.entity.Answer;
 import com.codestates.stackoverflowbe.domain.vote.entity.Vote;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -14,6 +13,7 @@ public class AccountDto {
     @Getter
     @Setter
     @AllArgsConstructor
+    @NoArgsConstructor
     public static class Post {
         private String displayName;
         private String email;
@@ -60,8 +60,7 @@ public class AccountDto {
     @Builder
     @AllArgsConstructor
     public static class Response {
-        private Long account_id;
-
+        private Long accountId;
         private String displayName;
         private String email;
 

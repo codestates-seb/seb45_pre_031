@@ -61,10 +61,9 @@ public class Account extends BaseTimeEntity {
 
     private String gitHubLink;
 
-
-
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
+
 
     public Account(long accountId, String email, String password, List<String> roles) {
         this.accountId = accountId;
@@ -97,7 +96,7 @@ public class Account extends BaseTimeEntity {
 
     public AccountDto.Response toResponse() {
         return AccountDto.Response.builder()
-                .account_id(this.getAccountId())
+                .accountId(this.getAccountId())
                 .displayName(this.getDisplayName())
                 .email(this.getEmail())
                 .build();
