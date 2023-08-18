@@ -123,7 +123,7 @@ public class OAuth2AccountSuccessHandler extends SimpleUrlAuthenticationSuccessH
                 .newInstance()
                 .scheme(requestScheme)
 //                .host("localhost")
-                .port(3000)
+                .port(80)
 //                .port(80)
 //                .path("/receive-token.html")
 //                .path("/login") // 이후 URI 수정
