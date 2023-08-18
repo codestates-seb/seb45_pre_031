@@ -12,7 +12,9 @@ function QuestionList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/question?tab=${tab}&page=${pageNumber}`);
+        const response = await axios.get(
+          `http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/question?tab=${tab}&page=${pageNumber}`
+        );
 
         if (response.data.success) {
           setData(response.data);

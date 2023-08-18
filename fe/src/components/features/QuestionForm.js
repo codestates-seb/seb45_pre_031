@@ -49,7 +49,7 @@ function QuestionForm() {
       return;
     }
     try {
-      const response = await axios.post("http://localhost:8080/question", {
+      const response = await axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/question", {
         title: titleValue,
         bodyHTML: bodyValue,
         user_id: "로그인정보에서",
