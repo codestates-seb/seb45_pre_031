@@ -1,7 +1,7 @@
 import { styled } from "styled-components"
 
 const AsideAside = styled.aside`
-  margin: 24px;
+  margin: 12px 24px;
   width: 300px;
 `
 //

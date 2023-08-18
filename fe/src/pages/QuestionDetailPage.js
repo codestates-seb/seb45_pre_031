@@ -57,6 +57,7 @@ const DivMainAside = styled.div`
   width: 1080px;
 `
 const MainMain = styled.main`
+  margin: 12px 0;
   width: 100%;
 `
 const ArticleQ = styled.article`
@@ -91,7 +92,7 @@ const SpanQContainer = styled.span`
 const DivQText = styled.div`
 `
 const UlTags = styled.ul`
-  margin: 24px 0 24px 0;
+  margin: 24px 0;
   list-style: none;
 `
 const LiTag = styled.li`
