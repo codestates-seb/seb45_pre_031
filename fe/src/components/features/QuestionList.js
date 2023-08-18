@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+import ReactPaginate from "react-paginate";
+
 function QuestionList() {
   const [data, setData] = useState("");
   const [tab, setTab] = useState("newest");
@@ -43,15 +45,6 @@ function QuestionList() {
     setPageNumber(selectedPage);
   };
 
-  const handlePageInput = (e) => {
-    if (e.key === "Enter") {
-      const inputValue = parseInt(e.target.value);
-      if (!isNaN(inputValue)) {
-        setPageNumber(inputValue);
-      }
-    }
-  };
-
   useEffect(() => console.log("tab:", tab, "page:", pageNumber), [tab, pageNumber]);
 
   return (
@@ -67,7 +60,6 @@ function QuestionList() {
           <FiterOption onClick={() => handleTab("active")}>Active</FiterOption>
           <FiterOption onClick={() => handleTab("unanswered")}>Unanswered</FiterOption>
           <FiterOption onClick={() => handleTab("score")}>Score</FiterOption>
-
           <FiterOption onClick={() => handleTab("popular")}>Pop(week)</FiterOption>
           <FiterOption onClick={() => handleTab("popular")}>Pop(month)</FiterOption>
         </Fiter>
@@ -157,15 +149,14 @@ function QuestionList() {
         <Question>Question6</Question>
       </QuestionListContainer>
       <PaginationContainer>
-        <Paginator>Prev</Paginator>
-        <Paginator onClick={() => handlePage(1)}>1</Paginator>
-        <Paginator onClick={() => handlePage(2)}>2</Paginator>
-        <Paginator onClick={() => handlePage(3)}>3</Paginator>
-        <Paginator onClick={() => handlePage(4)}>4</Paginator>
-        <Paginator onClick={() => handlePage(5)}>5</Paginator>
-        <PageInput onKeyUp={handlePageInput} />
-        <Paginator onClick={() => handlePage(1592)}>1592</Paginator>
-        <Paginator>Next</Paginator>
+        <StyledReactPaginate
+          pageCount={24}
+          pageRangeDisplayed={5}
+          marginPagesDisplayed={1}
+          previousLabel={"Prev"}
+          nextLabel={"Next"}
+          onPageChange={({ selected }) => handlePage(selected + 1)}
+        />
       </PaginationContainer>
     </StyledQuestionList>
   );
@@ -348,27 +339,23 @@ const PaginationContainer = styled.div`
   margin-bottom: 20px;
 `;
 
-const Paginator = styled.div`
+const StyledReactPaginate = styled(ReactPaginate)`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 6px 10px 6px 10px;
-  border-radius: 6px;
+  flex-direction: row;
+  list-style: none;
 
-  margin-right: 6px;
-  border: 1px solid rgb(214, 217, 220);
-  font-size: 12px;
-  &:hover {
-    background-color: hsl(210, 8%, 97.5%);
+  li {
+    padding: 6px 8px 6px 8px;
+    border-radius: 6px;
+    margin-right: 6px;
+    border: 1px solid rgb(214, 217, 220);
+    font-size: 12px;
+    &:hover {
+      background-color: rgb(189, 190, 191);
+    }
   }
-`;
-
-const PageInput = styled.input`
-  display: flex;
-  padding: 6px 10px 6px 10px;
-  border-radius: 6px;
-  width: 48px;
-  margin-right: 6px;
-  border: 1px solid rgb(214, 217, 220);
-  font-size: 12px;
+  li.selected {
+    color: white;
+    background-color: rgb(244, 130, 37);
+  }
 `;
