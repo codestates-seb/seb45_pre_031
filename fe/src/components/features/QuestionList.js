@@ -12,7 +12,9 @@ function QuestionList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/question?tab=${tab}&page=${pageNumber}`);
+        const response = await axios.get(
+          `http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/question?tab=${tab}&page=${pageNumber}`
+        );
 
         if (response.data.success) {
           setData(response.data);
@@ -53,13 +55,15 @@ function QuestionList() {
         <AskQuestionBtn>Ask Question</AskQuestionBtn>
       </HeaderContainer>
       <FiterContainer>
-        <span className="questionCount">25,343,781 quesitons</span>
+        <span className="questionCount">{data.questions_count} quesitons</span>
         <Fiter>
           <FiterOption onClick={() => handleTab("newest")}>Newest</FiterOption>
           <FiterOption onClick={() => handleTab("active")}>Active</FiterOption>
           <FiterOption onClick={() => handleTab("unanswered")}>Unanswered</FiterOption>
           <FiterOption onClick={() => handleTab("score")}>Score</FiterOption>
-          <FiterOption onClick={() => handleTab("popular")}>Popular</FiterOption>
+
+          <FiterOption onClick={() => handleTab("popular")}>Pop(week)</FiterOption>
+          <FiterOption onClick={() => handleTab("popular")}>Pop(month)</FiterOption>
         </Fiter>
       </FiterContainer>
       <QuestionListContainer>
@@ -84,7 +88,6 @@ function QuestionList() {
                   <TagContainer>
                     {question.tags.map((tag) => (
                       <>
-                        <Tag>{tag}</Tag>
                         <Tag>{tag}</Tag>
                       </>
                     ))}
