@@ -20,7 +20,7 @@ function App() {
           <Route path="/login" element={<LoginPage />}></Route>
           <Route path="/membership" element={<MembershipPage />}></Route>
           <Route path="/questionlist" element={<QuestionlistPage />}></Route>
-          <Route path="/questiondetail" element={<QuestionDetailPage />}></Route>
+          <Route path="/questiondetail/:question_id" element={<QuestionDetailPage />}></Route>
           <Route path="/questionform" element={<QuestionFormPage />}></Route>
           <Route path="/taglist" element={<TagListPage />}></Route>
         </Routes>
