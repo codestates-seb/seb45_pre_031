@@ -3,11 +3,17 @@ import AskQuestionBtn from "../atoms/AskQuestionBtn";
 import logo from "../../assets/images/logo.png";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function QuestionList() {
   const [data, setData] = useState("");
   const [tab, setTab] = useState("newest");
   const [pageNumber, setPageNumber] = useState(1);
+
+  const navigate = useNavigate();
+  const goToDetail = (question_id) => {
+    navigate(`/questiondetail/${question_id}`);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -82,7 +88,7 @@ function QuestionList() {
                 </LeftSideInfo>
               </div>
               <div className="rightSide">
-                <QuestionTitle> {question.title} </QuestionTitle>
+                <QuestionTitle onClick={() => goToDetail(question.question_id)}> {question.title} </QuestionTitle>
                 <QuestionSummury>{question.bodyHTML}</QuestionSummury>
                 <TagAndUserInfoContainer>
                   <TagContainer>
