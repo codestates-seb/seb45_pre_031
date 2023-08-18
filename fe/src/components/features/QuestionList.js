@@ -87,7 +87,6 @@ function QuestionList() {
                     {question.tags.map((tag) => (
                       <>
                         <Tag>{tag}</Tag>
-                        <Tag>{tag}</Tag>
                       </>
                     ))}
                   </TagContainer>
