@@ -1,91 +1,288 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
 import { styled } from "styled-components";
-import { loginSuccess, loginFailure } from "../redux/actions/loginAction";
+import { useDispatch } from "react-redux";
+import axios from "axios";
+import { loginSuccess, loginFailure, emailMismatchError, passwordMismatchError } from "../redux/actions/loginAction";
+import PasswordModal from "../components/features/PasswordModal";
+
+function LoginPage () {
+  const LOCAL_SERVER_ADRESS = process.env.REACT_APP_LOCAL_SEVER_ADRESS;
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [ email, setEmail ] = useState("");
+  const [ password, setPassword ] = useState("");
+  const [ emailError, setEmailError ] = useState(false);
+  const [ passwordError, setPasswordError ] = useState(false);
+  const [ emailMismatchErrorText, setEmailMismatchErrorText] = useState("");
+  const [ passwordMismatchErrorText, setPasswordMismatchErrorText] = useState("");
+  const [ isModalOpen, setIsModalOpen ] = useState(false);
+
+  const modalHandler = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  }
 
 
-const LoginPageContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-basis: auto;
-  flex-shrink: 0;
-  flex-grow: 1;
-  position: relative;
-  max-width: 100%;
+  const onEmailHandler = (e) => {
+    setEmail(e.currentTarget.value);
+    if (emailError) {
+      setEmailError(false); // 값 입력 시 에러 스타일 clear
+    }
+  }
+
+  const onPasswordHandler = (e) => {
+    setPassword(e.currentTarget.value);
+    if (passwordError) {
+      setPasswordError(false); // 값 입력 시 에러 스타일 clear
+    }
+  }
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$/;
+    return emailRegex.test(email);
+  }
+
+  const validatePassword = (password) => {
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    return passwordRegex.test(password);
+  }
+
+  const loginHanler = async (e) => {
+    // page refresh 방지
+    e.preventDefault();
+
+    // 이메일 input 값이 비어있거나 형식에 맞지 않게 입력 받을 경우 error 메시지 표출
+    if (email === "") {
+      setEmailError("Email cannot be empty.");
+    } else if (!validateEmail(email)) {
+      setEmailError("The email is not a valid email address.");
+    }
+
+    // 비밀번호 input 값이 비어있거나 형식에 맞지 않게 입력 받을 경우 error 메시지 표출
+    if (password === "") {
+      setPasswordError("Password cannot be empty.");
+    } else if (!validatePassword(password)) {
+      setPasswordError("The password is not a valid password.");
+    }
+
+    // 유효한 이메일과 비밀번호를 입력할 경우 서버로 전송
+    try {
+      const response = await axios.post(`${LOCAL_SERVER_ADRESS}/v1/accounts/authenticate`, { email, password });
+      if (response.data.success) {
+        // 서버에서 토큰을 받음
+        const accessToken = response.data.accessToken;
+        const refreshToken = response.data.refreshToken;
+
+        // 토큰을 로컬 스토리지에 저장
+        localStorage.setItem("access_token", accessToken);
+        localStorage.setItem("refresh_token", refreshToken);
+
+        // 토큰을 헤더에 포함시켜서 요청
+        axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.accessToken}`;
+
+         // 로그인 성공 처리
+         dispatch(loginSuccess(accessToken));
+
+         // 로그인 성공 후 리다이렉션 처리
+         navigate("/");
+
+      } else if (response.data.errorType === "email_not_found") {
+        dispatch(emailMismatchError("No user found with matching email."));
+        setPasswordMismatchErrorText("");
+      } else if (response.data.errorType === "password_mismatch") {
+        dispatch(passwordMismatchError("Password dose not match."));
+        setEmailMismatchErrorText("");
+      } else {
+        dispatch(loginFailure(response.data.message));
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+    }
+  };
+
+  const googleLoginHandler = async () => {
+    try {
+      window.location.href = `${LOCAL_SERVER_ADRESS}/oauth2/authorization/google`;
+    } catch (error) {
+      console.error("Google 로그인 중 에러:", error);
+      dispatch(loginFailure("Google 로그인 중 에러가 발생했습니다."));
+    }
+  };
+
+  useEffect(() => {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const accessToken = urlSearchParams.get("access_token");
+    const refreshToken = urlSearchParams.get("refresh_token");
+
+    if (accessToken && refreshToken) {
+      try {
+        // 로컬 스토리지에 토큰 저장
+        localStorage.setItem("access_token", accessToken);
+        localStorage.setItem("refresh_token", refreshToken);
+
+        // 토큰을 헤더에 포함시켜서 요청
+        axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+
+        // 로그인 성공 처리
+        dispatch(loginSuccess(accessToken));
+
+        // 로그인 성공 후 리다이렉션 처리
+        navigate("/");
+
+      } catch (error) {
+        console.error("토큰 저장 중 에러:", error);
+        dispatch(loginFailure("토큰 저장 중 에러가 발생했습니다."));
+      }
+    } else {
+      console.error("Google 로그인 오류");
+      dispatch(loginFailure("Google 로그인 오류가 발생했습니다."));
+    }
+  }, [dispatch, navigate]);
+
+  return (
+    <LoginPageContainer>
+      <LoginContentContainet>
+        <LoginLogoContiner>
+          <img src="https://media.discordapp.net/attachments/1138344984454631504/1138711197278015569/image.png?width=612&height=708" alt="" />
+        </LoginLogoContiner>
+        <LoginBtnContainer>
+          <GoogleLoginBtn
+            onClick={googleLoginHandler}>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1024px-Google_%22G%22_Logo.svg.png" alt="" />
+            Log in with Google</GoogleLoginBtn>
+        </LoginBtnContainer>
+        <LoginFormContainer>
+          <LoginForm>
+            <LoginInputForm className="login-email-form">
+              <div>
+                <LoginLabel>Email</LoginLabel>
+              </div>
+              <LoginInput
+                className={`login-email-input ${emailError || emailMismatchErrorText ? "error" : ""}`}
+                type="email"
+                value={email}
+                onChange={onEmailHandler}
+                />
+                {emailError &&
+                  <ErrorText>{emailError}</ErrorText>}
+                {emailMismatchErrorText &&
+                  <ErrorText>{emailMismatchErrorText}</ErrorText>}
+            </LoginInputForm>
+            <LoginInputForm className="login-password-form">
+              <div>
+                <LoginLabel>Password</LoginLabel>
+                <p onClick={modalHandler}>Forgot password?</p>
+                {isModalOpen ?
+                  <PasswordModal
+                    isModalOpen={isModalOpen}
+                    closeModal={closeModal}
+                    /> : null}
+              </div>
+              <LoginInput
+                className={`login-password-input ${passwordError || passwordMismatchErrorText ? "error" : ""}`}
+                type="password"
+                value={password}
+                onChange={onPasswordHandler}
+                />
+                {passwordError &&
+                  <ErrorText>{passwordError}</ErrorText>}
+                {passwordMismatchErrorText &&
+                  <ErrorText>{passwordMismatchErrorText}</ErrorText>}
+            </LoginInputForm>
+            <LoginBtnContainer>
+              <LoginBtn
+                onClick={loginHanler}>Log in</LoginBtn>
+            </LoginBtnContainer>
+          </LoginForm>
+        </LoginFormContainer>
+        <LoginTextBelowContainer>
+            Don't have an accout?
+            <a href="/membership">Sign up</a>
+        </LoginTextBelowContainer>
+      </LoginContentContainet>
+    </LoginPageContainer>
+
+  );
+};
+
+
+const LoginPageContainer = styled.section`
   width: 100%;
   height: 100vh;
-  margin: 0;
-  background-color: hsl(210,8%,95%);
-  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI Adjusted","Segoe UI","Liberation Sans",sans-serif;
-`
-
-const ContentContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  max-width: 1264px;
-  margin: 0;
-  background-color: transparent;
-  padding: 24px;
+  background-color: rgb(241, 242, 243);
+`;
 
-  &::before {
-    content: "";
-    display: table;
-  }
-`
-
-const ItemsContainer = styled.div`
-  display: block;
-  margin: 0;
-  padding: 0;
-`
-
-const LogoContainer = styled.div`
-  display: block;
-  text-align: center;
-  margin-bottom: 24px;
-
-  > img {
-    width: 32px;
-    height: 37px;
-  }
-`
-
-const SocialLoginContainer = styled.div`
+const LoginContentContainet = styled.div`
   display: flex;
   flex-direction: column;
-  flex-basis: auto;
-  flex-grow: 1;
-  flex-shrink: 1;
-  margin-bottom: 16px;
-`
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+`;
 
-const FormContainer = styled.div`
-  display: block;
-  margin-bottom: 24px;
+const LoginFormContainer = styled.div`
+  width: 290px;
+  box-shadow: 0 10px 24px hsla(0,0%,0%,0.05), 0 20px 48px hsla(0, 0%, 0%, 0.05), 0 1px 4px hsla(0, 0%, 0%, 0.1);
+  padding: 24px;
   margin-left: auto;
   margin-right: auto;
-  padding: 24px;
-  background-color: hsl(0,0%,100%);
-  border-radius: 8px;
-  box-shadow: 0 10px 24px hsla(0,0%,0%,0.05), 0 20px 48px hsla(0, 0%, 0%, 0.05), 0 1px 4px hsla(0, 0%, 0%, 0.1);
-  max-width: 24rem;
-  width: 230px;
+  margin-bottom: 24px;
+  background-color: white;
+  border-radius: 6px;
+  box-sizing: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
-  > form {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    flex: 1 0 auto;
-    margin: calc(12 / 2 * -1);
-    text-align: left;
+const LoginForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+`;
+
+const LoginInputForm = styled.div`
+  width: 100%;
+
+  > div {
+    margin-bottom: 4px;
   }
-`
 
-const Input = styled.input`
+  &.login-password-form {
+
+    > div {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      > p {
+        font-size: 12px;
+        color: rgb(0, 116, 204);
+        cursor: pointer;
+      }
+    }
+  }
+`;
+
+const LoginLabel = styled.label`
+  font-size: 15px;
+  font-family: inherit;
+  font-weight: 600;
+`;
+
+const LoginInput = styled.input`
   width: 100%;
   margin: 0;
   background-color: hsl(0,0%,100%);
@@ -98,175 +295,115 @@ const Input = styled.input`
     box-shadow: 0 0 0 4px hsla(206, 100%, 40%, 0.15);
     outline: none;
   }
-`
 
-const InputContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-  margin: 6px 0px;
+  &.error {
+    border: 1px solid hsl(358,68%,59%);
 
-  &.input-password {
-
-    > div {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    &:focus {
+      box-shadow: 0 0 0 4px hsla(358,62%,47%,0.15);
     }
   }
+`;
 
-  > div > span {
-    font-size: 10px;
-  }
-
-
-`
-
-const BtnContainer = styled.div`
-`
-
-const GoogleLoginButton = styled.button`
+const LoginBtnContainer = styled.div`
   width: 100%;
-  padding: 8px 0.8em;
-  border-radius: 6px;
-  border: none;
-  white-space: nowrap;
-  cursor: pointer;
-  color: black;
-  background-color: #ffffff; /* Google 로그인 색상 */
 `;
 
 const LoginBtn = styled.button`
   width: 100%;
-  padding: 8px 0.8em;
+  margin: 0;
+  padding: 10px;
   border-radius: 6px;
+  color: white;
+  font-size: 13px;
   border: none;
   white-space: nowrap;
-  cursor: pointer;
-  color: white;
   background-color: hsl(206,100%,52%);
-`
 
+  &:hover {
+    background-color: hsl(206,100%,40%);
+  }
 
-function LoginPage (props) {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  &:active {
+    background-color: hsl(209,100%,37.5%);
+  }
 
-  const [ username, setUsername ] = useState('');
-  const [ password, setPassword ] = useState('');
+  &:focus {
+    box-shadow: 0 0 0 4px hsla(206, 100%, 40%, 0.15);
+    outline: none;
+  }
+`;
 
-  // 입력 시, onChange 발생 -> state 변경 -> value 변경
-  const onUsernameHandler = (event) => {
-    setUsername(event.currentTarget.value);
-  };
+const GoogleLoginBtn = styled.button`
+  width: 100%;
+  margin: 0;
+  margin-top: 8px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 6px;
+  color: rgb(59, 64, 69);
+  font-size: 13px;
+  border: 1px solid hsl(210,8%,85%);
+  white-space: nowrap;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
 
-  const onPasswordHandler = (event) => {
-    setPassword(event.currentTarget.value);
-  };
+  &:hover {
+    background-color: hsl(210,8%,97.5%);
+  }
 
-  const onLoginHadler = async (event) => {
-    // page refresh 방지
-    event.preventDefault();
+  &:active {
+    background-color: hsl(210,8%,95%);
+  }
 
-    // 서버 요청
-    try {
-      const response = await axios.post("http://localhost:8080/v1/accounts/authenticate", {
-        username,
-        password,
-      });
+  &:focus {
+    box-shadow: 0 0 0 4px hsla(210,8%,15%,0.1);
+    outline: none;
+  }
 
-      if (response.data.success) {
-        // 서버에서 받은 토큰
-        const accessToken = response.data.accessToken;
-        const refreshToken = response.data.refreshToken;
+  > img {
+    display: block;
+    margin: 0;
+    padding: 0;
+    width: 18px;
+    height: 18px;
+  }
+`;
 
-        // 로컬 스토리지에 토큰 저장
-        localStorage.setItem("access_token", accessToken);
-        localStorage.setItem("refresh_token", refreshToken);
+const LoginLogoContiner = styled.div`
+  display: block;
+  text-align: center;
 
-        // 로그인 성공 처리
-        dispatch(loginSuccess(accessToken));
+  > img {
+    width: 32px;
+    height: 37px;
+  }
+`;
 
-        // 로그인 성공 후 리다이렉션 처리
-        navigate("/");
+const LoginTextBelowContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
 
-      } else {
-        dispatch(loginFailure(response.data.message));
-      }
-    } catch (error) {
-      console.error("Error during login:", error);
-      dispatch(loginFailure("An error occurred during login."));
+  > a {
+    color: rgb(0, 116, 204);
+    text-decoration: none;
+
+    &:hover {
+      color: hsl(206,100%,52%);
     }
-  };
+  }
+`;
 
-  const onGoogleLoginHandler = () => {
-    // Google 로그인 URL
-    const googleLoginUrl = "http://localhost:8080/oauth2/authorization/google";
-
-    // Google 로그인 팝업
-    window.open(googleLoginUrl, "_blank");
-  };
-
-  useEffect(() => {
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const accessToken = urlSearchParams.get("access_token");
-    const refreshToken = urlSearchParams.get("refresh_token");
-
-    if (accessToken && refreshToken) {
-      // 로컬 스토리지에 토큰 저장
-      localStorage.setItem("access_token", accessToken);
-      localStorage.setItem("refresh_token", refreshToken);
-
-      // 로그인 성공 처리
-      dispatch(loginSuccess(accessToken));
-
-      // 로그인 성공 후 리다이렉션 처리
-      navigate("/");
-    }
-  });
-
-  return (
-    <LoginPageContainer>
-      <ContentContainer>
-        <ItemsContainer>
-          <LogoContainer>
-            <img src="https://media.discordapp.net/attachments/1138344984454631504/1138711197278015569/image.png?width=612&height=708" alt="" />
-          </LogoContainer>
-          <SocialLoginContainer>
-            <GoogleLoginButton
-              onClick={onGoogleLoginHandler}>
-                Google로 로그인
-            </GoogleLoginButton>
-          </SocialLoginContainer>
-          <FormContainer>
-            <form id="login-form">
-               <InputContainer className="input-email">
-                <label>Email</label>
-                <Input
-                type="email"
-                value={username}
-                onChange={onUsernameHandler}/>
-              </InputContainer>
-              <InputContainer className="input-password">
-                <div>
-                  <label>Password</label>
-                  <span>Forgot password?</span>
-                </div>
-                <Input
-                  type="password"
-                  value={password}
-                  onChange={onPasswordHandler}/>
-              </InputContainer>
-              <BtnContainer>
-                <LoginBtn
-                  onClick={onLoginHadler}>Log in</LoginBtn>
-              </BtnContainer>
-            </form>
-          </FormContainer>
-        </ItemsContainer>
-      </ContentContainer>
-    </LoginPageContainer>
-  )
-}
+const ErrorText = styled.p`
+  font-size: 12px;
+  color: hsl(358, 68%, 59%);
+  margin-top: 4px;
+`;
 
 export default LoginPage;
