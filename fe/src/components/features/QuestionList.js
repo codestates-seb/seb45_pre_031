@@ -63,44 +63,45 @@ function QuestionList() {
         </Fiter>
       </FiterContainer>
       <QuestionListContainer>
-        {/* {data.question_data.map((question) => (
-          <Question>
-            <div className="leftSide">
-              <LeftSideInfo>
-                <span className="votes">{question.vote_up.length - question.vote_down.length} votes</span>
-              </LeftSideInfo>
-              <LeftSideInfo>
-                <span className="answersAndViews">{question.answers_count} asnswers</span>
-              </LeftSideInfo>
-              <LeftSideInfo>
-                <span className="answersAndViews">{question.views} views</span>
-              </LeftSideInfo>
-            </div>
-            <div className="rightSide">
-              <QuestionTitle> {question.title} </QuestionTitle>
-              <QuestionSummury>{question.bodyHTML}</QuestionSummury>
-              <TagAndUserInfoContainer>
-                <TagContainer>
-                  {question.tags.map((tag) => (
-                    <>
-                      <Tag>{tag}</Tag>
-                      <Tag>{tag}</Tag>
-                    </>
-                  ))}
-                </TagContainer>
-                <UserInfoContainer>
-                  <img className="userAvatar" alt="userAvatar" src={logo} />
-                  <div className="userName">
-                    <span>{question.avatarUrl}</span>
-                  </div>
-                  <div className="createdAt">
-                    <span>5 mins ago</span>
-                  </div>
-                </UserInfoContainer>
-              </TagAndUserInfoContainer>
-            </div>
-          </Question>
-        ))} */}
+        {data &&
+          data.question_data.map((question) => (
+            <Question>
+              <div className="leftSide">
+                <LeftSideInfo>
+                  <span className="votes">{question.vote_up.length - question.vote_down.length} votes</span>
+                </LeftSideInfo>
+                <LeftSideInfo>
+                  <span className="answersAndViews">{question.answers_count} asnswers</span>
+                </LeftSideInfo>
+                <LeftSideInfo>
+                  <span className="answersAndViews">{question.views} views</span>
+                </LeftSideInfo>
+              </div>
+              <div className="rightSide">
+                <QuestionTitle> {question.title} </QuestionTitle>
+                <QuestionSummury>{question.bodyHTML}</QuestionSummury>
+                <TagAndUserInfoContainer>
+                  <TagContainer>
+                    {question.tags.map((tag) => (
+                      <>
+                        <Tag>{tag}</Tag>
+                        <Tag>{tag}</Tag>
+                      </>
+                    ))}
+                  </TagContainer>
+                  <UserInfoContainer>
+                    <img className="userAvatar" alt="userAvatar" src={logo} />
+                    <div className="userName">
+                      <span>{question.avatarUrl}</span>
+                    </div>
+                    <div className="createdAt">
+                      <span>5 mins ago</span>
+                    </div>
+                  </UserInfoContainer>
+                </TagAndUserInfoContainer>
+              </div>
+            </Question>
+          ))}
         <Question>
           <div className="leftSide">
             <LeftSideInfo>
