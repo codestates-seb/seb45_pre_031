@@ -1,6 +1,74 @@
 import styled from "styled-components";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 function QuestionForm() {
+  const [titleValue, setTitleValue] = useState("");
+  const [bodyValue, setBodyValue] = useState("");
+
+  const [isTitleValid, setIsTitleValid] = useState(true);
+  const [isBodyValid, setIsBodyValid] = useState(true);
+
+  const handleTitleChange = (e) => {
+    setTitleValue(e.target.value);
+  };
+
+  const handleBodyChange = (e) => {
+    setBodyValue(e);
+  };
+
+  const handleTitleBlur = () => {
+    if (titleValue.trim().length < 15) {
+      setIsTitleValid(false);
+    } else {
+      setIsTitleValid(true);
+    }
+  };
+
+  const handleBodyBlur = () => {
+    validateBodyContent(bodyValue);
+    console.log("blur호출");
+  };
+
+  const validateBodyContent = (content) => {
+    //태그 없애고 텍스트만 남기기
+    const textOnly = content.replace(/<[^>]+>/g, "");
+
+    if (textOnly.length < 220) {
+      setIsBodyValid(false);
+    } else {
+      setIsBodyValid(true);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!isTitleValid || !isBodyValid) {
+      alert("Please ensure that the title and body meet the requirements.");
+      return;
+    }
+    try {
+      const response = await axios.post("http://localhost:8080/question", {
+        title: titleValue,
+        bodyHTML: bodyValue,
+        user_id: "로그인정보에서",
+      });
+
+      if (response.data.success) {
+        alert("Question successfully posted!");
+      } else {
+        console.error("Error posting question:", response.data.message || "Unknown server error");
+      }
+    } catch (error) {
+      console.error("Error while trying to post question:", error);
+    }
+  };
+
+  useEffect(() => console.log("titleValue:", titleValue), [titleValue]);
+
+  useEffect(() => console.log("bodyValue:", bodyValue), [bodyValue]);
+
   return (
     <StyledQuestionForm>
       <HeaderContainer>
@@ -13,15 +81,31 @@ function QuestionForm() {
         <TitleForm>
           <span className="title">Title</span>
           <span className="instruction">Be specific and imagine you’re asking a question to another person.</span>
-          <TitleInput placeholder="e.g. Is there an R function for finding the index of an element in a vector?"></TitleInput>
+          <TitleInput
+            onChange={handleTitleChange}
+            onBlur={handleTitleBlur}
+            placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
+            hasError={!isTitleValid}
+          ></TitleInput>
+          {!isTitleValid && <span className="inputError">Title must be at least 15 characters.</span>}
         </TitleForm>
         <BodyForm>
           <span className="title">Body</span>
           <span className="instruction">
             The body of your question contains your problem details and results. Minimum 220 characters.
           </span>
-          <BodyInput></BodyInput>
+          <StyledReactQuill
+            theme="snow"
+            Value={bodyValue}
+            onChange={handleBodyChange}
+            onBlur={handleBodyBlur}
+            hasError={!isBodyValid}
+          />
+          <div className="inputError">
+            {!isBodyValid && <span className="inputError">Body must be at least 220 characters.</span>}
+          </div>
         </BodyForm>
+
         <TagsForm>
           <span className="title">Tags</span>
           <span className="instruction">
@@ -30,7 +114,7 @@ function QuestionForm() {
           <TagsInput placeholder="e.g. (sql-server angularjs mysql)"></TagsInput>
         </TagsForm>
         <SubmitContainer>
-          <Btn>Post your question</Btn>
+          <Btn onClick={handleSubmit}>Post your question</Btn>
         </SubmitContainer>
       </FormContainer>
     </StyledQuestionForm>
@@ -87,7 +171,11 @@ const TitleForm = styled.div`
   border-radius: 6px;
   padding: 24px;
   border: 1px solid rgb(214 217 220);
+  .inputError {
+    color: red;
 
+    font-size: 12px;
+  }
   .title {
     font-weight: 500;
     margin-bottom: 4px;
@@ -100,7 +188,12 @@ const TitleForm = styled.div`
 `;
 
 const BodyForm = styled(TitleForm)`
+  min-height: 520px;
   margin-top: 12px;
+  .inputError {
+    position: relative;
+    top: 22px;
+  }
 `;
 
 const TagsForm = styled(TitleForm)`
@@ -111,7 +204,9 @@ const SubmitContainer = styled.div`
   display: flex;
   flex-direction: row;
   margin-top: 12px;
+  margin-bottom: 30px;
 `;
+
 const Btn = styled.button`
   height: 38px;
   padding: 10.5px;
@@ -129,10 +224,14 @@ const Input = styled.input`
   width: 100%;
   border-radius: 6px;
   font-size: 13px;
-  border: 1px solid #bbc0c4;
+  margin-bottom: 2px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: ${(props) => (props.hasError ? "red" : "#bbc0c4")};
   &:focus {
-    border-color: hsl(206, 90%, 69.5%);
-    box-shadow: 0 0 0 4px hsla(206, 100%, 40%, 0.15);
+    border-color: ${(props) => (props.hasError ? "red" : "hsl(206, 90%, 69.5%)")};
+    box-shadow: ${(props) =>
+      props.hasError ? "0 0 0 4px rgba(255, 0, 0, 0.15)" : "0 0 0 4px hsla(206, 100%, 40%, 0.15)"};
     outline: none;
   }
   &::placeholder {
@@ -141,7 +240,21 @@ const Input = styled.input`
 `;
 
 const TitleInput = styled(Input)``;
-const BodyInput = styled(Input)`
-  min-height: 260px;
-`;
+
 const TagsInput = styled(Input)``;
+
+const StyledReactQuill = styled(ReactQuill)`
+  height: 360px;
+  .ql-container {
+    border-color: ${(props) => (props.hasError ? "red" : "#bbc0c4")};
+    border-radius: 0px 0px 6px 6px;
+  }
+  .ql-editor {
+  }
+  .ql-toolbar {
+    background-color: rgb(251, 251, 251);
+    border-bottom: none;
+    border-color: ${(props) => (props.hasError ? "red" : "#bbc0c4")};
+    border-radius: 6px 6px 0px 0px;
+  }
+`;
