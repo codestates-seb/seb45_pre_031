@@ -19,6 +19,11 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -28,15 +33,14 @@ public class SecurityConfiguration {
     private final CustomAuthorityUtils authorityUtils;
     private final AccountService accountService;
 
-    private final SecurityCorsConfig corsConfig;
+//    private final SecurityCorsConfig corsConfig;
 
 
     public SecurityConfiguration(JwtTokenizer jwtTokenizer, CustomAuthorityUtils authorityUtils,
-                                 AccountService accountService, SecurityCorsConfig corsConfig) {
+                                 AccountService accountService) {
         this.jwtTokenizer = jwtTokenizer;
         this.authorityUtils = authorityUtils;
         this.accountService = accountService;
-        this.corsConfig = corsConfig;
     }
 
     @Bean
@@ -77,22 +81,28 @@ public class SecurityConfiguration {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-//    @Bean
-//    CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        //모든 출처(Origin)에 대해 스크립트 기반 HTTP 통신 허용
-//        configuration.setAllowedOrigins(Arrays.asList("*"));
-//
-//        //4가지 HTTP Method에 대한 HTTP 통신 허용
-//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE"));
-//
-//        // CorsConfigurationSource 인터페이스 구현 클래스인 UrlBasedCorsConfigurationSource 클래스 객체 생성
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//
-//        // 모든 URL에 상기 CORS 정책 적용
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        //모든 출처(Origin)에 대해 스크립트 기반 HTTP 통신 허용
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:80",
+                "http://localhost:8080",
+                "http://localhost:3000",
+                "http://seveneleven-stackoverflow-s3.s3-website.ap-northeast-2.amazonaws.com",
+                "3.36.128.133:8080",
+                "3.36.128.133:80"));
+
+        //4가지 HTTP Method에 대한 HTTP 통신 허용
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE", "OPTIONS"));
+
+        // CorsConfigurationSource 인터페이스 구현 클래스인 UrlBasedCorsConfigurationSource 클래스 객체 생성
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+        // 모든 URL에 상기 CORS 정책 적용
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
     public class CustomFilterConfigurer extends AbstractHttpConfigurer<CustomFilterConfigurer, HttpSecurity> {
 
@@ -112,7 +122,7 @@ public class SecurityConfiguration {
 
             // Spring Security FilterChain에 추가
             builder
-                    .addFilter(corsConfig.corsFilter())
+//                    .addFilter(corsConfig.corsFilter())
                     .addFilter(jwtAuthenticationFilter)
                     // OAuth2LoginAuthenticationFilter : OAuth2.0 권한 부여 응답 처리 클래스 뒤에 jwtVerificationFilter 추가 (Oauth)
                     .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);
