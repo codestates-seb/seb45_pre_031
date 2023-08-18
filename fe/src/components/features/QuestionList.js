@@ -12,19 +12,15 @@ function QuestionList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/question?tab=${tab}&page=${pageNumber}`, {
-          headers: {
-            // 필요 헤더
-          },
-        });
+        const response = await axios.get(`http://localhost:8080/question?tab=${tab}&page=${pageNumber}`);
 
         if (response.data.success) {
           setData(response.data);
         } else {
-          // 실패한 경우
+          console.error("Server responded with an error:", response.data.message || "Unknown server error");
         }
       } catch (error) {
-        console.error("Error fetching questions:", error);
+        console.error("Error while trying to fetch questions:", error);
       }
     };
     fetchData();
