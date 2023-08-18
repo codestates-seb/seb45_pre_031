@@ -63,7 +63,7 @@ public class AnswerService {
 
     @Transactional(readOnly = true)
     public Page<AnswerDto.Response> findAnswers(int page, int size, long questionId) {
-        Page<AnswerDto.Response> pageAnswers = answerRepository.findByQuestion(questionId, PageRequest.of(page, size))
+        Page<AnswerDto.Response> pageAnswers = answerRepository.findByQuestion_QuestionId(questionId, PageRequest.of(page, size))
                 .map(answer -> AnswerDto.Response.builder()
                         .answerId(answer.getAnswerId())
                         .body(answer.getBody())
