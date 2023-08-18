@@ -17,11 +17,7 @@ function QuestionList() {
         if (response.data.success) {
           setData(response.data);
         } else {
-<<<<<<< HEAD
-          console.error("Failed to fetch questions:", response.data.message);
-=======
           console.error("Server responded with an error:", response.data.message || "Unknown server error");
->>>>>>> dev-fe
         }
       } catch (error) {
         console.error("Error while trying to fetch questions:", error);
