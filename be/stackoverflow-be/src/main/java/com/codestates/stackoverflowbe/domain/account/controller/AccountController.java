@@ -42,8 +42,6 @@ public class AccountController {
     }
 
 
-
-
     @GetMapping("/{accountId}")
     ResponseEntity getAccount(@Positive @PathVariable("accountId") long accountId) {
         AccountDto.Response accountResponse= accountService.findAccount(accountId);
