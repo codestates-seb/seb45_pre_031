@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -48,9 +49,9 @@ public class SecurityConfiguration {
         httpSecurity
                 .headers().frameOptions().sameOrigin() // (해당 옵션 유효한 경우 h2사용가능) SOP 정책 유지, 다른 도메인에서 iframe 로드 방지
                 .and()
-//                .cors(Customizer.withDefaults()) //CORS 처리하는 가장 쉬운 방법인 CorsFilter 사용, CorsConfigurationSource Bean을 제공
-//                .cors(configuration -> configuration
-//                        .configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()))
+                .cors(Customizer.withDefaults()) //CORS 처리하는 가장 쉬운 방법인 CorsFilter 사용, CorsConfigurationSource Bean을 제공
+                .cors(configuration -> configuration
+                        .configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()))
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 정보 저장X
                 .and()
