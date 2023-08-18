@@ -70,6 +70,8 @@ public class AccountController {
                                        @Positive @PathVariable("accountId") long accountId) {
             AccountDto.Response responseDto = accountService.updateAccount(accountPatchDto, accountId);
 
+            System.out.println("ㅇㅎㅇㅎㅇ");
+
             return ResponseEntity.ok(SingleResponseDto.builder().status(HttpStatusCode.OK.getStatusCode())
                     .message(HttpStatusCode.OK.getMessage()).data(responseDto).build());
     }
