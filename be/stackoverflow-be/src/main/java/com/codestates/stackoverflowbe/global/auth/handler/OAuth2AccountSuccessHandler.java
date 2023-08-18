@@ -127,7 +127,7 @@ public class OAuth2AccountSuccessHandler extends SimpleUrlAuthenticationSuccessH
 //                .port(80)
 //                .path("/receive-token.html")
 //                .path("/login") // 이후 URI 수정
-                .host(requestHost) //"http://seveneleven-stackoverflow-s3.s3-website.ap-northeast-2.amazonaws.com"
+                .host("http://seveneleven-stackoverflow-s3.s3-website.ap-northeast-2.amazonaws.com") //"http://seveneleven-stackoverflow-s3.s3-website.ap-northeast-2.amazonaws.com"
                 .path("/login")
 //                .port(requestPort) //S3는 80포트
                 .queryParams(queryParams)
