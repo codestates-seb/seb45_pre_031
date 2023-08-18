@@ -20,6 +20,6 @@ public class QuestionCommentRequestDto {
 
     @Getter
     public static class Get {
-        private long questionId;
+        private Long questionId;
     }
 }

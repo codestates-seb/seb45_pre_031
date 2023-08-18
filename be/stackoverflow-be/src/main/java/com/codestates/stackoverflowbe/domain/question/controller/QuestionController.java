@@ -204,9 +204,9 @@ public class QuestionController {
 //    }
 
     // 질문 목록 조회 요청을 처리하는 메서드 (Unanswered: 답변이 없는 질문 필터)
-    @GetMapping("/unanswered")
-    public ResponseEntity<QuestionListResponseDto> getUnansweredQuestions() {
-        List<Question> unansweredQuestions = questionService.getUnansweredQuestions();
-        return ResponseEntity.ok(new QuestionListResponseDto(HttpStatusCode.OK, "Unanswered questions retrieved!", unansweredQuestions));
-    }
+//    @GetMapping("/unanswered")
+//    public ResponseEntity<QuestionListResponseDto> getUnansweredQuestions() {
+//        List<Question> unansweredQuestions = questionService.getUnansweredQuestions();
+//        return ResponseEntity.ok(new QuestionListResponseDto(HttpStatusCode.OK, "Unanswered questions retrieved!", unansweredQuestions));
+//    }
 }

@@ -115,10 +115,10 @@ public class QuestionService {
 //    }
 
     // 답변이 없는 질문 목록을 가져오는 메서드
-    public List<Question> getUnansweredQuestions() {
-        List<Question> questions = questionRepository.findAllByAnswersIsEmpty();
-        return questions;
-    }
+//    public List<Question> getUnansweredQuestions() {
+//        List<Question> questions = questionRepository.findAllByAnswersIsEmpty();
+//        return questions;
+//    }
 }
 
 
