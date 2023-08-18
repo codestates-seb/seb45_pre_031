@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { styled } from "styled-components";
 import { useDispatch } from "react-redux";
@@ -107,33 +107,43 @@ function LoginPage () {
   };
 
   const googleLoginHandler = async () => {
-    const googleLoginUrl = `${LOCAL_SERVER_ADRESS}/oauth2/authorization/google`;
-
-    // 로그인 팝업
-    const popup = window.open(googleLoginUrl, "_blank");
-
-    // 팝업 닫힘 처리
-    const popupCloseInterval = setInterval(() => {
-      if (popup.closed) {
-        clearInterval(popupCloseInterval);
-        const urlParams = new URLSearchParams(popup.location.search);
-        const accessToken = urlParams.get("access_token");
-        const refreshToken = urlParams.get("refresh_token");
-
-        if (accessToken && refreshToken) {
-          localStorage.setItem("access_token", accessToken);
-          localStorage.setItem("refresh_token", refreshToken);
-
-          axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-          dispatch(loginSuccess(accessToken));
-
-          navigate("/");
-        } else {
-          dispatch(loginFailure("Google 로그인 중에 오류가 발생했습니다."));
-        }
-      }
-    }, 1000);
+    try {
+      window.location.href = `${LOCAL_SERVER_ADRESS}/oauth2/authorization/google`;
+    } catch (error) {
+      console.error("Google 로그인 중 에러:", error);
+      dispatch(loginFailure("Google 로그인 중 에러가 발생했습니다."));
+    }
   };
+
+  useEffect(() => {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const accessToken = urlSearchParams.get("access_token");
+    const refreshToken = urlSearchParams.get("refresh_token");
+
+    if (accessToken && refreshToken) {
+      try {
+        // 로컬 스토리지에 토큰 저장
+        localStorage.setItem("access_token", accessToken);
+        localStorage.setItem("refresh_token", refreshToken);
+
+        // 토큰을 헤더에 포함시켜서 요청
+        axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+
+        // 로그인 성공 처리
+        dispatch(loginSuccess(accessToken));
+
+        // 로그인 성공 후 리다이렉션 처리
+        navigate("/");
+
+      } catch (error) {
+        console.error("토큰 저장 중 에러:", error);
+        dispatch(loginFailure("토큰 저장 중 에러가 발생했습니다."));
+      }
+    } else {
+      console.error("Google 로그인 오류");
+      dispatch(loginFailure("Google 로그인 오류가 발생했습니다."));
+    }
+  }, [dispatch, navigate]);
 
   return (
     <LoginPageContainer>
