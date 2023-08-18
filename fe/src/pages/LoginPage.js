@@ -73,7 +73,7 @@ function LoginPage () {
 
     // 유효한 이메일과 비밀번호를 입력할 경우 서버로 전송
     try {
-      const response = await axios.post(`${LOCAL_SERVER_ADRESS}/v1/accounts/authenticate`, { email, password });
+      const response = await axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/accounts/authenticate", { email, password });
       if (response.data.success) {
         // 서버에서 토큰을 받음
         const accessToken = response.data.accessToken;
@@ -108,7 +108,7 @@ function LoginPage () {
 
   const googleLoginHandler = async () => {
     try {
-      window.location.href = `${LOCAL_SERVER_ADRESS}/oauth2/authorization/google`;
+      window.location.href = "http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/oauth2/authorization/google";
     } catch (error) {
       console.error("Google 로그인 중 에러:", error);
       dispatch(loginFailure("Google 로그인 중 에러가 발생했습니다."));
