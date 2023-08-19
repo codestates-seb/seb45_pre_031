@@ -53,5 +53,3 @@ springdoc:
   default-produces-media-type: application/json
   paths-to-match:
     - /v1/**
-server:
-  port: 8888
