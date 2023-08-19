@@ -43,11 +43,7 @@ public class AnswerCommentController {
                 .buildAndExpand(answerComment.getCommentId())
                 .toUri();
 
-        return ResponseEntity.created(location)
-                .body(SingleResponseDto.builder()
-                        .status(HttpStatusCode.CREATED.getStatusCode())
-                        .message(HttpStatusCode.CREATED.getMessage())
-                        .build());
+        return ResponseEntity.created(location).build();
     }
 
     @Operation(summary = "Update Answer Comment API", description = "답변 댓글 수정 기능")

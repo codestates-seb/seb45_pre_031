@@ -30,7 +30,7 @@ public class QuestionCommentController {
 
     @Operation(summary = "Create Question Comment API", description = "질문 댓글 저장 기능")
     @PostMapping
-    public ResponseEntity<SingleResponseDto<?>> postComment(@RequestBody QuestionCommentRequestDto.Post requestCommentDto) {
+    public ResponseEntity<QuestionComment> postComment(@RequestBody QuestionCommentRequestDto.Post requestCommentDto) {
         QuestionComment questionComment = questionCommentService.saveComment(requestCommentDto);
 
         URI location = UriComponentsBuilder
@@ -39,11 +39,7 @@ public class QuestionCommentController {
                 .buildAndExpand(questionComment.getCommentId())
                 .toUri();
 
-        return ResponseEntity.created(location)
-                .body(SingleResponseDto.builder()
-                        .status(HttpStatusCode.CREATED.getStatusCode())
-                        .message(HttpStatusCode.CREATED.getMessage())
-                        .build());
+        return ResponseEntity.created(location).build();
     }
 
     @Operation(summary = "Update Question Comment API", description = "질문 댓글 수정 기능")

@@ -11,6 +11,7 @@ import com.codestates.stackoverflowbe.global.response.SingleResponseDto;
 import com.codestates.stackoverflowbe.global.constants.HttpStatusCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -29,16 +30,14 @@ import java.util.List;
 @Tag(name = "Question", description = "질문 기능")
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @Validated
 @RequestMapping("/v1/questions")
 public class QuestionController {
     private final QuestionService questionService;
     private final AccountService accountService;
 
-    public QuestionController(QuestionService questionService, AccountService accountService) {
-        this.questionService = questionService;
-        this.accountService = accountService;
-    }
+
 
 
     @Operation(summary = "asdf")
