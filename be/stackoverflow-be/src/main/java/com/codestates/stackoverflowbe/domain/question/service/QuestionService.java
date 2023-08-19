@@ -1,11 +1,16 @@
 package com.codestates.stackoverflowbe.domain.question.service;
 
 import com.codestates.stackoverflowbe.domain.account.entity.Account;
+import com.codestates.stackoverflowbe.domain.answer.service.AnswerService;
+import com.codestates.stackoverflowbe.domain.question.dto.QuestionResponseDto;
 import com.codestates.stackoverflowbe.domain.question.dto.QuestionUpdateDto;
 import com.codestates.stackoverflowbe.domain.question.entity.Question;
 import com.codestates.stackoverflowbe.domain.question.repository.QuestionRepository;
 import com.codestates.stackoverflowbe.domain.tag.entity.Tag;
 import com.codestates.stackoverflowbe.domain.tag.repository.TagRepository;
+import com.codestates.stackoverflowbe.domain.vote.service.VoteService;
+import com.codestates.stackoverflowbe.global.exception.BusinessLogicException;
+import com.codestates.stackoverflowbe.global.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,48 +21,43 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class QuestionService {
     private final QuestionRepository questionRepository;
+    private final VoteService voteService;
+    private final AnswerService answerService;
     private final TagRepository tagRepository;
 
     // 새로운 질문 생성
     public Question createQuestion(QuestionUpdateDto questionDto, Account account) {
         // 새로운 질문 엔티티를 생성하고 정보를 설정합니다.
-
-        List<Tag> tags = new ArrayList<>();
-        tags.add(Tag.builder()
-                .tagName("tag1")
-                .build());
-
-        tags.add(Tag.builder()
-                .tagName("tag2")
-                .build());
-
         Question newQuestion = new Question();
         newQuestion.setTitle(questionDto.getTitle());
         newQuestion.setBody(questionDto.getBody());
         newQuestion.setExpectContents(questionDto.getExpectContents());
         newQuestion.setAccount(account);
         newQuestion.setViewCount(0L);
-        newQuestion.setTags(tags);
-
 
         // 데이터베이스에 질문을 저장하고 반환합니다.
         return questionRepository.save(newQuestion);
     }
 
     // 모든 질문 목록 조회
-    public List<Question> getAllQuestions() {
-        return questionRepository.findAll();
+    public Page<QuestionResponseDto> getAllQuestions() {
+        return questionRepository.findAll(PageRequest.of(0, 15))
+                .map(this::getQuestionQuestionResponseDto);
     }
 
     // 특정 ID에 해당하는 질문 조회
     public Question findQuestionById(Long questionId) {
-        return questionRepository.findById(questionId).orElse(null);
+        return questionRepository.findById(questionId).orElseThrow(() ->
+                new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
     }
 
     // 질문 저장
@@ -67,39 +67,46 @@ public class QuestionService {
 
     // 질문 삭제
     public void deleteQuestion(Question question) {
+        question.getAnswers()
+                .forEach(answer -> answerService.deleteAnswer(answer.getAnswerId()));
         questionRepository.delete(question);
     }
 
     // 특정 사용자가 작성한 질문 조회
-    public List<Question> getQuestionsByUser(Account account) {
+    public Page<QuestionResponseDto> getQuestionsByUser(Account account) {
         // 해당 사용자가 작성한 질문을 조회합니다.
-        return questionRepository.findByAccount(account);
+        return questionRepository.findByAccount(account, PageRequest.of(0, 15))
+                .map(this::getQuestionQuestionResponseDto);
     }
 
     // 최신 질문 조회
-    public Page<Question> getNewestQuestions(int page, int size) {
+    public Page<QuestionResponseDto> getNewestQuestions(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        return questionRepository.findAllByOrderByCreatedAtDesc(pageable);
+        return questionRepository.findAllByOrderByCreatedAtDesc(pageable)
+                .map(this::getQuestionQuestionResponseDto);
     }
 
     // 인기 질문 조회
-    public Page<Question> getHotQuestions(int page, int size) {
+    public Page<QuestionResponseDto> getHotQuestions(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("viewCount").descending());
-        return questionRepository.findAllByOrderByViewCountDesc(pageable);
+        return questionRepository.findAllByOrderByViewCountDesc(pageable)
+                .map(this::getQuestionQuestionResponseDto);
     }
 
     // 지난 주 동안 가장 많이 본 질문 조회
-    public Page<Question> getWeekQuestions(int page, int size) {
+    public Page<QuestionResponseDto> getWeekQuestions(int page, int size) {
         LocalDateTime weekAgo = LocalDateTime.now().minus(7, ChronoUnit.DAYS);
         Pageable pageable = PageRequest.of(page, size, Sort.by("viewCount").descending());
-        return questionRepository.findByCreatedAtAfterOrderByViewCountDesc(weekAgo, pageable);
+        return questionRepository.findByCreatedAtAfterOrderByViewCountDesc(weekAgo, pageable)
+                .map(this::getQuestionQuestionResponseDto);
     }
 
     // 지난 달 동안 가장 많이 본 질문 조회
-    public Page<Question> getMonthQuestions(int page, int size) {
+    public Page<QuestionResponseDto> getMonthQuestions(int page, int size) {
         LocalDateTime monthAgo = LocalDateTime.now().minus(30, ChronoUnit.DAYS);
         Pageable pageable = PageRequest.of(page, size, Sort.by("viewCount").descending());
-        return questionRepository.findByCreatedAtAfterOrderByViewCountDesc(monthAgo, pageable);
+        return questionRepository.findByCreatedAtAfterOrderByViewCountDesc(monthAgo, pageable)
+                .map(this::getQuestionQuestionResponseDto);
     }
 
     // 질문 목록을 Active: 수정 시간 최신순으로 가져오는 메서드
@@ -108,16 +115,41 @@ public class QuestionService {
         return questions;
     }
 
-    // 질문 목록을 Score: Score 순으로 가져오는 메서드
-//    public List<Question> getScoreQuestions() {
-//        List<Question> questions = questionRepository.findAllByOrderByScoreDesc();
-//        return questions;
-//    }
+//     질문 목록을 Score: Score 순으로 가져오는 메서드
+    public List<QuestionResponseDto> getScoreQuestions() {
+        List<QuestionResponseDto> questions = questionRepository.findAll().stream()
+                .map(this::getQuestionQuestionResponseDto)
+                .sorted(Comparator.comparing(questionResponseDto ->
+                        questionResponseDto.getVoteDown().size() - questionResponseDto.getVoteUp().size()))
+                .collect(Collectors.toList());
+
+        return questions;
+    }
 
     // 답변이 없는 질문 목록을 가져오는 메서드
-    public List<Question> getUnansweredQuestions() {
+    public List<QuestionResponseDto> getUnansweredQuestions() {
         List<Question> questions = questionRepository.findAllByAnswersIsEmpty();
-        return questions;
+        return questions.stream()
+                .map(this::getQuestionQuestionResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    public QuestionResponseDto getQuestionQuestionResponseDto(Question question) {
+        return QuestionResponseDto.builder()
+                .questionId(question.getQuestionId())
+                .title(question.getTitle())
+                .body(question.getBody())
+                .views(question.getViewCount())
+                .displayName(question.getAccount().getDisplayName())
+                .voteUp(voteService.getUpVoteAccounts(question.getVotes()))
+                .voteDown(voteService.getDownVoteAccounts(question.getVotes()))
+                .tags(question.getTags().stream()
+                        .map(tag -> tag.getTagName())
+                        .collect(Collectors.toList()))
+//                .profileImage()
+                .created_at(question.getCreatedAt())
+                .modified_at(question.getModifiedAt())
+                .build();
     }
 }
 

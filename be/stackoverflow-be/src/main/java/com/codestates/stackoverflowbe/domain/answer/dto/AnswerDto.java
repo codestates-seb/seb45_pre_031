@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -27,11 +28,21 @@ public class AnswerDto {
     public static class Response {
         private long answerId;
         private String body;
+        private String displayName;
+        private List<String> voteUp;
+        private List<String> voteDown;
+        LocalDateTime created_at;
+        LocalDateTime modified_at;
 
         @Builder
-        public Response(long answerId, String body) {
+        public Response(long answerId, String body, String displayName, List<String> voteUp, List<String> voteDown, LocalDateTime created_at, LocalDateTime modified_at) {
             this.answerId = answerId;
             this.body = body;
+            this.displayName = displayName;
+            this.voteUp = voteUp;
+            this.voteDown = voteDown;
+            this.created_at = created_at;
+            this.modified_at = modified_at;
         }
     }
 }

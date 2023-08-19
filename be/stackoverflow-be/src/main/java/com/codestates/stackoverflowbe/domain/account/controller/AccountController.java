@@ -63,6 +63,8 @@ public class AccountController {
         , HttpStatus.OK);
     }
 
+
+    // 제발 되라
     @PatchMapping("/{accountId}")
     public ResponseEntity patchAccount(@Valid @RequestBody AccountDto.Patch accountPatchDto,
                                        @Positive @PathVariable("accountId") long accountId) {

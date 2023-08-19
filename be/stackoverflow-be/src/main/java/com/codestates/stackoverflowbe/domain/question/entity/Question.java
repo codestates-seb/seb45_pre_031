@@ -1,5 +1,6 @@
 package com.codestates.stackoverflowbe.domain.question.entity;
 
+import com.codestates.stackoverflowbe.domain.answer.entity.Answer;
 import com.codestates.stackoverflowbe.domain.question.dto.QuestionUpdateRequestDto;
 import com.codestates.stackoverflowbe.global.audit.BaseTimeEntity;
 import com.codestates.stackoverflowbe.domain.comment.entity.QuestionComment;
@@ -39,7 +40,8 @@ public class Question extends BaseTimeEntity {
     private List<QuestionComment> questionComments = new ArrayList<>();
 
     @OneToMany(mappedBy = "question")
-    private List<QuestionComment> answers = new ArrayList<>();
+    private List<Answer> answers = new ArrayList<>();
+
 
     @OneToMany(mappedBy = "question")
     private List<Tag> tags = new ArrayList<>();
@@ -77,8 +79,15 @@ public class Question extends BaseTimeEntity {
         this.viewCount = viewCount;
     }
 
+    public void addAnswer(Answer answer) {
+        answers.add(answer);
+    }
     public void addVote(Vote vote) {
         votes.add(vote);
+    }
+
+    public void addTag(Tag tag) {
+        tags.add(tag);
     }
 
     // 질문을 업데이트하는 메서드

@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface QuestionRepository extends JpaRepository<Question, Long> {
     // 사용자별 질문 조회 메서드
-    List<Question> findByAccount(Account account);
+    Page<Question> findByAccount(Account account, Pageable pageable);
 
     Page<Question> findAllByOrderByCreatedAtDesc(Pageable pageable); // Newest
     Page<Question> findAllByOrderByViewCountDesc(Pageable pageable); // Hot

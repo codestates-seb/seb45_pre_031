@@ -1,5 +1,6 @@
 package com.codestates.stackoverflowbe.domain.vote.controller;
 
+import com.codestates.stackoverflowbe.domain.account.entity.Account;
 import com.codestates.stackoverflowbe.domain.vote.dto.VoteDto;
 import com.codestates.stackoverflowbe.domain.vote.service.VoteService;
 import com.codestates.stackoverflowbe.global.constants.HttpStatusCode;
@@ -8,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,13 +29,14 @@ public class VoteController {
     @Operation(summary = "Vote Writing API", description = "추천/비추천 투표 기능")
     @PostMapping("/voteWriting")
     public ResponseEntity<HttpStatus> voteWriting(@Valid @RequestBody VoteDto.Request requestDto) {
-        voteService.voteWriting(requestDto);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        voteService.voteWriting(requestDto, principal);
 
         return ResponseEntity.ok().build();
     }
 
     @Operation(summary = "Get All Votes API", description = "글의 모든 투표 조회 기능")
-    @GetMapping("/VotesResult")
+    @GetMapping("/votesResult")
     public ResponseEntity<SingleResponseDto<VoteDto.Response>> getQuestionVotes(@Positive @RequestBody VoteDto.Request requestDto) {
         VoteDto.Response responseDto = voteService.getVotes(requestDto);
 
