@@ -33,7 +33,7 @@ public class VoteController {
     }
 
     @Operation(summary = "Get All Votes API", description = "글의 모든 투표 조회 기능")
-    @GetMapping("/VotesResult")
+    @GetMapping("/votesResult")
     public ResponseEntity<SingleResponseDto<VoteDto.Response>> getQuestionVotes(@Positive @RequestBody VoteDto.Request requestDto) {
         VoteDto.Response responseDto = voteService.getVotes(requestDto);
 

@@ -54,7 +54,7 @@ public class AnswerController {
 
     @Operation(summary = "Get Answers API", description = "전체 답변 조회 기능")
     @GetMapping
-    public ResponseEntity<MultiResponseDto<AnswerDto.Response>> getAnswers(@Positive @RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<MultiResponseDto<AnswerDto.Response>> getAnswers(@Positive @RequestParam(defaultValue = "1") int page,
                                                                            @Positive @RequestParam(defaultValue = "15") int size,
                                                                            @RequestBody AnswerDto.Request requestDto) {
         Page<AnswerDto.Response> pageResponseDtos = answerService.findAnswers(page - 1, size, requestDto.getQuestionId());
