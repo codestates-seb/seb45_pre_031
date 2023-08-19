@@ -44,6 +44,7 @@ function QuestionForm() {
   };
 
   const handleSubmit = async () => {
+    console.log("title:", titleValue, "body:", bodyValue);
     if (!isTitleValid || !isBodyValid) {
       alert("Please ensure that the title and body meet the requirements.");
       return;
@@ -52,13 +53,11 @@ function QuestionForm() {
       const response = await axios.post("http://localhost:8080/v1/questions", {
         title: titleValue,
         body: bodyValue,
-        // user_id: "로그인정보에서",
       });
-
-      if (response.data.success) {
+      if (response.status === 201) {
         alert("Question successfully posted!");
       } else {
-        console.error("Error posting question:", response.data.message || "Unknown server error");
+        console.error("Error posting question: Unknown server error");
       }
     } catch (error) {
       console.error("Error while trying to post question:", error);
@@ -96,7 +95,7 @@ function QuestionForm() {
           </span>
           <StyledReactQuill
             theme="snow"
-            Value={bodyValue}
+            value={bodyValue}
             onChange={handleBodyChange}
             onBlur={handleBodyBlur}
             hasError={!isBodyValid}
