@@ -34,8 +34,8 @@ jobs:
         run: |
           docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
           docker build -t 7elenven-cicd . 
-          docker tag 7elenven-cicd gdh012/7eleven-cicd:${GITHUB_SHA::7}
-          docker push gdh012/7eleven-cicd:${GITHUB_SHA::7}
+          docker tag 7elenven-cicd leest/7eleven-cicd:${GITHUB_SHA::7}
+          docker push leest/7eleven-cicd:${GITHUB_SHA::7}
         working-directory: ${{ env.working-directory }}
 
       - name: Configure AWS credentials
@@ -48,13 +48,13 @@ jobs:
       - name: SSH Connection and Deploy to Server
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.AWS_SSH_HOST }}
-          username: ${{ secrets.AWS_SSH_USERNAME }}
-          key: ${{ secrets.AWS_SSH_KEY }}
-          port: ${{ secrets.AWS_SSH_PORT }}
+          host: ${{ secrets.AWS_SSH_HOST }}  # ipv4
+          username: ${{ secrets.AWS_SSH_USERNAME }} # ubuntu
+          key: ${{ secrets.AWS_SSH_KEY }} #
+#          port: ${{ secrets.AWS_SSH_PORT }} #
           envs: GITHUB_SHA
           script: |
             sudo docker rm -f server
-            sudo docker pull gdh012/7eleven-cicd:${GITHUB_SHA::7}
-            sudo docker tag gdh012/7eleven-cicd:${GITHUB_SHA::7} 7eleven-cicd
+            sudo docker pull leest/7eleven-cicd:${GITHUB_SHA::7}
+            sudo docker tag leest/7eleven-cicd:${GITHUB_SHA::7} 7eleven-cicd
             sudo docker run -d --name server -p 8080:8080 7eleven-cicd
