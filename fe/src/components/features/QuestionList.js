@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 
 function QuestionList() {
-  const [data, setData] = useState("");
+  const [questionData, setQuestionData] = useState([]);
   const [tab, setTab] = useState("newest");
   const [pageNumber, setPageNumber] = useState(1);
 
@@ -22,12 +22,10 @@ function QuestionList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/question?tab=${tab}&page=${pageNumber}`
-        );
+        const response = await axios.get(`http://localhost:8080/v1/questions?tab=${tab}&page=${pageNumber}&size=15`);
 
-        if (response.data.success) {
-          setData(response.data.content);
+        if (response.data.statusCode === 200) {
+          setQuestionData(response.data.data);
         } else {
           console.error("Server responded with an error:", response.data.message || "Unknown server error");
         }
@@ -35,6 +33,7 @@ function QuestionList() {
         console.error("Error while trying to fetch questions:", error);
       }
     };
+
     fetchData();
   }, [tab, pageNumber]);
 
@@ -47,8 +46,36 @@ function QuestionList() {
     setPageNumber(selectedPage);
   };
 
-  useEffect(() => console.log("tab:", tab, "page:", pageNumber), [tab, pageNumber]);
+  function formatRelativeTime(dateString) {
+    const now = new Date();
+    const inputDate = new Date(dateString);
 
+    const seconds = Math.floor((now - inputDate) / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const months = Math.floor(days / 30);
+    const years = Math.floor(days / 365);
+
+    if (years > 1) return `${years} years ago`;
+    if (years === 1) return "1 year ago";
+
+    if (months > 1) return `${months} months ago`;
+    if (months === 1) return "1 month ago";
+
+    if (days > 1) return `${days} days ago`;
+    if (days === 1) return "1 day ago";
+
+    if (hours > 1) return `${hours} hours ago`;
+    if (hours === 1) return "1 hour ago";
+
+    if (minutes > 1) return `${minutes} minutes ago`;
+
+    return "1 minute ago";
+  }
+
+  useEffect(() => console.log("tab:", tab, "page:", pageNumber), [tab, pageNumber]);
+  useEffect(() => console.log("data:", questionData), [questionData]);
   return (
     <StyledQuestionList>
       <HeaderContainer>
@@ -56,7 +83,7 @@ function QuestionList() {
         <AskQuestionBtn>Ask Question</AskQuestionBtn>
       </HeaderContainer>
       <FiterContainer>
-        <span className="questionCount">{data.length || "22,345,751"} quesitons</span>
+        <span className="questionCount">{questionData.length || "22,345,751"} quesitons</span>
         <Fiter>
           {filterOptions.map((option, index) => (
             <FilterOption key={index} onClick={() => handleTab(option)} isSelected={tab === option}>
@@ -66,9 +93,9 @@ function QuestionList() {
         </Fiter>
       </FiterContainer>
       <QuestionListContainer>
-        {data &&
-          data.map((question) => (
-            <Question>
+        {questionData &&
+          questionData.map((question) => (
+            <Question key={question.questionId}>
               <div className="leftSide">
                 <LeftSideInfo>
                   <span className="votes">{question.votes.length} votes</span>
@@ -81,81 +108,27 @@ function QuestionList() {
                 </LeftSideInfo>
               </div>
               <div className="rightSide">
-                <QuestionTitle onClick={() => goToDetail(question.account.questionId)}>
-                  {" "}
-                  {question.title}{" "}
-                </QuestionTitle>
+                <QuestionTitle onClick={() => goToDetail(question.questionId)}> {question.title} </QuestionTitle>
                 <QuestionSummury>{question.body}</QuestionSummury>
                 <TagAndUserInfoContainer>
-                  <TagContainer>
-                    {question.tags &&
-                      question.tags.map((tag) => (
-                        <>
-                          <Tag>{tag}</Tag>
-                        </>
-                      ))}
-                  </TagContainer>
+                  <TagContainer>{question.tags && question.tags.map((tag) => <Tag>{tag}</Tag>)}</TagContainer>
                   <UserInfoContainer>
-                    {/* <img className="userAvatar" alt="userAvatar" src={logo} /> */}
+                    <img className="userAvatar" alt="userAvatar" src={logo} />
                     <div className="userName">
                       <span>{question.account.displayName}</span>
                     </div>
                     <div className="createdAt">
-                      <span>5 mins ago</span>
+                      <span>{formatRelativeTime(question.createdAt)}</span>
                     </div>
                   </UserInfoContainer>
                 </TagAndUserInfoContainer>
               </div>
             </Question>
           ))}
-        {/* <Question>
-          <div className="leftSide">
-            <LeftSideInfo>
-              <span className="votes">0 votes</span>
-            </LeftSideInfo>
-            <LeftSideInfo>
-              <span className="answersAndViews">0 asnswers</span>
-            </LeftSideInfo>
-            <LeftSideInfo>
-              <span className="answersAndViews">0 views</span>
-            </LeftSideInfo>
-          </div>
-          <div className="rightSide">
-            <QuestionTitle> What is JavaScript? </QuestionTitle>
-            <QuestionSummury>
-              JavaScript is a scripting or programming language that allows you to implement complex features on web
-              pages — every time a web page does more than just sit there and display static information for you to look
-              at — displaying timely content updates, interactive maps, animated 2D/3D graphics, scrolling video
-              jukeboxes, etc. — you can bet that JavaScript is probably involved. It is the third layer of the layer
-              cake of standard web technologies, two of which (HTML and CSS) we have covered in much more detail in
-              other parts of the Learning Area.
-            </QuestionSummury>
-            <TagAndUserInfoContainer>
-              <TagContainer>
-                <Tag>javascript</Tag>
-                <Tag>about</Tag>
-              </TagContainer>
-              <UserInfoContainer>
-                <img className="userAvatar" alt="userAvatar" src={logo} />
-                <div className="userName">
-                  <span>HongGilDong</span>
-                </div>
-                <div className="createdAt">
-                  <span>5 mins ago</span>
-                </div>
-              </UserInfoContainer>
-            </TagAndUserInfoContainer>
-          </div>
-        </Question>
-        <Question>Question2</Question>
-        <Question>Question3</Question>
-        <Question>Question4</Question>
-        <Question>Question5</Question>
-        <Question>Question6</Question> */}
       </QuestionListContainer>
       <PaginationContainer>
         <StyledReactPaginate
-          pageCount={Math.ceil(data.questions_count / 15) || 20}
+          pageCount={Math.ceil(questionData.length / 15) || 20}
           pageRangeDisplayed={5}
           marginPagesDisplayed={1}
           previousLabel={"Prev"}
