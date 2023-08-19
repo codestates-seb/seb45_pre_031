@@ -12,6 +12,8 @@ function QuestionList() {
   const [tab, setTab] = useState("newest");
   const [pageNumber, setPageNumber] = useState(1);
 
+  const filterOptions = ["Newest", "Active", "Unanswered", "Score", "Pop(week)", "Pop(month)"];
+
   const navigate = useNavigate();
   const goToDetail = (question_id) => {
     navigate(`/questiondetail/${question_id}`);
@@ -54,14 +56,13 @@ function QuestionList() {
         <AskQuestionBtn>Ask Question</AskQuestionBtn>
       </HeaderContainer>
       <FiterContainer>
-        <span className="questionCount">{data.questions_count} quesitons</span>
+        <span className="questionCount">{data.questions_count || "22,345,751"} quesitons</span>
         <Fiter>
-          <FiterOption onClick={() => handleTab("newest")}>Newest</FiterOption>
-          <FiterOption onClick={() => handleTab("active")}>Active</FiterOption>
-          <FiterOption onClick={() => handleTab("unanswered")}>Unanswered</FiterOption>
-          <FiterOption onClick={() => handleTab("score")}>Score</FiterOption>
-          <FiterOption onClick={() => handleTab("popular")}>Pop(week)</FiterOption>
-          <FiterOption onClick={() => handleTab("popular")}>Pop(month)</FiterOption>
+          {filterOptions.map((option, index) => (
+            <FilterOption key={index} onClick={() => handleTab(option)} isSelected={tab === option}>
+              {option}
+            </FilterOption>
+          ))}
         </Fiter>
       </FiterContainer>
       <QuestionListContainer>
@@ -150,7 +151,7 @@ function QuestionList() {
       </QuestionListContainer>
       <PaginationContainer>
         <StyledReactPaginate
-          pageCount={24}
+          pageCount={Math.ceil(data.questions_count / 15) || 20}
           pageRangeDisplayed={5}
           marginPagesDisplayed={1}
           previousLabel={"Prev"}
@@ -207,11 +208,12 @@ const Fiter = styled.div`
   height: 36px;
 `;
 
-const FiterOption = styled.div`
+const FilterOption = styled.div`
   display: flex;
   font-size: 12px;
   align-items: center;
   padding: 9.6px;
+  background-color: ${(props) => (props.isSelected ? "rgb(219, 219, 219)" : "transparent")};
 
   border-right: 1px solid rgb(214, 217, 220);
   &:last-of-type {
@@ -344,18 +346,21 @@ const StyledReactPaginate = styled(ReactPaginate)`
   flex-direction: row;
   list-style: none;
 
-  li {
+  a {
     padding: 6px 8px 6px 8px;
     border-radius: 6px;
     margin-right: 6px;
     border: 1px solid rgb(214, 217, 220);
     font-size: 12px;
+
     &:hover {
       background-color: rgb(189, 190, 191);
     }
   }
   li.selected {
-    color: white;
-    background-color: rgb(244, 130, 37);
+    a {
+      color: white;
+      background-color: rgb(244, 130, 37);
+    }
   }
 `;
