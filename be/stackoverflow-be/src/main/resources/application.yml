@@ -10,7 +10,7 @@ spring:
     database: mysql
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
     properties:
       hibernate:
         format_sql: true
@@ -21,7 +21,7 @@ spring:
           google:
             client-id: ${G_CLIENT_ID}
             client-secret: ${G_CLIENT_SECRET}
-            redirect-uri: http://localhost:8080/login/oauth2/code/google
+#            redirect-uri: http://localhost:8080/login/oauth2/code/google
             scope:
               - email
               - profile
