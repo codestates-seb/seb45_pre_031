@@ -68,6 +68,18 @@ public class QuestionController {
         return ResponseEntity.created(location).build();
     }
 
+    // 질문의 상세 정보를 조회하는 메서드
+    @GetMapping("/{questionId}")
+    public ResponseEntity<SingleResponseDto<QuestionResponseDto>> getQuestionDetail(@PathVariable Long questionId) {
+        // QuestionService를 통해 특정 ID에 해당하는 질문을 조회합니다.
+        Question question = questionService.findQuestionById(questionId);
+        question.setViewCount(question.getViewCount() + 1);
+
+        QuestionResponseDto responseDto = questionService.getQuestionQuestionResponseDto(question);
+        // 조회한 질문을 반환합니다.
+        return ResponseEntity.ok(new SingleResponseDto<>(HttpStatusCode.OK.getStatusCode(), HttpStatusCode.OK.getMessage(), responseDto));
+    }
+
     // 질문 목록 조회 요청을 처리하는 메서드
     @Operation(summary = "Get All Question", description = "전체 질문 조회 기능")
     @GetMapping
@@ -107,8 +119,7 @@ public class QuestionController {
     // 질문 삭제 요청을 처리하는 메서드
     @Operation(summary = "Delete Question", description = "질문 삭제 기능")
     @DeleteMapping("/{questionId}")
-    public ResponseEntity<SingleResponseDto<String>> deleteQuestion(
-            @PathVariable Long questionId) {
+    public ResponseEntity<SingleResponseDto<String>> deleteQuestion(@PathVariable Long questionId) {
         // 질문을 찾습니다.
         Question question = questionService.findQuestionById(questionId);
 
@@ -125,18 +136,6 @@ public class QuestionController {
         questionService.deleteQuestion(question);
         // 삭제 성공 응답을 반환합니다.
         return ResponseEntity.noContent().build();
-    }
-
-    // 질문의 상세 정보를 조회하는 메서드
-    @GetMapping("/{questionId}")
-    public ResponseEntity<SingleResponseDto<QuestionResponseDto>> getQuestionDetail(@PathVariable Long questionId) {
-        // QuestionService를 통해 특정 ID에 해당하는 질문을 조회합니다.
-        Question question = questionService.findQuestionById(questionId);
-        question.setViewCount(question.getViewCount() + 1);
-
-        QuestionResponseDto responseDto = questionService.getQuestionQuestionResponseDto(question);
-        // 조회한 질문을 반환합니다.
-        return ResponseEntity.ok(new SingleResponseDto<>(HttpStatusCode.OK.getStatusCode(), HttpStatusCode.OK.getMessage(), responseDto));
     }
 
     // 사용자별 질문 조회 요청을 처리하는 메서드
@@ -227,6 +226,7 @@ public class QuestionController {
                 .page(monthQuestions)
                 .build());
     }
+
     // 질문 목록 조회 요청을 처리하는 메서드 (Active: 수정 시간 최신순으로)
     @GetMapping("/active")
     public ResponseEntity<SingleResponseDto<List<QuestionResponseDto>>> getActiveQuestions() {
@@ -237,12 +237,12 @@ public class QuestionController {
         return ResponseEntity.ok(new SingleResponseDto<>(HttpStatusCode.OK.getStatusCode(), HttpStatusCode.OK.getMessage(), activeQuestions));
     }
 
-    // 질문 목록 조회 요청을 처리하는 메서드 (Score: Score 순으로)
-//    @GetMapping("/score")
-//    public ResponseEntity<QuestionListResponseDto> getScoreQuestions() {
-//        List<Question> scoreQuestions = questionService.getScoreQuestions();
-//        return ResponseEntity.ok(new QuestionListResponseDto(HttpStatusCode.OK, "Scored questions retrieved!", scoreQuestions));
-//    }
+    // 질문 목록 조회 요청을 처리하는 메서드 (Score: Vote Score 순으로)
+    @GetMapping("/score")
+    public ResponseEntity<List<QuestionResponseDto>> getScoreQuestions() {
+        List<QuestionResponseDto> scoreQuestions = questionService.getScoreQuestions();
+        return ResponseEntity.ok(scoreQuestions);
+    }
 
     // 질문 목록 조회 요청을 처리하는 메서드 (Unanswered: 답변이 없는 질문 필터)
     @GetMapping("/unanswered")

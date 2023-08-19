@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -110,11 +111,16 @@ public class QuestionService {
         return questions;
     }
 
-    // 질문 목록을 Score: Score 순으로 가져오는 메서드
-//    public List<Question> getScoreQuestions() {
-//        List<Question> questions = questionRepository.findAllByOrderByScoreDesc();
-//        return questions;
-//    }
+//     질문 목록을 Score: Score 순으로 가져오는 메서드
+    public List<QuestionResponseDto> getScoreQuestions() {
+        List<QuestionResponseDto> questions = questionRepository.findAll().stream()
+                .map(this::getQuestionQuestionResponseDto)
+                .sorted(Comparator.comparing(questionResponseDto ->
+                        questionResponseDto.getVoteDown().size() - questionResponseDto.getVoteUp().size()))
+                .collect(Collectors.toList());
+
+        return questions;
+    }
 
     // 답변이 없는 질문 목록을 가져오는 메서드
     public List<QuestionResponseDto> getUnansweredQuestions() {

@@ -1,10 +1,12 @@
 package com.codestates.stackoverflowbe.domain.question.dto;
 
 import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Getter
 @Builder
 public class QuestionResponseDto {
     private long questionId;
