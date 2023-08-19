@@ -1,6 +1,7 @@
 package com.codestates.stackoverflowbe.domain.account.entity;
 
 import com.codestates.stackoverflowbe.domain.account.dto.AccountDto;
+import com.codestates.stackoverflowbe.domain.account.dto.AccountPageResponseDto;
 import com.codestates.stackoverflowbe.domain.answer.entity.Answer;
 import com.codestates.stackoverflowbe.domain.question.entity.Question;
 import com.codestates.stackoverflowbe.global.audit.BaseTimeEntity;
@@ -104,5 +105,9 @@ public class Account extends BaseTimeEntity {
                 .displayName(this.getDisplayName())
                 .email(this.getEmail())
                 .build();
+    }
+
+    public AccountPageResponseDto toPageResponseDto() {
+        return null;
     }
 }
