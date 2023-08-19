@@ -170,40 +170,52 @@ const H2YourAnswer = styled.h2`
   border-top: 1px solid rgb(227, 230, 232);
 `;
 const DivQuill = styled.div`
+  padding-bottom: 45px;
   height: 200px;
+`;
+const SubmitPost = styled.input`
+  margin-top: 30px;
+  height: 38px;
+  padding: 10.5px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  background-color: hsl(206, 100%, 52%);
 `;
 ///// 임시 DB 시작 /////
 const askAll = {
-  question_id: "001",
+  questionId: "001", // primary key
   created_at: "Mon Aug 14 2023 11:11:22 GMT+0900 (한국 표준시)",
-  updated_at: "Mon Aug 15 2023 11:11:22 GMT+0900 (한국 표준시)",
+  modified_at: "Mon Aug 15 2023 11:11:22 GMT+0900 (한국 표준시)",
   views: 252,
   title: "koans 과제 진행 중 npm install 오류로 인해 정상 작동 되지 않습니다",
-  user_id: "dubipy",
-  vote_up: ["hongsik", "jang"],
-  vote_down: ["honggildong", "boby", "james"],
+  displayName: "dubipy", // 작성자 닉네임
+  voteUp: ["hongsik", "jang"], // post 현재 로그인 계정 추가
+  voteDown: ["honggildong", "boby", "james"], // post 현재 로그인 계정 추가
   tags: ["javascript", "react", "discord"],
-  bodyHTML: "<p>--------------- 질문 내용 ---------------</p>",
+  body: "<p>--------------- 질문 내용 ---------------</p>",
+  //프로필 이미지 없어질 수 있음
   avatarUrl: "https://avatars.githubusercontent.com/u/97888923?s=64&u=12b18768cdeebcf358b70051283a3ef57be6a20f&v=4",
   answer: [
     {
       answer_id: "DC_kwDOHOApLM4AKg6M",
-      created_at: "Mon Aug 14 2023 11:11:22 GMT+0900 (한국 표준시)", //date 기본값,
-      vote_up: ["hongsik", "jang"],
-      vote_down: ["honggildong", "boby", "james"],
-      user_id: "Kingsenal",
-      bodyHTML:
-        '<p dir="auto">안녕하세요. <a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/dubipy/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/dubipy">@dubipy</a> 님!<br>\n코드스테이츠 교육 엔지니어 권준혁 입니다. <g-emoji class="g-emoji" alias="raised_hands" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f64c.png">🙌</g-emoji></p>\n<p dir="auto">질문 주신 내용은 노드 환경이 구성되어 있지 않기 때문에 발생되는 문제로 확인됩니다.</p>\n<p dir="auto"><code class="notranslate">brew unlink node &amp;&amp; brew link node</code></p>\n<p dir="auto">노드를 연결해 보시고 안된다면</p>\n<p dir="auto"><code class="notranslate">brew link --overwrite node</code></p>\n<p dir="auto">이 명령어를 그 다음에도 안된다면 접근권한 문제일 가능성이 큽니다.</p>\n<p dir="auto"><code class="notranslate">$ sudo chmod 776 /usr/local/lib</code> 접근 권한 변경 후<br>\n<code class="notranslate">$ brew link --overwrite node</code> 다시 연결을 해보세요 !</p>\n<p dir="auto">그럼에도 안된다면 다시 한 번 더 질문을 남겨주세요 !</p>\n<p dir="auto">답변이 되셨다면 내용을 간략하게 정리해서 코멘트를 남기고 answered를 마크해주세요 <g-emoji class="g-emoji" alias="white_check_mark" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2705.png">✅</g-emoji><br>\n감사합니다.<g-emoji class="g-emoji" alias="rocket" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f680.png">🚀</g-emoji><br>\n코드스테이츠 교육 엔지니어 권준혁</p>',
+      created_at: "Mon Aug 14 2023 11:11:22 GMT+0900 (한국 표준시)",
+      modified_at: "Mon Aug 14 2023 11:11:22 GMT+0900 (한국 표준시)",
+      voteUp: ["hongsik", "jang"],
+      voteDown: ["honggildong", "boby", "james"],
+      displayName: "Kingsenal",
+      body: "안녕하세요.",
       avatarUrl: "https://avatars.githubusercontent.com/u/79903256?s=64&v=4",
     },
     {
       answer_id: "DC_kwDOHOApLM4AKg6M",
       created_at: "Mon Aug 14 2023 11:11:22 GMT+0900 (한국 표준시)", //date 기본값,
-      vote_up: ["hongsik", "jang"],
-      vote_down: ["honggildong", "boby", "james"],
-      user_id: "Kingsenal",
-      bodyHTML:
-        '<p dir="auto">안녕하세요. <a class="user-mention notranslate" data-hovercard-type="user" data-hovercard-url="/users/dubipy/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="https://github.com/dubipy">@dubipy</a> 님!<br>\n코드스테이츠 교육 엔지니어 권준혁 입니다. <g-emoji class="g-emoji" alias="raised_hands" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f64c.png">🙌</g-emoji></p>\n<p dir="auto">질문 주신 내용은 노드 환경이 구성되어 있지 않기 때문에 발생되는 문제로 확인됩니다.</p>\n<p dir="auto"><code class="notranslate">brew unlink node &amp;&amp; brew link node</code></p>\n<p dir="auto">노드를 연결해 보시고 안된다면</p>\n<p dir="auto"><code class="notranslate">brew link --overwrite node</code></p>\n<p dir="auto">이 명령어를 그 다음에도 안된다면 접근권한 문제일 가능성이 큽니다.</p>\n<p dir="auto"><code class="notranslate">$ sudo chmod 776 /usr/local/lib</code> 접근 권한 변경 후<br>\n<code class="notranslate">$ brew link --overwrite node</code> 다시 연결을 해보세요 !</p>\n<p dir="auto">그럼에도 안된다면 다시 한 번 더 질문을 남겨주세요 !</p>\n<p dir="auto">답변이 되셨다면 내용을 간략하게 정리해서 코멘트를 남기고 answered를 마크해주세요 <g-emoji class="g-emoji" alias="white_check_mark" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2705.png">✅</g-emoji><br>\n감사합니다.<g-emoji class="g-emoji" alias="rocket" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f680.png">🚀</g-emoji><br>\n코드스테이츠 교육 엔지니어 권준혁</p>',
+      modified_at: "Mon Aug 14 2023 11:11:22 GMT+0900 (한국 표준시)",
+      voteUp: ["hongsik", "jang"],
+      voteDown: ["honggildong", "boby", "james"],
+      displayName: "Kingsenal",
+      body: "코드스테이츠 교육 엔지니어 권준혁",
       avatarUrl: "https://avatars.githubusercontent.com/u/79903256?s=64&v=4",
     },
   ],
@@ -247,11 +259,11 @@ function QuestionDetailPage() {
               <ArticleQ>
                 <SpanVoteContainer>
                   <ButtonUpDown>▲</ButtonUpDown>
-                  <DivVote>{askAll.vote_up.length - askAll.vote_down.length}</DivVote>
+                  <DivVote>{askAll.voteUp.length - askAll.voteDown.length}</DivVote>
                   <ButtonUpDown>▼</ButtonUpDown>
                 </SpanVoteContainer>
                 <SpanQContainer>
-                  <DivQText>{askAll.bodyHTML}</DivQText>
+                  <DivQText>{askAll.body}</DivQText>
                   <UlTags>
                     {askAll.tags.map((tag) => {
                       return <LiTag>{tag.toLowerCase()}</LiTag>;
@@ -298,11 +310,11 @@ function QuestionDetailPage() {
               <ArticleA>
                 <SpanVoteContainer>
                   <ButtonUpDown>▲</ButtonUpDown>
-                  <DivVote>{askAll.vote_up.length - askAll.vote_down.length}</DivVote>
+                  <DivVote>{askAll.answer[0].voteUp.length - askAll.answer[0].voteDown.length}</DivVote>
                   <ButtonUpDown>▼</ButtonUpDown>
                 </SpanVoteContainer>
                 <SpanQContainer>
-                  <DivQText>{askAll.bodyHTML}</DivQText>
+                  <DivQText>{askAll.answer[0].body}</DivQText>
                   <DivShareEditProfile>
                     <SpanShare>
                       <span>Share</span>
@@ -313,11 +325,45 @@ function QuestionDetailPage() {
                       <div>
                         {"asked " +
                           new Intl.DateTimeFormat("en-GB", { month: "short", day: "numeric" }).format(
-                            new Date(askAll.created_at)
+                            new Date(askAll.answer[0].created_at)
                           )}
                       </div>
                       <SpanProfileUser>
-                        <img src={askAll.avatarUrl} alt="" width="32px" height="32px" />
+                        <img src={askAll.answer[0].avatarUrl} alt="" width="32px" height="32px" />
+                        <span>
+                          <DivUserName>name</DivUserName>
+                          <DivFollow>follow</DivFollow>
+                        </span>
+                      </SpanProfileUser>
+                    </SpanProfile>
+                  </DivShareEditProfile>
+                </SpanQContainer>
+                <span></span>
+                <SpanComment>Add a comment</SpanComment>
+              </ArticleA>
+              <ArticleA>
+                <SpanVoteContainer>
+                  <ButtonUpDown>▲</ButtonUpDown>
+                  <DivVote>{askAll.answer[1].voteUp.length - askAll.answer[0].voteDown.length}</DivVote>
+                  <ButtonUpDown>▼</ButtonUpDown>
+                </SpanVoteContainer>
+                <SpanQContainer>
+                  <DivQText>{askAll.answer[1].body}</DivQText>
+                  <DivShareEditProfile>
+                    <SpanShare>
+                      <span>Share</span>
+                      <span>Improve this question</span>
+                      <span>Follow</span>
+                    </SpanShare>
+                    <SpanProfile>
+                      <div>
+                        {"asked " +
+                          new Intl.DateTimeFormat("en-GB", { month: "short", day: "numeric" }).format(
+                            new Date(askAll.answer[1].created_at)
+                          )}
+                      </div>
+                      <SpanProfileUser>
+                        <img src={askAll.answer[1].avatarUrl} alt="" width="32px" height="32px" />
                         <span>
                           <DivUserName>name</DivUserName>
                           <DivFollow>follow</DivFollow>
@@ -330,10 +376,13 @@ function QuestionDetailPage() {
                 <SpanComment>Add a comment</SpanComment>
               </ArticleA>
               <ArticleNewA>
-                <H2YourAnswer>Your Answer</H2YourAnswer>
-                <DivQuill>
-                  <ReactQuill theme="snow" value={newAnswerValue} onChange={setNewAnswerValue} />
-                </DivQuill>
+                <form>
+                  <H2YourAnswer>Your Answer</H2YourAnswer>
+                  <DivQuill>
+                    <ReactQuill theme="snow" value={newAnswerValue} onChange={setNewAnswerValue} />
+                  </DivQuill>
+                  <SubmitPost type="submit" value="Post Your Answer" />
+                </form>
               </ArticleNewA>
             </MainMain>
             <Aside />
