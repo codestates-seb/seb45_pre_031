@@ -1,6 +1,7 @@
 package com.codestates.stackoverflowbe.domain.question.service;
 
 import com.codestates.stackoverflowbe.domain.account.entity.Account;
+import com.codestates.stackoverflowbe.domain.answer.service.AnswerService;
 import com.codestates.stackoverflowbe.domain.question.dto.QuestionResponseDto;
 import com.codestates.stackoverflowbe.domain.question.dto.QuestionUpdateDto;
 import com.codestates.stackoverflowbe.domain.question.entity.Question;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 public class QuestionService {
     private final QuestionRepository questionRepository;
     private final VoteService voteService;
+    private final AnswerService answerService;
     private final TagRepository tagRepository;
 
     // 새로운 질문 생성
@@ -65,6 +67,8 @@ public class QuestionService {
 
     // 질문 삭제
     public void deleteQuestion(Question question) {
+        question.getAnswers()
+                .forEach(answer -> answerService.deleteAnswer(answer.getAnswerId()));
         questionRepository.delete(question);
     }
 
@@ -132,6 +136,7 @@ public class QuestionService {
 
     public QuestionResponseDto getQuestionQuestionResponseDto(Question question) {
         return QuestionResponseDto.builder()
+                .questionId(question.getQuestionId())
                 .title(question.getTitle())
                 .body(question.getBody())
                 .views(question.getViewCount())

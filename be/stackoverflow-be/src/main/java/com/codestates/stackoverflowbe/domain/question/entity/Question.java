@@ -79,6 +79,9 @@ public class Question extends BaseTimeEntity {
         this.viewCount = viewCount;
     }
 
+    public void addAnswer(Answer answer) {
+        answers.add(answer);
+    }
     public void addVote(Vote vote) {
         votes.add(vote);
     }

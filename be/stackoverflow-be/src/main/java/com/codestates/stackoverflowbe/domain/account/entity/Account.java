@@ -43,9 +43,13 @@ public class Account extends BaseTimeEntity {
     @OneToMany(mappedBy = "account")
     private List<Answer> answers = new ArrayList<>();
 
+    public void addAnswer(Answer answer) {
+        answers.add(answer);
+    }
+
 //    @JsonIgnore
-    @OneToMany()
-    private List<Vote> votes;
+    @OneToMany(mappedBy = "account")
+    private List<Vote> votes = new ArrayList<>();
 
     @JsonIgnore
     private String location;

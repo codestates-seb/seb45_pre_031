@@ -20,12 +20,15 @@ public class TagService {
     private final QuestionRepository questionRepository;
 
     public TagDto.Response createTag(TagDto.Request requestDto) {
-        Tag savedTag = tagRepository.save(Tag.builder()
-                .tagName(requestDto.getTagName())
-                .build());
-
         Question findQuestion = questionRepository.findById(requestDto.getQuestionId()).orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
+
+        Tag savedTag = tagRepository.save(Tag.builder()
+                        .question(findQuestion)
+                        .tagName(requestDto.getTagName())
+                        .build());
+
+
         findQuestion.addTag(savedTag);
 
         return TagDto.Response.builder()

@@ -98,7 +98,7 @@ public class QuestionController {
 
     // 질문 수정 요청을 처리하는 메서드
     @Operation(summary = "Put Question", description = "질문 수정 기능")
-    @PutMapping("/{questionId}")
+    @PatchMapping("/{questionId}")
     public ResponseEntity<SingleResponseDto<Question>> updateQuestion(@PathVariable Long questionId,
                                                                       @RequestBody QuestionUpdateRequestDto updateDto) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
