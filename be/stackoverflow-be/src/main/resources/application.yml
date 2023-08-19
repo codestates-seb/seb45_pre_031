@@ -21,7 +21,7 @@ spring:
           google:
             client-id: ${G_CLIENT_ID}
             client-secret: ${G_CLIENT_SECRET}
-            redirect-uri: http://seveneleven-stackoverflow-s3.s3-website.ap-northeast-2.amazonaws.com//login/oauth2/code/google
+            redirect-uri: http://seveneleven-stackoverflow-s3.s3-website.ap-northeast-2.amazonaws.com/login/oauth2/code/google
             scope:
               - email
               - profile
