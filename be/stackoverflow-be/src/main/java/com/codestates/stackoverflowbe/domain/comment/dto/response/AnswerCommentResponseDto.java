@@ -18,13 +18,13 @@ public class AnswerCommentResponseDto {
 
     private String content;
 
-    private Account accountId;
+    private Long accountId;
 
-    private Account displayName;
+    private String displayName;
 
-    private Account email;
+    private String email;
 
-    private Answer answerId;
+    private Long answerId;
 
     private LocalDateTime createAt;
 

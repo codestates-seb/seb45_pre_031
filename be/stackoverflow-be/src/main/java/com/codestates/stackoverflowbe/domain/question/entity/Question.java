@@ -1,12 +1,12 @@
 package com.codestates.stackoverflowbe.domain.question.entity;
 
-import com.codestates.stackoverflowbe.domain.answer.entity.Answer;
-import com.codestates.stackoverflowbe.domain.question.dto.QuestionUpdateRequestDto;
-import com.codestates.stackoverflowbe.global.audit.BaseTimeEntity;
-import com.codestates.stackoverflowbe.domain.comment.entity.QuestionComment;
-import com.codestates.stackoverflowbe.domain.tag.entity.Tag;
 import com.codestates.stackoverflowbe.domain.account.entity.Account;
+import com.codestates.stackoverflowbe.domain.answer.entity.Answer;
+import com.codestates.stackoverflowbe.domain.comment.entity.QuestionComment;
+import com.codestates.stackoverflowbe.domain.question.dto.QuestionUpdateRequestDto;
+import com.codestates.stackoverflowbe.domain.tag.entity.Tag;
 import com.codestates.stackoverflowbe.domain.vote.entity.Vote;
+import com.codestates.stackoverflowbe.global.audit.BaseTimeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,6 +41,7 @@ public class Question extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "question")
     private List<Answer> answers = new ArrayList<>();
+
 
 
     @OneToMany(mappedBy = "question")

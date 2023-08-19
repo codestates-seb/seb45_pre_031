@@ -2,50 +2,41 @@ package com.codestates.stackoverflowbe.domain.question.controller;
 
 import com.codestates.stackoverflowbe.domain.account.entity.Account;
 import com.codestates.stackoverflowbe.domain.account.service.AccountService;
-import com.codestates.stackoverflowbe.domain.question.dto.QuestionListResponseDto;
 import com.codestates.stackoverflowbe.domain.question.dto.QuestionResponseDto;
 import com.codestates.stackoverflowbe.domain.question.dto.QuestionUpdateDto;
 import com.codestates.stackoverflowbe.domain.question.dto.QuestionUpdateRequestDto;
 import com.codestates.stackoverflowbe.domain.question.entity.Question;
 import com.codestates.stackoverflowbe.domain.question.service.QuestionService;
-import com.codestates.stackoverflowbe.domain.vote.service.VoteService;
+import com.codestates.stackoverflowbe.global.constants.HttpStatusCode;
 import com.codestates.stackoverflowbe.global.response.MultiResponseDto;
 import com.codestates.stackoverflowbe.global.response.SingleResponseDto;
-import com.codestates.stackoverflowbe.global.constants.HttpStatusCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Tag(name = "Question", description = "질문 기능")
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @Validated
 @RequestMapping("/v1/questions")
 public class QuestionController {
     private final static String QUESTION_DEFAULT_URL = "/v1/questions";
     private final QuestionService questionService;
     private final AccountService accountService;
-    private final VoteService voteService;
 
-    public QuestionController(QuestionService questionService, AccountService accountService, VoteService voteService) {
-        this.questionService = questionService;
-        this.accountService = accountService;
-        this.voteService = voteService;
-    }
 
     // 질문 생성 요청을 처리하는 메서드
     @Operation(summary = "Post Question", description = "질문 생성 기능")
@@ -250,4 +241,5 @@ public class QuestionController {
         List<QuestionResponseDto> unansweredQuestions = questionService.getUnansweredQuestions();
         return ResponseEntity.ok(unansweredQuestions);
     }
+
 }
