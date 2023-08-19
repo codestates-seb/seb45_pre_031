@@ -36,7 +36,5 @@ out/
 ### VS Code ###
 .vscode/
 
-*.yml
-
 #
 *.lock
