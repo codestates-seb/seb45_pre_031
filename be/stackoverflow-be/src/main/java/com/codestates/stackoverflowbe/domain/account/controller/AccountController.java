@@ -77,5 +77,4 @@ public class AccountController {
             accountService.deleteAccount(accountId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    // commit
 }
