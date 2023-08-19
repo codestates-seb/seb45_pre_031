@@ -8,9 +8,10 @@ import Answer from "../components/features/Answer";
 
 import Footer from "../components/sharedlayout/Footer";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import axios from "axios";
 
 import { useParams } from "react-router-dom";
 
@@ -74,6 +75,7 @@ const ButtonUpDown = styled.button`
   padding: 10px;
   background-color: transparent;
   font-size: 13px;
+  cursor: pointer;
 `
 const DivVote = styled.div`
   width: 45px; height: 45px;
@@ -85,6 +87,7 @@ const SpanComment = styled.span`
   padding: 0 3px 2px;
   font-size: 13px;
   color: rgb(131, 140, 149);
+  cursor: pointer;
 `
 const SpanQContainer = styled.span`
   margin-bottom: 16px;
@@ -112,6 +115,7 @@ const DivShareEditProfile = styled.div`
 const SpanShare = styled.span`
   color: rgb(106, 115, 124);
   font-size: 13px;
+  cursor: pointer;
   & span{
     margin-right: 8px;
   }
@@ -228,10 +232,52 @@ const askAll = {
 
 function QuestionDetailPage() {
 
-  const [newAnswerValue, setNewAnswerValue] = useState('');
+  const [question, setQuestion] = useState({})
+  const [answers, setAnswers] = useState([])
+  const [questionVote, setQuestionVote] = useState(0)
+  const [answerVote, setAnswerVote] = useState(0)
 
   const { questionId } = useParams();
 
+  const [newAnswerValue, setNewAnswerValue] = useState('');
+
+  // fetch 사용 코드
+  // function loadQnA(){
+  //   fetch("ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/questions/"+questionId)
+  //   .then(res=>res)
+  //   .then(question=>setQuestion(question))
+  //   .catch(err=>console.log(err))
+  //   fetch("ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/answers/"+questionId)
+  //   .then(res=>res)
+  //   .then(answers=>setAnswers(answers))
+  //   .catch(err=>console.log(err))
+  // }
+
+  function loadQnA(){
+    axios.get("ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/questions/"+questionId)
+    .then(question=>setQuestion(question))
+    .catch(err=>console.log(err+"질문을 가져오지 못했습니다."))
+    axios.get(`ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/answers/${questionId}`)
+    .then(answers=>setAnswers(answers))
+    .catch(err=>console.log(err+"답변을 가져오지 못했습니다."))
+    axios.get("ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/votesResult/questionId=?"+questionId)
+    .then(questionVote=>setQuestionVote(questionVote))
+    .catch(err=>console.log(err+"질문의 추천 정보를 가져오지 못했습니다."))
+    axios.get("ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/votesResult/answerId=?"+questionId)
+    .then(answerVote=>setAnswerVote(answerVote))
+    .catch(err=>console.log(err+"답변의 추천 정보를 가져오지 못했습니다."))
+  }
+
+  useEffect(loadQnA,[])
+  console.log(question)
+  console.log(answers)
+  console.log(questionId)
+
+  function shareClick(){
+    navigator.clipboard.writeText(window.location.href)
+    .then(res=>alert('링크가 복사되었습니다.')  )
+  }
+  
   return(
     <div>
       <DivAllContainer>
@@ -296,7 +342,7 @@ function QuestionDetailPage() {
                   </UlTags>
                   <DivShareEditProfile>
                     <SpanShare>
-                      <span>
+                      <span onClick={shareClick}>
                         Share
                       </span>
                       <span>
@@ -329,17 +375,15 @@ function QuestionDetailPage() {
                 <SpanAnswerLength>
                   {askAll.answer.length+" Answers"}
                 </SpanAnswerLength>
-                <form>
-                  <LabelAnswerFilter>
-                    Sorted by:
-                  </LabelAnswerFilter>
-                  <SelectAnswerFilter>
-                    <option>Highest score (default)</option>
-                    <option>Trending (recent votes count more)</option>
-                    <option>Date modified (newest first)</option>
-                    <option>Date created (oldest first)</option>
-                  </SelectAnswerFilter>
-                </form>
+                <LabelAnswerFilter>
+                  Sorted by:
+                </LabelAnswerFilter>
+                <SelectAnswerFilter>
+                  <option>Highest score (default)</option>
+                  <option>Trending (recent votes count more)</option>
+                  <option>Date modified (newest first)</option>
+                  <option>Date created (oldest first)</option>
+                </SelectAnswerFilter>
               </DivAnswerContainer>
               <ArticleA>
               <SpanVoteContainer>
@@ -359,7 +403,7 @@ function QuestionDetailPage() {
                   </DivQText>
                   <DivShareEditProfile>
                     <SpanShare>
-                      <span>
+                      <span onClick={shareClick}>
                         Share
                       </span>
                       <span>
@@ -406,7 +450,7 @@ function QuestionDetailPage() {
                   </DivQText>
                   <DivShareEditProfile>
                     <SpanShare>
-                      <span>
+                      <span onClick={shareClick}>
                         Share
                       </span>
                       <span>
@@ -438,7 +482,10 @@ function QuestionDetailPage() {
                 <SpanComment>Add a comment</SpanComment>                
               </ArticleA>
               <ArticleNewA>
-                <form>
+                <form
+                  method="POST"
+                  action={"http://host/v1/answer/questionId=?"+questionId}
+                >
                   <H2YourAnswer>
                     Your Answer
                   </H2YourAnswer>
@@ -448,7 +495,6 @@ function QuestionDetailPage() {
                   <SubmitPost
                     type="submit"
                     value="Post Your Answer"
-
                    />
                 </form>
               </ArticleNewA>
