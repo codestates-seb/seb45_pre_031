@@ -15,8 +15,8 @@ function QuestionList() {
   const filterOptions = ["Newest", "Active", "Unanswered", "Score", "Pop(week)", "Pop(month)"];
 
   const navigate = useNavigate();
-  const goToDetail = (question_id) => {
-    navigate(`/questiondetail/${question_id}`);
+  const goToDetail = (questionId) => {
+    navigate(`/questiondetail/${questionId}`);
   };
 
   useEffect(() => {
@@ -27,7 +27,7 @@ function QuestionList() {
         );
 
         if (response.data.success) {
-          setData(response.data);
+          setData(response.data.content);
         } else {
           console.error("Server responded with an error:", response.data.message || "Unknown server error");
         }
@@ -56,7 +56,7 @@ function QuestionList() {
         <AskQuestionBtn>Ask Question</AskQuestionBtn>
       </HeaderContainer>
       <FiterContainer>
-        <span className="questionCount">{data.questions_count || "22,345,751"} quesitons</span>
+        <span className="questionCount">{data.length || "22,345,751"} quesitons</span>
         <Fiter>
           {filterOptions.map((option, index) => (
             <FilterOption key={index} onClick={() => handleTab(option)} isSelected={tab === option}>
@@ -67,34 +67,38 @@ function QuestionList() {
       </FiterContainer>
       <QuestionListContainer>
         {data &&
-          data.question_data.map((question) => (
+          data.map((question) => (
             <Question>
               <div className="leftSide">
                 <LeftSideInfo>
-                  <span className="votes">{question.vote_up.length - question.vote_down.length} votes</span>
+                  <span className="votes">{question.votes.length} votes</span>
                 </LeftSideInfo>
                 <LeftSideInfo>
-                  <span className="answersAndViews">{question.answers_count} asnswers</span>
+                  <span className="answersAndViews">{question.answers.length} asnswers</span>
                 </LeftSideInfo>
                 <LeftSideInfo>
-                  <span className="answersAndViews">{question.views} views</span>
+                  <span className="answersAndViews">{question.viewCount} views</span>
                 </LeftSideInfo>
               </div>
               <div className="rightSide">
-                <QuestionTitle onClick={() => goToDetail(question.question_id)}> {question.title} </QuestionTitle>
-                <QuestionSummury>{question.bodyHTML}</QuestionSummury>
+                <QuestionTitle onClick={() => goToDetail(question.account.questionId)}>
+                  {" "}
+                  {question.title}{" "}
+                </QuestionTitle>
+                <QuestionSummury>{question.body}</QuestionSummury>
                 <TagAndUserInfoContainer>
                   <TagContainer>
-                    {question.tags.map((tag) => (
-                      <>
-                        <Tag>{tag}</Tag>
-                      </>
-                    ))}
+                    {question.tags &&
+                      question.tags.map((tag) => (
+                        <>
+                          <Tag>{tag}</Tag>
+                        </>
+                      ))}
                   </TagContainer>
                   <UserInfoContainer>
-                    <img className="userAvatar" alt="userAvatar" src={logo} />
+                    {/* <img className="userAvatar" alt="userAvatar" src={logo} /> */}
                     <div className="userName">
-                      <span>{question.avatarUrl}</span>
+                      <span>{question.account.displayName}</span>
                     </div>
                     <div className="createdAt">
                       <span>5 mins ago</span>
@@ -104,7 +108,7 @@ function QuestionList() {
               </div>
             </Question>
           ))}
-        <Question>
+        {/* <Question>
           <div className="leftSide">
             <LeftSideInfo>
               <span className="votes">0 votes</span>
@@ -147,7 +151,7 @@ function QuestionList() {
         <Question>Question3</Question>
         <Question>Question4</Question>
         <Question>Question5</Question>
-        <Question>Question6</Question>
+        <Question>Question6</Question> */}
       </QuestionListContainer>
       <PaginationContainer>
         <StyledReactPaginate
