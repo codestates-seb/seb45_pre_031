@@ -7,6 +7,7 @@ import com.codestates.stackoverflowbe.global.auth.handler.*;
 import com.codestates.stackoverflowbe.global.auth.filter.JwtAuthenticationFilter;
 import com.codestates.stackoverflowbe.global.auth.jwt.JwtTokenizer;
 import com.codestates.stackoverflowbe.global.auth.utils.CustomAuthorityUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -27,6 +28,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 
 @Configuration
+@RequiredArgsConstructor
 @EnableWebSecurity
 public class SecurityConfiguration {
 
@@ -34,24 +36,16 @@ public class SecurityConfiguration {
     private final CustomAuthorityUtils authorityUtils;
     private final AccountService accountService;
 
-//    private final SecurityCorsConfig corsConfig;
-
-
-    public SecurityConfiguration(JwtTokenizer jwtTokenizer, CustomAuthorityUtils authorityUtils,
-                                 AccountService accountService) {
-        this.jwtTokenizer = jwtTokenizer;
-        this.authorityUtils = authorityUtils;
-        this.accountService = accountService;
-    }
+    private final SecurityCorsConfig corsConfig;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .headers().frameOptions().sameOrigin() // (해당 옵션 유효한 경우 h2사용가능) SOP 정책 유지, 다른 도메인에서 iframe 로드 방지
                 .and()
-                .cors(Customizer.withDefaults()) //CORS 처리하는 가장 쉬운 방법인 CorsFilter 사용, CorsConfigurationSource Bean을 제공
-                .cors(configuration -> configuration
-                        .configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()))
+//                .cors(Customizer.withDefaults()) //CORS 처리하는 가장 쉬운 방법인 CorsFilter 사용, CorsConfigurationSource Bean을 제공
+//                .cors(configuration -> configuration
+//                        .configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()))
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 정보 저장X
                 .and()
@@ -97,6 +91,11 @@ public class SecurityConfiguration {
         //4가지 HTTP Method에 대한 HTTP 통신 허용
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE", "OPTIONS"));
 
+//        configuration.setAllowedHeaders(Arrays.asList("Authorization"));
+        configuration.addExposedHeader("Authorization");
+//        configuration.addExposedHeader("Refresh");
+
+
         // CorsConfigurationSource 인터페이스 구현 클래스인 UrlBasedCorsConfigurationSource 클래스 객체 생성
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
@@ -123,7 +122,7 @@ public class SecurityConfiguration {
 
             // Spring Security FilterChain에 추가
             builder
-//                    .addFilter(corsConfig.corsFilter())
+                    .addFilter(corsConfig.corsFilter())
                     .addFilter(jwtAuthenticationFilter)
                     // OAuth2LoginAuthenticationFilter : OAuth2.0 권한 부여 응답 처리 클래스 뒤에 jwtVerificationFilter 추가 (Oauth)
                     .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);

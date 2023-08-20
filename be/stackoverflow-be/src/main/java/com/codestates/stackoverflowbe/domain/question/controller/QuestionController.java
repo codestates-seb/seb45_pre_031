@@ -9,11 +9,14 @@ import com.codestates.stackoverflowbe.domain.question.dto.QuestionUpdateRequestD
 import com.codestates.stackoverflowbe.domain.question.entity.Question;
 import com.codestates.stackoverflowbe.domain.question.service.QuestionService;
 import com.codestates.stackoverflowbe.domain.vote.service.VoteService;
+import com.codestates.stackoverflowbe.global.exception.BusinessLogicException;
+import com.codestates.stackoverflowbe.global.exception.ExceptionCode;
 import com.codestates.stackoverflowbe.global.response.MultiResponseDto;
 import com.codestates.stackoverflowbe.global.response.SingleResponseDto;
 import com.codestates.stackoverflowbe.global.constants.HttpStatusCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -25,6 +28,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.constraints.Positive;
 import java.net.URI;
 import java.security.Principal;
 import java.util.List;
@@ -34,18 +38,12 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @Validated
+@RequiredArgsConstructor
 @RequestMapping("/v1/questions")
 public class QuestionController {
     private final static String QUESTION_DEFAULT_URL = "/v1/questions";
     private final QuestionService questionService;
     private final AccountService accountService;
-    private final VoteService voteService;
-
-    public QuestionController(QuestionService questionService, AccountService accountService, VoteService voteService) {
-        this.questionService = questionService;
-        this.accountService = accountService;
-        this.voteService = voteService;
-    }
 
     // 질문 생성 요청을 처리하는 메서드
     @Operation(summary = "Post Question", description = "질문 생성 기능")
@@ -83,9 +81,10 @@ public class QuestionController {
     // 질문 목록 조회 요청을 처리하는 메서드
     @Operation(summary = "Get All Question", description = "전체 질문 조회 기능")
     @GetMapping
-    public ResponseEntity<MultiResponseDto<QuestionResponseDto>> getQuestions() {
+    public ResponseEntity<MultiResponseDto<QuestionResponseDto>> getQuestions(@Positive @RequestParam(defaultValue = "1") int page,
+                                                                              @Positive @RequestParam(defaultValue = "15") int size) {
         // QuestionService를 통해 모든 질문 목록을 가져옵니다.
-        Page<QuestionResponseDto> pageQuestionDtos = questionService.getAllQuestions();
+        Page<QuestionResponseDto> pageQuestionDtos = questionService.getAllQuestions(page, size);
 
         // 질문 목록과 함께 응답 객체를 생성하여 반환합니다.
         return ResponseEntity.ok(MultiResponseDto.<QuestionResponseDto>builder()
@@ -97,10 +96,10 @@ public class QuestionController {
     }
 
     // 질문 수정 요청을 처리하는 메서드
-    @Operation(summary = "Put Question", description = "질문 수정 기능")
+    @Operation(summary = "Patch Question", description = "질문 수정 기능")
     @PatchMapping("/{questionId}")
-    public ResponseEntity<SingleResponseDto<Question>> updateQuestion(@PathVariable Long questionId,
-                                                                      @RequestBody QuestionUpdateRequestDto updateDto) {
+    public ResponseEntity<HttpStatus> updateQuestion(@PathVariable Long questionId,
+                                                     @RequestBody QuestionUpdateRequestDto updateDto) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         // 요청을 보낸 사용자의 정보를 가져옵니다.
@@ -119,7 +118,7 @@ public class QuestionController {
     // 질문 삭제 요청을 처리하는 메서드
     @Operation(summary = "Delete Question", description = "질문 삭제 기능")
     @DeleteMapping("/{questionId}")
-    public ResponseEntity<SingleResponseDto<String>> deleteQuestion(@PathVariable Long questionId) {
+    public ResponseEntity<HttpStatus> deleteQuestion(@PathVariable Long questionId) {
         // 질문을 찾습니다.
         Question question = questionService.findQuestionById(questionId);
 
@@ -128,10 +127,7 @@ public class QuestionController {
         Account account = accountService.findByEmail((String) principal);
 
         // 질문 작성자와 현재 로그인한 사용자가 일치하는지 확인합니다.
-        if (!question.getAccount().equals(account)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(new SingleResponseDto<>(HttpStatusCode.FORBIDDEN.getStatusCode(), "You don't have permission to delete this question.", null));
-        }
+        if (!question.getAccount().equals(account)) throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_ALLOW);
         // 질문을 삭제합니다.
         questionService.deleteQuestion(question);
         // 삭제 성공 응답을 반환합니다.
@@ -141,13 +137,14 @@ public class QuestionController {
     // 사용자별 질문 조회 요청을 처리하는 메서드
     @Operation(summary = "Get User's Question", description = "사용자 별 질문 조회 기능")
     @GetMapping("/user")
-    public ResponseEntity<MultiResponseDto<QuestionResponseDto>> getUserQuestions() {
+    public ResponseEntity<MultiResponseDto<QuestionResponseDto>> getUserQuestions(@Positive @RequestParam(defaultValue = "1") int page,
+                                                                                  @Positive @RequestParam(defaultValue = "15") int size) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         // 요청을 보낸 사용자의 정보를 가져옵니다.
         Account account = accountService.findByEmail((String) principal);
 
         // 사용자별 작성한 질문 목록을 조회합니다.
-        Page<QuestionResponseDto> pageQuestionDtos = questionService.getQuestionsByUser(account);
+        Page<QuestionResponseDto> pageQuestionDtos = questionService.getQuestionsByUser(page, size, account);
 
         // 조회한 질문 목록을 반환합니다.
         return ResponseEntity.ok(MultiResponseDto.<QuestionResponseDto>builder()
@@ -159,6 +156,40 @@ public class QuestionController {
     }
 
 
+    // 탭["Newest", "Active", "Unanswered", "Score", "Pop(week)", "Pop(month)"] 별 질문 조회 요청을 처리하는 메서드
+//    @Operation(summary = "Get Questions", description = "탭 별 질문 조회 기능")
+//    @GetMapping("/tabQuestion")
+//    public ResponseEntity<MultiResponseDto<QuestionResponseDto>> getTabQuestions(@Positive @RequestParam(defaultValue = "1") int page,
+//                                                                                 @Positive @RequestParam(defaultValue = "15") int size,
+//                                                                                 @RequestParam String tab) {
+//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        // 요청을 보낸 사용자의 정보를 가져옵니다.
+//        Account account = accountService.findByEmail((String) principal);
+//
+//        // 사용자별 작성한 질문 목록을 조회합니다.
+//        Page<QuestionResponseDto> pageQuestionDtos;
+//
+//        if (tab.equals("Newest")) pageQuestionDtos = questionService.getNewestQuestions(page, size);
+//        else if (tab.equals("Active")) pageQuestionDtos = questionService.getActiveQuestions(page, size);
+//
+//            else if (tab.equals("Unanswered"))
+//
+//        } else if (tab.equals("Score")) {
+//
+//        } else if (tab.equals("Pop(week)")) {
+//
+//        } else if (tab.equals("Pop(month)")) {
+//
+//        }
+//
+//        // 조회한 질문 목록을 반환합니다.
+//        return ResponseEntity.ok(MultiResponseDto.<QuestionResponseDto>builder()
+//                .status(HttpStatusCode.OK.getStatusCode())
+//                .message(HttpStatusCode.OK.getMessage())
+//                .data(pageQuestionDtos.getContent())
+//                .page(pageQuestionDtos)
+//                .build());
+//    }
 
 
     // 최신 질문 조회 요청을 처리하는 메서드
@@ -228,14 +259,14 @@ public class QuestionController {
     }
 
     // 질문 목록 조회 요청을 처리하는 메서드 (Active: 수정 시간 최신순으로)
-    @GetMapping("/active")
-    public ResponseEntity<SingleResponseDto<List<QuestionResponseDto>>> getActiveQuestions() {
-        List<QuestionResponseDto> activeQuestions = questionService.getActiveQuestions().stream()
-                .map(questionService::getQuestionQuestionResponseDto)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(new SingleResponseDto<>(HttpStatusCode.OK.getStatusCode(), HttpStatusCode.OK.getMessage(), activeQuestions));
-    }
+//    @GetMapping("/active")
+//    public ResponseEntity<SingleResponseDto<List<QuestionResponseDto>>> getActiveQuestions() {
+//        List<QuestionResponseDto> activeQuestions = questionService.getActiveQuestions().stream()
+//                .map(questionService::getQuestionQuestionResponseDto)
+//                .collect(Collectors.toList());
+//
+//        return ResponseEntity.ok(new SingleResponseDto<>(HttpStatusCode.OK.getStatusCode(), HttpStatusCode.OK.getMessage(), activeQuestions));
+//    }
 
     // 질문 목록 조회 요청을 처리하는 메서드 (Score: Vote Score 순으로)
     @GetMapping("/score")

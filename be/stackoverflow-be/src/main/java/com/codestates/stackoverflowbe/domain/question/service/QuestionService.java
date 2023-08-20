@@ -40,7 +40,6 @@ public class QuestionService {
         Question newQuestion = new Question();
         newQuestion.setTitle(questionDto.getTitle());
         newQuestion.setBody(questionDto.getBody());
-        newQuestion.setExpectContents(questionDto.getExpectContents());
         newQuestion.setAccount(account);
         newQuestion.setViewCount(0L);
 
@@ -49,8 +48,8 @@ public class QuestionService {
     }
 
     // 모든 질문 목록 조회
-    public Page<QuestionResponseDto> getAllQuestions() {
-        return questionRepository.findAll(PageRequest.of(0, 15))
+    public Page<QuestionResponseDto> getAllQuestions(int page, int size) {
+        return questionRepository.findAll(PageRequest.of(page, size))
                 .map(this::getQuestionQuestionResponseDto);
     }
 
@@ -73,9 +72,9 @@ public class QuestionService {
     }
 
     // 특정 사용자가 작성한 질문 조회
-    public Page<QuestionResponseDto> getQuestionsByUser(Account account) {
+    public Page<QuestionResponseDto> getQuestionsByUser(int page, int size, Account account) {
         // 해당 사용자가 작성한 질문을 조회합니다.
-        return questionRepository.findByAccount(account, PageRequest.of(0, 15))
+        return questionRepository.findByAccount(account, PageRequest.of(page, size))
                 .map(this::getQuestionQuestionResponseDto);
     }
 
@@ -84,6 +83,13 @@ public class QuestionService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         return questionRepository.findAllByOrderByCreatedAtDesc(pageable)
                 .map(this::getQuestionQuestionResponseDto);
+    }
+
+    // 질문 목록을 Active: 수정 시간 최신순으로 가져오는 메서드
+    public List<Question> getActiveQuestions(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("modifiedAt").descending());
+        List<Question> questions = questionRepository.findAllByOrderByModifiedAtDesc();
+        return questions;
     }
 
     // 인기 질문 조회
@@ -109,11 +115,7 @@ public class QuestionService {
                 .map(this::getQuestionQuestionResponseDto);
     }
 
-    // 질문 목록을 Active: 수정 시간 최신순으로 가져오는 메서드
-    public List<Question> getActiveQuestions() {
-        List<Question> questions = questionRepository.findAllByOrderByModifiedAtDesc();
-        return questions;
-    }
+
 
 //     질문 목록을 Score: Score 순으로 가져오는 메서드
     public List<QuestionResponseDto> getScoreQuestions() {
