@@ -14,11 +14,14 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     Page<Question> findByAccount(Account account, Pageable pageable);
 
     Page<Question> findAllByOrderByCreatedAtDesc(Pageable pageable); // Newest
+    Page<Question> findAllByOrderByModifiedAtDesc(Pageable pageable);
+    Page<Question> findAllByAnswersIsEmpty(Pageable pageable);
+
     Page<Question> findAllByOrderByViewCountDesc(Pageable pageable); // Hot
     Page<Question> findByCreatedAtAfterOrderByViewCountDesc(LocalDateTime createdAt, Pageable pageable); // Week, Month
-    List<Question> findAllByAnswersIsEmpty();
 
-    List<Question> findAllByOrderByModifiedAtDesc();
+
+
 
 //    List<Question> findAllByOrderByScoreDesc();
 }

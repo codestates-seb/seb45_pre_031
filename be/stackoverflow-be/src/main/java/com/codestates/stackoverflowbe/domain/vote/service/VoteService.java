@@ -38,7 +38,6 @@ public class VoteService {
             findQuestion = questionRepository.findById(requestDto.getQuestionId()).orElseThrow(() ->
                     new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
             findVotes = findQuestion.getVotes();
-
         } else{
             findAnswer = answerRepository.findById(requestDto.getAnswerId()).orElseThrow(() ->
                     new BusinessLogicException(ExceptionCode.ANSWER_NOT_FOUND));

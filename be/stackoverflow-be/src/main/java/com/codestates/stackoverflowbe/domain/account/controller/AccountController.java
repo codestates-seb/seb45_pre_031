@@ -55,7 +55,6 @@ public class AccountController {
     ResponseEntity getAccount(@Positive @PathVariable("accountId") long accountId) {
         AccountDto.Response accountResponse= accountService.findAccount(accountId);
         return ResponseEntity.ok(new SingleResponseDto<>(HttpStatusCode.CREATED.getStatusCode(), HttpStatusCode.CREATED.getMessage(), accountResponse));
-
     }
 
 
