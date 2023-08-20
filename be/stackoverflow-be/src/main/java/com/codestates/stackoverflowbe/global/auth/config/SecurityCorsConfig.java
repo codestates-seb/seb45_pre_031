@@ -25,8 +25,9 @@ public class SecurityCorsConfig {
         config.addAllowedOriginPattern("http://localhost:3000"); // 로컬 프론트 환경에서 접근하는 CORS 허용
         config.addAllowedOriginPattern("http://seveneleven-stackoverflow-s3.s3-website.ap-northeast-2.amazonaws.com"); // 배포 환경
 
-        //응답 헤더에 Authorization 헤더를 노출하도록 설정
+        // (리액트) 응답 헤더에 Authorization 헤더를 노출하도록 설정
         config.addExposedHeader("Authorization");
+        config.addExposedHeader("Refresh");
 
         config.addAllowedHeader("*"); //특정 header만 허용
         config.addAllowedMethod("GET"); //특정 메소드만 허용
