@@ -108,6 +108,21 @@ public class Account extends BaseTimeEntity {
     }
 
     public AccountPageResponseDto toPageResponseDto() {
-        return null;
+        return AccountPageResponseDto.builder()
+                .accountId(this.accountId)
+                .displayName(this.displayName)
+                .email(this.email)
+                .password(this.email)
+                .questions(this.questions)
+                .answers(this.answers)
+                .votes(this.votes)
+                .location(this.location)
+                .title(this.title)
+                .aboutMe(this.aboutMe)
+                .websiteLink(this.websiteLink)
+                .twitterLink(this.twitterLink)
+                .gitHubLink(this.gitHubLink)
+                .roles(this.roles)
+                .build();
     }
 }

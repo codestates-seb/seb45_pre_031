@@ -4,12 +4,18 @@ import com.codestates.stackoverflowbe.domain.answer.entity.Answer;
 import com.codestates.stackoverflowbe.domain.question.entity.Question;
 import com.codestates.stackoverflowbe.domain.vote.entity.Vote;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+@AllArgsConstructor
+@Builder
+@Getter
 public class AccountPageResponseDto {
 
     private long accountId;
