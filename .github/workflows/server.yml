@@ -35,10 +35,6 @@ jobs:
           docker build -t 7elenven-cicd . 
           docker tag 7elenven-cicd leest/7eleven-cicd:${GITHUB_SHA::7}
           docker push leest/7eleven-cicd:${GITHUB_SHA::7}
-        with:
-          G_CLIENT_ID: ${{secrets.G_CLIENT_ID}}
-          G_CLIENT_SECRET: ${{secrets.G_CLIENT_SECRET}}
-          JWT_SECRET_KEY: ${{secrets.JWT_SECRET_KEY}}
         working-directory: ${{ env.working-directory }}
 
       - name: Configure AWS credentials
