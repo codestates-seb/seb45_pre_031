@@ -8,9 +8,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      G_CLIENT_ID: ${{secrets.G_CLIENT_ID}}
-      G_CLIENT_SECRET: ${{secrets.G_CLIENT_SECRET}}
-      JWT_SECRET_KEY: ${{secrets.JWT_SECRET_KEY}}
+      jwt.key.secrets: ${JWT_SECRET_KEY}
+      spring.security.oauth2.client.registration.google.client-id: ${G_CLIENT_ID}
+      spring.security.oauth2.client.registration.google.client-secret: ${G_CLIENT_SECRET}
       working-directory: ./be/stackoverflow-be
 
     steps:
