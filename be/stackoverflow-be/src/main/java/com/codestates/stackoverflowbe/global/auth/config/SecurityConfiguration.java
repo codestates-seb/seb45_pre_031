@@ -79,8 +79,10 @@ public class SecurityConfiguration {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        //모든 출처(Origin)에 대해 스크립트 기반 HTTP 통신 허용
-        configuration.setAllowedOrigins(Arrays.asList("*"));
+        // 자격증명 (예: 쿠키, 인증 헤더 등)을 허용
+        configuration.setAllowCredentials(true);
+        //모든 출처(Origin)에 대해 스크립트 기반 HTTP 통신 허용 (단, configuration.setAllowCredentials(true)와 함께 적용 불가!)
+//        configuration.setAllowedOrigins(Arrays.asList("*"));
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:80",
                 "http://localhost:8080",
                 "http://localhost:3000",

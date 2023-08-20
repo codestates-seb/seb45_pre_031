@@ -16,8 +16,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class QuestionCommentResponseDto {
 
-//    private Long questionCommentId;
-
     private String content;
 
     private Long accountId;
@@ -26,7 +24,7 @@ public class QuestionCommentResponseDto {
 
     private String email;
 
-    private long questionId;
+    private Long questionId;
 
     private LocalDateTime createAt;
 
