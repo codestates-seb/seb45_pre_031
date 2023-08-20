@@ -35,7 +35,6 @@ public class SecurityConfiguration {
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
     private final AccountService accountService;
-
     private final SecurityCorsConfig corsConfig;
 
 
