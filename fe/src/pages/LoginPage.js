@@ -75,7 +75,7 @@ function LoginPage () {
       const response = await axios.post("http://localhost:8080/v1/accounts/authenticate", { email, password });
 
       if (response.status === 200) {
-        // 서버에서 토큰을 받음 //수정
+        // 서버에서 토큰을 받음
         const accessToken = response.data.accessToken;
         const refreshToken = response.data.refreshToken;
 

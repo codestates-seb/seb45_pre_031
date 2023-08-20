@@ -32,7 +32,7 @@ function MembershipPage() {
           <MsTextContentbox className="ms-textbox-below">
             <div>
               Collaborate and share knowledge with a private group for FREE.
-              <a>Get Stack Overflow for Teams free for up to 50 users.</a>
+              <a href="#none"> Get Stack Overflow for Teams free for up to 50 users.</a>
             </div>
           </MsTextContentbox>
         </MsTextContentParts>
@@ -44,39 +44,37 @@ function MembershipPage() {
           </MsBtnContainer>
           <SignUpFormContainer>
             <SignUpForm>
-              <div>
-                <label>Display name</label>
-                <input></input>
-              </div>
-              <div>
-                <label>Display name</label>
-                <input></input>
-              </div>
-              <div>
-                <label>Display name</label>
-                <input></input>
-              </div>
-              <div>
+              <SignUpInputForm>
+                <MsLabel>Display name</MsLabel>
+                <SignUpInput />
+              </SignUpInputForm>
+              <SignUpInputForm>
+                <MsLabel>Email</MsLabel>
+                <SignUpInput />
+              </SignUpInputForm>
+              <SignUpInputForm className="signup-password-form">
+                <MsLabel>Password</MsLabel>
+                <SignUpInput />
+              </SignUpInputForm>
+              <MsCreatePwRuleTextBox>
                 <p>Passwords must contain at least eight characters, including at least 1 letter and 1 number.</p>
-              </div>
+              </MsCreatePwRuleTextBox>
               <MsBtnContainer>
-                <button>sign up</button>
+                <SignUpBtn>Sign up</SignUpBtn>
               </MsBtnContainer>
-              <div>
-                <p>
+              <MsTermsTextBox>
                 By clicking “Sign up”, you agree to our
-                <a>terms of service</a>
-                and acknowledge that you have read and understand our <a>privacy policy</a>
+                <a href="#none"> terms of service </a>
+                and acknowledge that you have read and understand our <a href="#none">privacy policy </a>
                 and
-                <a>code of conduct.</a>
-                </p>
-              </div>
+                <a href="#none"> code of conduct.</a>
+              </MsTermsTextBox>
             </SignUpForm>
           </SignUpFormContainer>
-          <div>
+          <SignUpTextBelowContainer>
             Already have an account?
-            <a>Log in</a>
-          </div>
+            <a href="/login">Log in</a>
+          </SignUpTextBelowContainer>
         </MsSignupContentParts>
       </MembershipContentContainer>
     </MembershipPageContainer>
@@ -106,11 +104,16 @@ const MsTextContentParts = styled.div`
   flex-direction: column;
   gap: 18px;
   width: 100%;
+  padding-left: 20px;
 `
 
 const MsTextTitle = styled.div`
 
   > h1 {
+    font-size: 27px;
+    white-space: nowrap;
+    line-height: 1;
+    font-weight: 400;
 
   }
 `
@@ -120,10 +123,27 @@ const MsTextContentbox = styled.div`
   text-align: left;
   align-items: center;
   gap: 6px;
+  font-size: 15px;
+  white-space: normal;
+
 
   &.ms-textbox-below {
-    display: flex;
-    flex-direction: column;
+
+    > div {
+      display: flex;
+      flex-direction: column;
+      font-size: 13px;
+      color: hsl(210,8%,45%);
+
+      > a {
+      color: rgb(0, 116, 204);
+      text-decoration: none;
+
+      &:hover {
+        color: hsl(206,100%,52%);
+      }
+    }
+    }
   }
 `
 
@@ -131,6 +151,7 @@ const MsSignupContentParts = styled.div`
 `
 
 const MsBtnContainer = styled.div`
+  width: 100%;
 `
 
 const GoogleSignUpBtn = styled.button`
@@ -192,6 +213,112 @@ const SignUpForm = styled.form`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 18px;
   width: 100%;
 `
+
+const MsLabel = styled.label`
+  font-size: 15px;
+  font-family: inherit;
+  font-weight: 600;
+`
+
+const SignUpInput = styled.input`
+  width: 100%;
+  margin: 0;
+  background-color: hsl(0,0%,100%);
+  border: 1px solid hsl(210,8%,75%);
+  border-radius: 6px;
+  padding: 8px 9px;
+
+  &:focus {
+    border-color: hsl(206, 90%, 69.5%);
+    box-shadow: 0 0 0 4px hsla(206, 100%, 40%, 0.15);
+    outline: none;
+  }
+
+  &.error {
+    border: 1px solid hsl(358,68%,59%);
+
+    &:focus {
+      box-shadow: 0 0 0 4px hsla(358,62%,47%,0.15);
+    }
+  }
+`
+
+const SignUpInputForm = styled.div`
+  width: 100%;
+  margin-bottom: 18px;
+
+  > div {
+    margin-bottom: 4px;
+  }
+
+  &.signup-password-form {
+    margin-bottom: 6px;
+  }
+`
+
+const SignUpBtn = styled.button`
+  width: 100%;
+  margin: 0;
+  padding: 10px;
+  border-radius: 6px;
+  color: white;
+  font-size: 13px;
+  border: none;
+  white-space: nowrap;
+  background-color: hsl(206,100%,52%);
+
+  &:hover {
+    background-color: hsl(206,100%,40%);
+  }
+
+  &:active {
+    background-color: hsl(209,100%,37.5%);
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 4px hsla(206, 100%, 40%, 0.15);
+    outline: none;
+  }
+`
+
+const MsCreatePwRuleTextBox = styled.div`
+  width: 100%;
+  font-size: 12px;
+  color: hsl(210,8%,45%);
+  margin-bottom: 14px;
+`
+
+const MsTermsTextBox = styled.div`
+  width: 100%;
+  font-size: 12px;
+  color: hsl(210,8%,45%);
+  margin-top: 28px;
+
+  > a {
+    color: rgb(0, 116, 204);
+    text-decoration: none;
+
+    &:hover {
+      color: hsl(206,100%,52%);
+    }
+  }
+`
+
+const SignUpTextBelowContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+
+  > a {
+    color: rgb(0, 116, 204);
+    text-decoration: none;
+
+    &:hover {
+      color: hsl(206,100%,52%);
+    }
+  }
+`;
