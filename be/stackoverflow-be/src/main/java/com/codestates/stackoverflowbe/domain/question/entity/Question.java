@@ -21,7 +21,6 @@ import java.util.List;
 @Entity
 public class Question extends BaseTimeEntity {
     // JPA 어노테이션을 사용한 질문 엔티티 클래스
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long questionId;
@@ -42,24 +41,15 @@ public class Question extends BaseTimeEntity {
     @OneToMany(mappedBy = "question")
     private List<Answer> answers = new ArrayList<>();
 
-
     @OneToMany(mappedBy = "question")
     private List<Tag> tags = new ArrayList<>();
 
     @OneToMany(mappedBy = "question")
     private List<Vote> votes = new ArrayList<>();
 
-    // 추가한 필드 및 메서드
-
     @Column
     private Long viewCount;
 
-    @Column(columnDefinition = "TEXT")
-    private String expectContents;
-
-    public void setExpectContents(String expectContents) {
-        this.expectContents = expectContents;
-    }
     public void setTitle(String title) {
         this.title = title;
     }

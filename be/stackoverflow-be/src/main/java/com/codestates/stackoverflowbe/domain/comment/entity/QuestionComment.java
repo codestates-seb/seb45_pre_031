@@ -33,9 +33,6 @@ public class QuestionComment extends BaseTimeEntity {
     @JoinColumn(name = "QUESTION_ID")
     private Question question;
 
-    @ManyToOne
-    @JoinColumn(name = "ANSWER_ID")
-    private Answer answer;
 
     public void update(String contents) {
         this.contents = contents;

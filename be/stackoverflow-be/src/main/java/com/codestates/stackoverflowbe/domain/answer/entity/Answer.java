@@ -1,5 +1,6 @@
 package com.codestates.stackoverflowbe.domain.answer.entity;
 
+import com.codestates.stackoverflowbe.domain.comment.entity.AnswerComment;
 import com.codestates.stackoverflowbe.global.audit.BaseTimeEntity;
 import com.codestates.stackoverflowbe.domain.comment.entity.QuestionComment;
 import com.codestates.stackoverflowbe.domain.question.entity.Question;
@@ -37,7 +38,7 @@ public class Answer extends BaseTimeEntity {
     private Question question;
 
     @OneToMany(mappedBy = "answer")
-    private List<QuestionComment> questionComments = new ArrayList<>();
+    private List<AnswerComment> answerComments = new ArrayList<>();
 
     @OneToMany(mappedBy = "answer")
     private List<Vote> votes = new ArrayList<>();

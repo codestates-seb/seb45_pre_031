@@ -5,13 +5,20 @@ import lombok.Getter;
 @Getter
 public class AnswerCommentRequestDto {
 
-    private String content;
-    private Long accountId;
-    private Long answerId;
+    @Getter
+    public static class Post {
+        private String contents;
+        private Long accountId;
+        private Long answerId;
+    }
 
-//    public Comment toEntity() {
-//        return Comment.builder()
-//                .content(content)
-//                .build();
-//    }
+    @Getter
+    public static class Patch {
+        private String contents;
+    }
+
+    @Getter
+    public static class Get {
+        private Long answerId;
+    }
 }

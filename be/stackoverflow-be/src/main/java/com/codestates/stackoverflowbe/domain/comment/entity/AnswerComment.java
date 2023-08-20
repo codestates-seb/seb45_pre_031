@@ -23,7 +23,7 @@ public class AnswerComment extends BaseTimeEntity {
     private Long commentId;
 
     @Column
-    private String content;
+    private String contents;
 
     @ManyToOne
     @JoinColumn(name = "ACCOUNT_ID")
@@ -33,7 +33,7 @@ public class AnswerComment extends BaseTimeEntity {
     @JoinColumn(name = "ANSWER_ID")
     private Answer answer;
 
-    public void update(String content) {
-        this.content = content;
+    public void update(String contents) {
+        this.contents = contents;
     }
 }

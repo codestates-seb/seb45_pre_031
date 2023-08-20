@@ -3,14 +3,12 @@ package com.codestates.stackoverflowbe.domain.comment.service;
 
 import com.codestates.stackoverflowbe.domain.account.entity.Account;
 import com.codestates.stackoverflowbe.domain.account.repository.AccountRepository;
-import com.codestates.stackoverflowbe.domain.answer.dto.AnswerDto;
 import com.codestates.stackoverflowbe.domain.comment.dto.request.QuestionCommentRequestDto;
 import com.codestates.stackoverflowbe.domain.comment.dto.response.QuestionCommentResponseDto;
 import com.codestates.stackoverflowbe.domain.comment.entity.QuestionComment;
 import com.codestates.stackoverflowbe.domain.comment.repository.QuestionCommentRepository;
 import com.codestates.stackoverflowbe.domain.question.entity.Question;
 import com.codestates.stackoverflowbe.domain.question.repository.QuestionRepository;
-import com.codestates.stackoverflowbe.domain.question.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,7 +25,6 @@ public class QuestionCommentService {
     private final QuestionCommentRepository questionCommentRepository;
     private final AccountRepository accountRepository;
     private final QuestionRepository questionRepository;
-    private final QuestionService questionService;
 
     @Transactional
     public QuestionComment saveComment(QuestionCommentRequestDto.Post requestCommentDto) {
@@ -47,12 +44,14 @@ public class QuestionCommentService {
         return questionCommentRepository.save(questionComment);
     }
 
+    @Transactional
     public void updateComment(Long id, QuestionCommentRequestDto.Patch requestCommentDto) {
         QuestionComment savedQuestionComment = verifyExistsComment(id);
         savedQuestionComment.update(requestCommentDto.getContents());
     }
 
 
+    @Transactional
     public void deleteComment(Long id) {
         QuestionComment questionComment = verifyExistsComment(id);
 
@@ -66,7 +65,7 @@ public class QuestionCommentService {
     }
 
     @Transactional(readOnly = true)
-    public Page<QuestionCommentResponseDto> findcomments(int page, int size, long questionId) {
+    public Page<QuestionCommentResponseDto> findcomments(int page, int size, Long questionId) {
         Question question = questionRepository.findById(questionId).orElseThrow(() -> new IllegalArgumentException("not found"));
 //        Question question1 = questionService.findQuestionById(questionId);
 

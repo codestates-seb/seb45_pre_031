@@ -5,15 +5,17 @@ import styled from "styled-components";
 
 function TagListPage() {
   return (
-    <StyledTagListPage>
-      <div className="top">
-        <NavBar></NavBar>
-        <TagList></TagList>
-      </div>
-      <div className="bottom">
-        <Footer></Footer>
-      </div>
-    </StyledTagListPage>
+    <div>
+      <StyledTagListPage>
+        <div className="top">
+          <NavBar></NavBar>
+          <TagList></TagList>
+        </div>
+        <div className="bottom"></div>
+      </StyledTagListPage>
+
+      <Footer></Footer>
+    </div>
   );
 }
 

@@ -19,7 +19,7 @@ import javax.validation.constraints.Positive;
 import java.net.URI;
 
 
-@Tag(name = "Comment", description = "댓글 기능")
+@Tag(name = "Question Comment API", description = "질문 댓글 기능")
 @RestController
 @RequestMapping("/v1/comments/question")
 @RequiredArgsConstructor
@@ -30,7 +30,7 @@ public class QuestionCommentController {
 
     @Operation(summary = "Create Question Comment API", description = "질문 댓글 저장 기능")
     @PostMapping
-    public ResponseEntity<SingleResponseDto<?>> postComment(@RequestBody QuestionCommentRequestDto.Post requestCommentDto) {
+    public ResponseEntity<QuestionComment> postComment(@RequestBody QuestionCommentRequestDto.Post requestCommentDto) {
         QuestionComment questionComment = questionCommentService.saveComment(requestCommentDto);
 
         URI location = UriComponentsBuilder
@@ -39,11 +39,7 @@ public class QuestionCommentController {
                 .buildAndExpand(questionComment.getCommentId())
                 .toUri();
 
-        return ResponseEntity.created(location)
-                .body(SingleResponseDto.builder()
-                        .status(HttpStatusCode.CREATED.getStatusCode())
-                        .message(HttpStatusCode.CREATED.getMessage())
-                        .build());
+        return ResponseEntity.created(location).build();
     }
 
     @Operation(summary = "Update Question Comment API", description = "질문 댓글 수정 기능")
@@ -55,7 +51,7 @@ public class QuestionCommentController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Get Question Comments API", description = "전체 댓글 조회 기능")
+    @Operation(summary = "Get Question Comments API", description = "전체 질문 댓글 조회 기능")
     @GetMapping
     public ResponseEntity<MultiResponseDto<QuestionCommentResponseDto>> getAnswers(@Positive @RequestParam(defaultValue = "1") int page,
                                                                                    @Positive @RequestParam(defaultValue = "15") int size,

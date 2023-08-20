@@ -5,10 +5,9 @@ import com.codestates.stackoverflowbe.domain.account.service.AccountService;
 import com.codestates.stackoverflowbe.domain.answer.dto.AnswerDto;
 import com.codestates.stackoverflowbe.domain.answer.entity.Answer;
 import com.codestates.stackoverflowbe.domain.answer.repository.AnswerRepository;
-import com.codestates.stackoverflowbe.domain.comment.repository.QuestionCommentRepository;
+import com.codestates.stackoverflowbe.domain.comment.repository.AnswerCommentRepository;
 import com.codestates.stackoverflowbe.domain.question.entity.Question;
 import com.codestates.stackoverflowbe.domain.question.repository.QuestionRepository;
-import com.codestates.stackoverflowbe.domain.question.service.QuestionService;
 import com.codestates.stackoverflowbe.domain.vote.repository.VoteRepository;
 import com.codestates.stackoverflowbe.domain.vote.service.VoteService;
 import com.codestates.stackoverflowbe.global.exception.BusinessLogicException;
@@ -29,7 +28,7 @@ public class AnswerService {
     private final AnswerRepository answerRepository;
     private final AccountService accountService;
     private final QuestionRepository questionRepository;
-    private final QuestionCommentRepository questionCommentRepository;
+    private final AnswerCommentRepository answerCommentRepository;
     private final VoteRepository voteRepository;
     private final VoteService voteService;
 
@@ -38,6 +37,7 @@ public class AnswerService {
         Account account = accountService.findByEmail((String) principal);
         Question findQuestion = questionRepository.findById(requestDto.getQuestionId()).orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
+
 
         Answer answer = requestDto.toEntity().toBuilder()
                 .account(account)
@@ -79,7 +79,7 @@ public class AnswerService {
     public void deleteAnswer(long answerId) {
         Answer findAnswer = findVerifiedAnswer(answerId);
         voteRepository.deleteAll(findAnswer.getVotes());
-        questionCommentRepository.deleteAll(findAnswer.getQuestionComments());
+        answerCommentRepository.deleteAll(findAnswer.getAnswerComments());
         answerRepository.delete(findAnswer);
     }
 
