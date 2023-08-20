@@ -7,7 +7,6 @@ import { loginSuccess, loginFailure, emailMismatchError, passwordMismatchError }
 import PasswordModal from "../components/features/PasswordModal";
 
 function LoginPage () {
-  const LOCAL_SERVER_ADRESS = process.env.REACT_APP_LOCAL_SEVER_ADRESS;
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -73,8 +72,9 @@ function LoginPage () {
 
     // 유효한 이메일과 비밀번호를 입력할 경우 서버로 전송
     try {
-      const response = await axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/accounts/authenticate", { email, password });
-      if (response.data.success) {
+      const response = await axios.post("http://localhost:8080/v1/accounts/authenticate", { email, password });
+
+      if (response.status === 200) {
         // 서버에서 토큰을 받음
         const accessToken = response.data.accessToken;
         const refreshToken = response.data.refreshToken;
@@ -108,7 +108,7 @@ function LoginPage () {
 
   const googleLoginHandler = async () => {
     try {
-      window.location.href = "http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/oauth2/authorization/google";
+      window.location.href = "http://localhost:8080/oauth2/authorization/google";
     } catch (error) {
       console.error("Google 로그인 중 에러:", error);
       dispatch(loginFailure("Google 로그인 중 에러가 발생했습니다."));
@@ -207,7 +207,6 @@ function LoginPage () {
         </LoginTextBelowContainer>
       </LoginContentContainet>
     </LoginPageContainer>
-
   );
 };
 
