@@ -5,6 +5,9 @@ import com.codestates.stackoverflowbe.domain.answer.entity.Answer;
 import com.codestates.stackoverflowbe.domain.vote.entity.Vote;
 import lombok.*;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 
 
@@ -15,8 +18,15 @@ public class AccountDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Post {
+        @NotBlank
         private String displayName;
+
+        @NotBlank
+        @Email
         private String email;
+
+        @NotBlank
+        @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d).{6,}$")
         private String password;
 
         public Post(String email) {
