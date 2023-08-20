@@ -52,7 +52,7 @@ public class AnswerController {
                                                   @Valid @RequestBody AnswerDto.Request requestDto) {
         answerService.updateAnswer(answerId, requestDto);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "Get Answers API", description = "전체 답변 조회 기능")

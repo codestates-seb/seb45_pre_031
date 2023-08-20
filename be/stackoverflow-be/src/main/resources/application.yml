@@ -1,19 +1,19 @@
 spring:
-  h2:
-    console:
-      enabled: true
-      path: /h2
-  datasource:
-    url: jdbc:h2:mem:stackoverflow
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2
 #  datasource:
-#    url: jdbc:mysql://3.36.128.133:3306/stackoverflow?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
-#    username: 7eleven
-#    password: 1234
-#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:h2:mem:stackoverflow
+  datasource:
+    url: jdbc:mysql://seveneleven.c1vvhrsbxo9y.ap-northeast-2.rds.amazonaws.com:3306/stackoverflow?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+    username: admin
+    password: 12341234
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
-#    database-platform: org.hibernate.dialect.MySQL8Dialect
-    database: h2
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    database: mysql
     show-sql: true
     hibernate:
       ddl-auto: create
@@ -27,7 +27,7 @@ spring:
           google:
             client-id: ${G_CLIENT_ID}
             client-secret: ${G_CLIENT_SECRET}
-            redirect-uri: http://localhost:8080/login/oauth2/code/google
+            redirect-uri: http://seveneleven-stackoverflow-s3.s3-website.ap-northeast-2.amazonaws.com/login/oauth2/code/google
             scope:
               - email
               - profile
@@ -59,6 +59,3 @@ springdoc:
   default-produces-media-type: application/json
   paths-to-match:
     - /v1/**
-
-server:
-  port: 8888
