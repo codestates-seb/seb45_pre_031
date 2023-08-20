@@ -7,10 +7,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     env:
-      jwt.key.secrets: ${JWT_SECRET_KEY}
-      spring.security.oauth2.client.registration.google.client-id: ${G_CLIENT_ID}
-      spring.security.oauth2.client.registration.google.client-secret: ${G_CLIENT_SECRET}
+      G_CLIENT_ID: ${{secrets.G_CLIENT_ID}}
+      G_CLIENT_SECRET: ${{secrets.G_CLIENT_SECRET}}
+      JWT_SECRET_KEY: ${{secrets.JWT_SECRET_KEY}}
       working-directory: ./be/stackoverflow-be
 
     steps:
@@ -50,7 +51,7 @@ jobs:
           host: ${{ secrets.AWS_SSH_HOST }}  # ipv4
           username: ${{ secrets.AWS_SSH_USERNAME }} # ubuntu
           key: ${{ secrets.AWS_SSH_KEY }} #
-#          port: ${{ secrets.AWS_SSH_PORT }} #
+          #          port: ${{ secrets.AWS_SSH_PORT }} #
           envs: GITHUB_SHA
           script: |
             sudo docker rm -f server
