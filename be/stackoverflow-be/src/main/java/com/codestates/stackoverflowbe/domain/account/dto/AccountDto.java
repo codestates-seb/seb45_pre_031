@@ -26,7 +26,7 @@ public class AccountDto {
         private String email;
 
         @NotBlank
-        @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d).{6,}$")
+        @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d).{6,}$" , message = "영문, 숫자 포함 6글자 이상의 패스워드만 허용합니다.")
         private String password;
 
         public Post(String email) {
