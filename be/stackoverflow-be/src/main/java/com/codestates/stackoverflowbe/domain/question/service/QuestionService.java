@@ -127,7 +127,6 @@ public class QuestionService {
     }
 
     // 답변이 없는 질문 목록을 가져오는 메서드
-<<<<<<< HEAD
     public List<QuestionResponseDto> getUnansweredQuestions() {
         List<Question> questions = questionRepository.findAllByAnswersIsEmpty();
         return questions.stream()
@@ -152,12 +151,6 @@ public class QuestionService {
                 .modified_at(question.getModifiedAt())
                 .build();
     }
-=======
-//    public List<Question> getUnansweredQuestions() {
-//        List<Question> questions = questionRepository.findAllByAnswersIsEmpty();
-//        return questions;
-//    }
->>>>>>> feature/be-testing
 }
 
 

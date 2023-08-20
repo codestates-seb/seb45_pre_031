@@ -1,6 +1,7 @@
 package com.codestates.stackoverflowbe.domain.account.controller;
 
 import com.codestates.stackoverflowbe.domain.account.dto.AccountDto;
+import com.codestates.stackoverflowbe.domain.account.dto.AccountPageResponseDto;
 import com.codestates.stackoverflowbe.domain.account.entity.Account;
 import com.codestates.stackoverflowbe.domain.account.service.AccountService;
 import com.codestates.stackoverflowbe.global.constants.HttpStatusCode;
@@ -62,11 +63,10 @@ public class AccountController {
     @GetMapping
     public ResponseEntity getAccounts(@Positive @RequestParam int page,
                                       @Positive @RequestParam int size) {
-        Page<Account> accountsPage = accountService.findAccounts(page-1, size);
-        List<Account> accounts = accountsPage.getContent();
+        Page<AccountPageResponseDto> accountsPage = accountService.findAccounts(page-1, size);
+        List<AccountPageResponseDto> accounts = accountsPage.getContent();
 
         return new ResponseEntity<>(
-
                 new MultiResponseDto<>(HttpStatusCode.OK.getStatusCode(), HttpStatusCode.OK.getMessage(), accounts, accountsPage)
         , HttpStatus.OK);
     }

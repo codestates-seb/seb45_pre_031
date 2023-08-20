@@ -1,6 +1,7 @@
 package com.codestates.stackoverflowbe.domain.account.service;
 
 import com.codestates.stackoverflowbe.domain.account.dto.AccountDto;
+import com.codestates.stackoverflowbe.domain.account.dto.AccountPageResponseDto;
 import com.codestates.stackoverflowbe.domain.account.entity.Account;
 import com.codestates.stackoverflowbe.domain.account.mapper.AccountMapper;
 import com.codestates.stackoverflowbe.domain.account.repository.AccountRepository;
@@ -9,6 +10,7 @@ import com.codestates.stackoverflowbe.global.exception.BusinessLogicException;
 import com.codestates.stackoverflowbe.global.exception.ExceptionCode;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -70,10 +73,10 @@ public class AccountService {
     }
 
     //POST(OAuth2.0 회원 등록) : OAuth2.0 를 통해 가입된 회원 정보 저장 (DB에 해당 정보 존재하면 메서드 리턴하고 존재하지 않으면 저장)
-    public Account createAccountOAuth2(AccountDto.Post accountPostDto) {
+    public AccountDto.Response createAccountOAuth2(AccountDto.Post accountPostDto) {
         Optional<Account> findAccount = accountRepository.findByEmail(accountPostDto.getEmail());
         if(findAccount.isPresent()) {
-            return findAccount.get(); //이미 DB에 저장된 정보가 있다면 반환
+            return findAccount.get().toResponse(); //이미 DB에 저장된 정보가 있다면 반환
         }
 
         // DB에 저장된 정보가 없다면
@@ -86,7 +89,7 @@ public class AccountService {
         );
 
         verifyExistsEmail(accountPostDto.getEmail());
-        return accountRepository.save(beSavedAccount);
+        return accountRepository.save(beSavedAccount).toResponse();
     }
 
     //PATCH(특정 계정 정보 수정) patchAccount : DB에서 튜플을 꺼내와 사용자가 입력한 특정 정보만 수정
@@ -121,8 +124,12 @@ public class AccountService {
     }
 
     //GET(계정 페이지 조회) getAccounts : page와 size를 바탕으로 DB에서 목록을 조회하여 페이지로 반환.
-    public Page<Account> findAccounts(int page, int size) {
-        return accountRepository.findAll(PageRequest.of(page, size, Sort.by("accountId").descending()));
+    public Page<AccountPageResponseDto> findAccounts(int page, int size) {
+        Page<Account> accountPage = accountRepository.findAll(PageRequest.of(page, size, Sort.by("accountId").descending()));
+        List<AccountPageResponseDto> accountPageResponseDtos = accountPage.getContent().stream()
+                .map( account -> account.toPageResponseDto()).collect(Collectors.toList());
+        Page<AccountPageResponseDto> accountPageResponseDtoPage = new PageImpl<AccountPageResponseDto>(accountPageResponseDtos, PageRequest.of(page, size), accountPageResponseDtos.size());
+        return accountPageResponseDtoPage;
     }
 
     //DELETE(계정 삭제) deleteAccount : accountId를 전달받아 DB에서 자원 삭제
@@ -150,4 +157,6 @@ public class AccountService {
         return accountOptional.orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND)); // 해당 이메일로 찾은 Account가 없으면 null 반환
     }
+
+    // 주석안무거나
 }
