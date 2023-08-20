@@ -3,21 +3,29 @@ import AskQuestionBtn from "../atoms/AskQuestionBtn";
 import logo from "../../assets/images/logo.png";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+import ReactPaginate from "react-paginate";
 
 function QuestionList() {
-  const [data, setData] = useState("");
+  const [questionData, setQuestionData] = useState([]);
   const [tab, setTab] = useState("newest");
   const [pageNumber, setPageNumber] = useState(1);
+
+  const filterOptions = ["Newest", "Active", "Unanswered", "Score", "Pop(week)", "Pop(month)"];
+
+  const navigate = useNavigate();
+  const goToDetail = (questionId) => {
+    navigate(`/questiondetail/${questionId}`);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/question?tab=${tab}&page=${pageNumber}`
-        );
+        const response = await axios.get(`http://localhost:8080/v1/questions?tab=${tab}&page=${pageNumber}&size=15`);
 
-        if (response.data.success) {
-          setData(response.data);
+        if (response.data.statusCode === 200) {
+          setQuestionData(response.data.data);
         } else {
           console.error("Server responded with an error:", response.data.message || "Unknown server error");
         }
@@ -25,6 +33,7 @@ function QuestionList() {
         console.error("Error while trying to fetch questions:", error);
       }
     };
+
     fetchData();
   }, [tab, pageNumber]);
 
@@ -37,17 +46,36 @@ function QuestionList() {
     setPageNumber(selectedPage);
   };
 
-  const handlePageInput = (e) => {
-    if (e.key === "Enter") {
-      const inputValue = parseInt(e.target.value);
-      if (!isNaN(inputValue)) {
-        setPageNumber(inputValue);
-      }
-    }
-  };
+  function formatRelativeTime(dateString) {
+    const now = new Date();
+    const inputDate = new Date(dateString);
+
+    const seconds = Math.floor((now - inputDate) / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const months = Math.floor(days / 30);
+    const years = Math.floor(days / 365);
+
+    if (years > 1) return `${years} years ago`;
+    if (years === 1) return "1 year ago";
+
+    if (months > 1) return `${months} months ago`;
+    if (months === 1) return "1 month ago";
+
+    if (days > 1) return `${days} days ago`;
+    if (days === 1) return "1 day ago";
+
+    if (hours > 1) return `${hours} hours ago`;
+    if (hours === 1) return "1 hour ago";
+
+    if (minutes > 1) return `${minutes} minutes ago`;
+
+    return "1 minute ago";
+  }
 
   useEffect(() => console.log("tab:", tab, "page:", pageNumber), [tab, pageNumber]);
-
+  useEffect(() => console.log("data:", questionData), [questionData]);
   return (
     <StyledQuestionList>
       <HeaderContainer>
@@ -55,111 +83,58 @@ function QuestionList() {
         <AskQuestionBtn>Ask Question</AskQuestionBtn>
       </HeaderContainer>
       <FiterContainer>
-        <span className="questionCount">{data.questions_count} quesitons</span>
+        <span className="questionCount">{questionData.length || "22,345,751"} quesitons</span>
         <Fiter>
-          <FiterOption onClick={() => handleTab("newest")}>Newest</FiterOption>
-          <FiterOption onClick={() => handleTab("active")}>Active</FiterOption>
-          <FiterOption onClick={() => handleTab("unanswered")}>Unanswered</FiterOption>
-          <FiterOption onClick={() => handleTab("score")}>Score</FiterOption>
-
-          <FiterOption onClick={() => handleTab("popular")}>Pop(week)</FiterOption>
-          <FiterOption onClick={() => handleTab("popular")}>Pop(month)</FiterOption>
+          {filterOptions.map((option, index) => (
+            <FilterOption key={index} onClick={() => handleTab(option)} isSelected={tab === option}>
+              {option}
+            </FilterOption>
+          ))}
         </Fiter>
       </FiterContainer>
       <QuestionListContainer>
-        {data &&
-          data.question_data.map((question) => (
-            <Question>
+        {questionData &&
+          questionData.map((question) => (
+            <Question key={question.questionId}>
               <div className="leftSide">
                 <LeftSideInfo>
-                  <span className="votes">{question.vote_up.length - question.vote_down.length} votes</span>
+                  <span className="votes">{question.votes.length} votes</span>
                 </LeftSideInfo>
                 <LeftSideInfo>
-                  <span className="answersAndViews">{question.answers_count} asnswers</span>
+                  <span className="answersAndViews">{question.answers.length} asnswers</span>
                 </LeftSideInfo>
                 <LeftSideInfo>
-                  <span className="answersAndViews">{question.views} views</span>
+                  <span className="answersAndViews">{question.viewCount} views</span>
                 </LeftSideInfo>
               </div>
               <div className="rightSide">
-                <QuestionTitle> {question.title} </QuestionTitle>
-                <QuestionSummury>{question.bodyHTML}</QuestionSummury>
+                <QuestionTitle onClick={() => goToDetail(question.questionId)}> {question.title} </QuestionTitle>
+                <QuestionSummury>{question.body}</QuestionSummury>
                 <TagAndUserInfoContainer>
-                  <TagContainer>
-                    {question.tags.map((tag) => (
-                      <>
-                        <Tag>{tag}</Tag>
-                      </>
-                    ))}
-                  </TagContainer>
+                  <TagContainer>{question.tags && question.tags.map((tag) => <Tag>{tag}</Tag>)}</TagContainer>
                   <UserInfoContainer>
                     <img className="userAvatar" alt="userAvatar" src={logo} />
                     <div className="userName">
-                      <span>{question.avatarUrl}</span>
+                      <span>{question.account.displayName}</span>
                     </div>
                     <div className="createdAt">
-                      <span>5 mins ago</span>
+                      <span>{formatRelativeTime(question.createdAt)}</span>
                     </div>
                   </UserInfoContainer>
                 </TagAndUserInfoContainer>
               </div>
             </Question>
           ))}
-        <Question>
-          <div className="leftSide">
-            <LeftSideInfo>
-              <span className="votes">0 votes</span>
-            </LeftSideInfo>
-            <LeftSideInfo>
-              <span className="answersAndViews">0 asnswers</span>
-            </LeftSideInfo>
-            <LeftSideInfo>
-              <span className="answersAndViews">0 views</span>
-            </LeftSideInfo>
-          </div>
-          <div className="rightSide">
-            <QuestionTitle> What is JavaScript? </QuestionTitle>
-            <QuestionSummury>
-              JavaScript is a scripting or programming language that allows you to implement complex features on web
-              pages — every time a web page does more than just sit there and display static information for you to look
-              at — displaying timely content updates, interactive maps, animated 2D/3D graphics, scrolling video
-              jukeboxes, etc. — you can bet that JavaScript is probably involved. It is the third layer of the layer
-              cake of standard web technologies, two of which (HTML and CSS) we have covered in much more detail in
-              other parts of the Learning Area.
-            </QuestionSummury>
-            <TagAndUserInfoContainer>
-              <TagContainer>
-                <Tag>javascript</Tag>
-                <Tag>about</Tag>
-              </TagContainer>
-              <UserInfoContainer>
-                <img className="userAvatar" alt="userAvatar" src={logo} />
-                <div className="userName">
-                  <span>HongGilDong</span>
-                </div>
-                <div className="createdAt">
-                  <span>5 mins ago</span>
-                </div>
-              </UserInfoContainer>
-            </TagAndUserInfoContainer>
-          </div>
-        </Question>
-        <Question>Question2</Question>
-        <Question>Question3</Question>
-        <Question>Question4</Question>
-        <Question>Question5</Question>
-        <Question>Question6</Question>
       </QuestionListContainer>
       <PaginationContainer>
-        <Paginator>Prev</Paginator>
-        <Paginator onClick={() => handlePage(1)}>1</Paginator>
-        <Paginator onClick={() => handlePage(2)}>2</Paginator>
-        <Paginator onClick={() => handlePage(3)}>3</Paginator>
-        <Paginator onClick={() => handlePage(4)}>4</Paginator>
-        <Paginator onClick={() => handlePage(5)}>5</Paginator>
-        <PageInput onKeyUp={handlePageInput} />
-        <Paginator onClick={() => handlePage(1592)}>1592</Paginator>
-        <Paginator>Next</Paginator>
+        <StyledReactPaginate
+          pageCount={Math.ceil(questionData.length / 15) || 20}
+          pageRangeDisplayed={5}
+          marginPagesDisplayed={1}
+          previousLabel={"Prev"}
+          nextLabel={"Next"}
+          onPageChange={({ selected }) => handlePage(selected + 1)}
+        />
       </PaginationContainer>
     </StyledQuestionList>
   );
@@ -210,11 +185,12 @@ const Fiter = styled.div`
   height: 36px;
 `;
 
-const FiterOption = styled.div`
+const FilterOption = styled.div`
   display: flex;
   font-size: 12px;
   align-items: center;
   padding: 9.6px;
+  background-color: ${(props) => (props.isSelected ? "rgb(219, 219, 219)" : "transparent")};
 
   border-right: 1px solid rgb(214, 217, 220);
   &:last-of-type {
@@ -342,27 +318,26 @@ const PaginationContainer = styled.div`
   margin-bottom: 20px;
 `;
 
-const Paginator = styled.div`
+const StyledReactPaginate = styled(ReactPaginate)`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 6px 10px 6px 10px;
-  border-radius: 6px;
+  flex-direction: row;
+  list-style: none;
 
-  margin-right: 6px;
-  border: 1px solid rgb(214, 217, 220);
-  font-size: 12px;
-  &:hover {
-    background-color: hsl(210, 8%, 97.5%);
+  a {
+    padding: 6px 8px 6px 8px;
+    border-radius: 6px;
+    margin-right: 6px;
+    border: 1px solid rgb(214, 217, 220);
+    font-size: 12px;
+
+    &:hover {
+      background-color: rgb(189, 190, 191);
+    }
   }
-`;
-
-const PageInput = styled.input`
-  display: flex;
-  padding: 6px 10px 6px 10px;
-  border-radius: 6px;
-  width: 48px;
-  margin-right: 6px;
-  border: 1px solid rgb(214, 217, 220);
-  font-size: 12px;
+  li.selected {
+    a {
+      color: white;
+      background-color: rgb(244, 130, 37);
+    }
+  }
 `;
