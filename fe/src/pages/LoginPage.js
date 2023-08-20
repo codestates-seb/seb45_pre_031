@@ -72,13 +72,14 @@ function LoginPage () {
 
     // 유효한 이메일과 비밀번호를 입력할 경우 서버로 전송
     try {
+
       const response = await axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/accounts/authenticate", { email, password });
 
       if (response.status === 200) {
         // 서버에서 토큰을 받음
         const accessToken = response.headers.Authorization;
         const refreshToken = response.data.refreshToken;
-        console(accessToken);
+        console.log(accessToken);
 
         // 토큰을 로컬 스토리지에 저장
         localStorage.setItem("access_token", accessToken);
