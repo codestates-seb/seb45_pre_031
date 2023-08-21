@@ -53,9 +53,15 @@ const SpanSubTitleRight = styled.span`
   font-size: 13px;
 `
 const DivMainAside = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: 1080px;
+
+  /* display: flex;
+  justify-content: space-between; */
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  @media screen and(max-width: 979px) {
+    grid-template-columns: 5fr 0;
+  }
+
 `
 const MainMain = styled.main`
   margin: 12px 0;
@@ -275,9 +281,9 @@ function QuestionDetailPage() {
 
   function shareClick(){
     navigator.clipboard.writeText(window.location.href)
-    .then(res=>alert('링크가 복사되었습니다.')  )
+    .then(res=>alert('링크가 복사되었습니다.'))
   }
-  
+
   return(
     <div>
       <DivAllContainer>
@@ -296,7 +302,7 @@ function QuestionDetailPage() {
                 Asked
               </SpanSubTitleLeft>
               <SpanSubTitleRight>
-                {new Date().getDate() - new Date(askAll.created_at).getDate()} days ago
+                {new Date().getDate() - new Date(question.created_at).getDate()} days ago
               </SpanSubTitleRight>
             </SpanSubTitleBox>
             <SpanSubTitleBox>
@@ -304,7 +310,7 @@ function QuestionDetailPage() {
                 Modified
               </SpanSubTitleLeft>
               <SpanSubTitleRight>
-                {new Date().getDate() - new Date(askAll.updated_at).getDate()} days ago
+                {new Date().getDate() - new Date(question.updated_at).getDate()} days ago
               </SpanSubTitleRight>
             </SpanSubTitleBox>
             <SpanSubTitleBox>
@@ -312,7 +318,7 @@ function QuestionDetailPage() {
                 Viewed
               </SpanSubTitleLeft>
               <SpanSubTitleRight>
-                {askAll.views} times
+                {question.views} times
               </SpanSubTitleRight>
             </SpanSubTitleBox>
             </DivSubTitleContainer>
@@ -325,7 +331,7 @@ function QuestionDetailPage() {
                     ▲
                   </ButtonUpDown>
                   <DivVote>
-                    {askAll.voteUp.length - askAll.voteDown.length}
+                    {question.voteUp.length - question.voteDown.length}
                   </DivVote>
                   <ButtonUpDown>
                     ▼
@@ -333,10 +339,10 @@ function QuestionDetailPage() {
                 </SpanVoteContainer>
                 <SpanQContainer>
                   <DivQText>
-                    {askAll.body}
+                    {question.body}
                   </DivQText>
                   <UlTags>
-                    {askAll.tags.map((tag)=>{
+                    {question.tags.map((tag)=>{
                       return <LiTag>{tag.toLowerCase()}</LiTag>
                     })}
                   </UlTags>
@@ -353,10 +359,10 @@ function QuestionDetailPage() {
                       </span>
                     </SpanShare>
                     <SpanProfile>
-                      <div>{"asked "+new Intl.DateTimeFormat("en-GB",{month: 'short', day: 'numeric'}).format(new Date(askAll.created_at))}</div>
+                      <div>{"asked "+new Intl.DateTimeFormat("en-GB",{month: 'short', day: 'numeric'}).format(new Date(question.created_at))}</div>
                       <SpanProfileUser>
                         <img
-                          src={askAll.avatarUrl}
+                          src={question.avatarUrl}
                           alt=""
                           width="32px" height="32px"
                         />
@@ -373,7 +379,7 @@ function QuestionDetailPage() {
               </ArticleQ>
               <DivAnswerContainer>
                 <SpanAnswerLength>
-                  {askAll.answer.length+" Answers"}
+                  {answers.answer.length+" Answers"}
                 </SpanAnswerLength>
                 <LabelAnswerFilter>
                   Sorted by:
@@ -391,7 +397,7 @@ function QuestionDetailPage() {
                     ▲
                   </ButtonUpDown>
                   <DivVote>
-                    {askAll.answer[0].voteUp.length - askAll.answer[0].voteDown.length}
+                    {answers.answer[0].voteUp.length - answers.answer[0].voteDown.length}
                   </DivVote>
                   <ButtonUpDown>
                     ▼
@@ -399,7 +405,7 @@ function QuestionDetailPage() {
                 </SpanVoteContainer>
                 <SpanQContainer>
                   <DivQText>
-                    {askAll.answer[0].body}
+                    {answers.answer[0].body}
                   </DivQText>
                   <DivShareEditProfile>
                     <SpanShare>
@@ -414,10 +420,10 @@ function QuestionDetailPage() {
                       </span>
                     </SpanShare>
                     <SpanProfile>
-                      <div>{"asked "+new Intl.DateTimeFormat("en-GB",{month: 'short', day: 'numeric'}).format(new Date(askAll.answer[0].created_at))}</div>
+                      <div>{"asked "+new Intl.DateTimeFormat("en-GB",{month: 'short', day: 'numeric'}).format(new Date(answers.answer[0].created_at))}</div>
                       <SpanProfileUser>
                         <img
-                          src={askAll.answer[0].avatarUrl}
+                          src={answers.answer[0].avatarUrl}
                           alt=""
                           width="32px" height="32px"
                         />
@@ -438,7 +444,7 @@ function QuestionDetailPage() {
                     ▲
                   </ButtonUpDown>
                   <DivVote>
-                    {askAll.answer[1].voteUp.length - askAll.answer[0].voteDown.length}
+                    {answers.answer[1].voteUp.length - answers.answer[0].voteDown.length}
                   </DivVote>
                   <ButtonUpDown>
                     ▼
@@ -446,7 +452,7 @@ function QuestionDetailPage() {
                 </SpanVoteContainer>
                 <SpanQContainer>
                   <DivQText>
-                    {askAll.answer[1].body}
+                    {answers.answer[1].body}
                   </DivQText>
                   <DivShareEditProfile>
                     <SpanShare>
@@ -462,11 +468,11 @@ function QuestionDetailPage() {
                     </SpanShare>
                     <SpanProfile>
                       <div>
-                        {"asked "+new Intl.DateTimeFormat("en-GB",{month: 'short', day: 'numeric'}).format(new Date(askAll.answer[1].created_at))}
+                        {"asked "+new Intl.DateTimeFormat("en-GB",{month: 'short', day: 'numeric'}).format(new Date(answers.answer[1].created_at))}
                       </div>
                       <SpanProfileUser>
                         <img
-                          src={askAll.answer[1].avatarUrl}
+                          src={answers.answer[1].avatarUrl}
                           alt=""
                           width="32px" height="32px"
                         />
