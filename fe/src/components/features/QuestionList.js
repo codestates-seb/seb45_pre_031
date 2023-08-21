@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 
 function QuestionList() {
-  const [questionData, setQuestionData] = useState(mok);
+  const [questionData, setQuestionData] = useState([]);
   const [pageInfoData, setPageInfoData] = useState({});
   const [tab, setTab] = useState("newest");
   const [pageNumber, setPageNumber] = useState(1);
@@ -352,47 +352,3 @@ const StyledReactPaginate = styled(ReactPaginate)`
     }
   }
 `;
-
-const mok = [
-  {
-    questionId: 5,
-    title: "test title ",
-    body: "test body5test titletest title",
-    views: 0,
-    displayName: "김매니저",
-    voteUp: ["d"],
-    voteDown: ["fdf", "dfsdf,"],
-    tags: [],
-    created_at: "2023-08-21T00:43:05.281618",
-    modified_at: "2023-08-21T00:43:05.281618",
-    answersCount: 0,
-  },
-  {
-    questionId: 2,
-    title:
-      "test title2test title2test titlest tst title2test title2test title2test title2test t2test title2test title2test title2test title2test title2test title2",
-    body: "tesbody5tesbody5st title2test title2tst titst tst titlevitlevst tstitlevst t title2test title2test t2test title2test title2test title2test tle2test title2test test title2test title2test title2test title2test tst tst tst title2test title2test t",
-    views: 2,
-    displayName: "호랑이",
-    voteUp: [],
-    voteDown: [],
-    tags: [],
-    created_at: "2023-08-15T00:40:05.281618",
-    modified_at: "2023-08-15T00:40:05.281618",
-    answersCount: 0,
-  },
-  {
-    questionId: 1,
-    title:
-      "test titlst title2test title2test tst title2test title2test tst title2test title2test tst title2test title2test tst title2test title2test te",
-    body: "test body5test body5test body5test title2test title2test body5tetest title2test title2st body5test body5test body5test body5test body5test body5test body5test body5test body5test body5test body5test body5",
-    views: 0,
-    displayName: "굄",
-    voteUp: [],
-    voteDown: [],
-    tags: ["r31r", "javascript", "javascript", "javascript", "javascript"],
-    created_at: "2023-07-21T00:27:05.281618",
-    modified_at: "2023-07-21T00:27:05.281618",
-    answersCount: 1,
-  },
-];
