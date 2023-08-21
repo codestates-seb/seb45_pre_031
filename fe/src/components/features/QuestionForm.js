@@ -84,7 +84,7 @@ function QuestionForm() {
             onChange={handleTitleChange}
             onBlur={handleTitleBlur}
             placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
-            hasError={!isTitleValid}
+            $hasError={!isTitleValid}
           ></TitleInput>
           {!isTitleValid && <span className="inputError">Title must be at least 15 characters.</span>}
         </TitleForm>
@@ -98,7 +98,7 @@ function QuestionForm() {
             value={bodyValue}
             onChange={handleBodyChange}
             onBlur={handleBodyBlur}
-            hasError={!isBodyValid}
+            $hasError={!isBodyValid}
           />
           <div className="inputError">
             {!isBodyValid && <span className="inputError">Body must be at least 220 characters.</span>}
@@ -226,11 +226,11 @@ const Input = styled.input`
   margin-bottom: 2px;
   border-width: 1px;
   border-style: solid;
-  border-color: ${(props) => (props.hasError ? "red" : "#bbc0c4")};
+  border-color: ${(props) => (props.$hasError ? "red" : "#bbc0c4")};
   &:focus {
-    border-color: ${(props) => (props.hasError ? "red" : "hsl(206, 90%, 69.5%)")};
+    border-color: ${(props) => (props.$hasError ? "red" : "hsl(206, 90%, 69.5%)")};
     box-shadow: ${(props) =>
-      props.hasError ? "0 0 0 4px rgba(255, 0, 0, 0.15)" : "0 0 0 4px hsla(206, 100%, 40%, 0.15)"};
+      props.$hasError ? "0 0 0 4px rgba(255, 0, 0, 0.15)" : "0 0 0 4px hsla(206, 100%, 40%, 0.15)"};
     outline: none;
   }
   &::placeholder {
@@ -245,7 +245,7 @@ const TagsInput = styled(Input)``;
 const StyledReactQuill = styled(ReactQuill)`
   height: 360px;
   .ql-container {
-    border-color: ${(props) => (props.hasError ? "red" : "#bbc0c4")};
+    border-color: ${(props) => (props.$hasError ? "red" : "#bbc0c4")};
     border-radius: 0px 0px 6px 6px;
   }
   .ql-editor {
@@ -253,7 +253,7 @@ const StyledReactQuill = styled(ReactQuill)`
   .ql-toolbar {
     background-color: rgb(251, 251, 251);
     border-bottom: none;
-    border-color: ${(props) => (props.hasError ? "red" : "#bbc0c4")};
+    border-color: ${(props) => (props.$hasError ? "red" : "#bbc0c4")};
     border-radius: 6px 6px 0px 0px;
   }
 `;

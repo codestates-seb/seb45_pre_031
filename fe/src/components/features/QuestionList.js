@@ -22,7 +22,7 @@ function QuestionList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/v1/questions?tab=${tab}&page=${pageNumber}&size=15`);
+        const response = await axios.get(`http://localhost:8080/v1/questions?tab=${tab}&page=${pageNumber}`);
 
         if (response.data.statusCode === 200) {
           setQuestionData(response.data.data);
@@ -86,7 +86,7 @@ function QuestionList() {
         <span className="questionCount">{questionData.length || "22,345,751"} quesitons</span>
         <Fiter>
           {filterOptions.map((option, index) => (
-            <FilterOption key={index} onClick={() => handleTab(option)} isSelected={tab === option}>
+            <FilterOption key={index} onClick={() => handleTab(option)} selected={tab === option}>
               {option}
             </FilterOption>
           ))}
@@ -190,8 +190,7 @@ const FilterOption = styled.div`
   font-size: 12px;
   align-items: center;
   padding: 9.6px;
-  background-color: ${(props) => (props.isSelected ? "rgb(219, 219, 219)" : "transparent")};
-
+  background-color: ${(props) => (props.selected ? "rgb(219, 219, 219)" : "transparent")};
   border-right: 1px solid rgb(214, 217, 220);
   &:last-of-type {
     border-right: none;
@@ -199,7 +198,6 @@ const FilterOption = styled.div`
   &:hover {
     background-color: hsl(210, 8%, 97.5%);
   }
-  //selected: hwb(210deg 89.2% 9.2%);
 `;
 
 const QuestionListContainer = styled.ul`
