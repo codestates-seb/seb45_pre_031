@@ -1,5 +1,3 @@
-import axios from "axios";
-
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 
@@ -11,11 +9,13 @@ export const LOGIN_USER = 'LOGIN_USER';
 export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
 export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE';
 
+export const LOGOUT = 'LOGOUT';
 
 
-export const loginSuccess = (token) => ({
+
+export const loginSuccess = (accessToken, DisplayName) => ({
     type: LOGIN_SUCCESS,
-    payload: token,
+    payload: { accessToken, DisplayName }
 });
 
 export const loginFailure = (error) => ({
@@ -33,15 +33,10 @@ export const passwordMismatchError = (error) => ({
     payload: error,
 });
 
-export const loginUser = (dataToSubmit) => {
-    // dataToSubmit으로 받은 이메일, 비밀번호 정보를
-    const request = axios.post('http://localhost:8080/v1/accounts/authenticate', dataToSubmit) // axios로 login 요청
-        .then(res => res.data)
-
+export const logoutAction = () => {
     return {
-        type: LOGIN_USER,
-        payload: request,
-    }; // 반환하여 request에 넣어줌
+        type: LOGOUT,
+    }
 };
 
 export const signUpSuccess = () => ({

@@ -9,8 +9,24 @@ import QuestionlistPage from "./pages/QuestionListPage";
 import QuestionDetailPage from "./pages/QuestionDetailPage";
 import QuestionFormPage from "./pages/QuestionFormPage";
 import TagListPage from "./pages/TagListPage";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { loginSuccess, logoutAction } from "./redux/actions/loginAction";
 
 function App() {
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("access_token");
+
+    if (accessToken) {
+      dispatch(loginSuccess(accessToken));
+    } else {
+      dispatch(logoutAction());
+    }
+  }, [dispatch]);
+
   return (
     <BrowserRouter>
       <div className="App">
