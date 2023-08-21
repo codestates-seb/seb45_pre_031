@@ -1,4 +1,3 @@
-![image](https://github.com/codestates-seb/seb45_pre_031/assets/75276860/d5fb10e2-d776-4458-a484-69050d4417e9)![header](https://capsule-render.vercel.app/api?type=waving&&color=gradient&&text=Hi&animation=twinkling&fontColor=333)
 
 # 프로젝트 : 
 
