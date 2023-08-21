@@ -45,7 +45,7 @@ public class AccountService {
 
     //POST(회원 등록) : DB에 데이터 저장
     public AccountDto.Response createAccount(AccountDto.Post accountPostDto) {
-//        verifyExistsEmail(accountPostDto.getEmail());
+        verifyExistsEmail(accountPostDto.getEmail());
         //PostDto로 입력된 이메일 정보를 기반으로 권한 생성
         List<String> roles = authorityUtils.createRoles(accountPostDto.getEmail());
 
@@ -74,6 +74,7 @@ public class AccountService {
 
     //POST(OAuth2.0 회원 등록) : OAuth2.0 를 통해 가입된 회원 정보 저장 (DB에 해당 정보 존재하면 메서드 리턴하고 존재하지 않으면 저장)
     public AccountDto.Response createAccountOAuth2(AccountDto.Post accountPostDto) {
+        verifyExistsEmail(accountPostDto.getEmail());
         Optional<Account> findAccount = accountRepository.findByEmail(accountPostDto.getEmail());
         if(findAccount.isPresent()) {
             return findAccount.get().toResponse(); //이미 DB에 저장된 정보가 있다면 반환
@@ -88,7 +89,6 @@ public class AccountService {
                 roles               //권한 목록
         );
 
-        verifyExistsEmail(accountPostDto.getEmail());
         return accountRepository.save(beSavedAccount).toResponse();
     }
 
