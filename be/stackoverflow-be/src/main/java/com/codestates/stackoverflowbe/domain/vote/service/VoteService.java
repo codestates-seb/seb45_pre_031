@@ -38,7 +38,7 @@ public class VoteService {
             findQuestion = questionRepository.findById(requestDto.getQuestionId()).orElseThrow(() ->
                     new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
             findVotes = findQuestion.getVotes();
-        } else{
+        } else {
             findAnswer = answerRepository.findById(requestDto.getAnswerId()).orElseThrow(() ->
                     new BusinessLogicException(ExceptionCode.ANSWER_NOT_FOUND));
             findVotes = findAnswer.getVotes();
@@ -56,14 +56,18 @@ public class VoteService {
                 .downVote(requestDto.getDownVote())
                 .build();
 
-        Optional<Vote> findVote = voteRepository.findByAccount_AccountId(account.getAccountId());
-        if (findVote.isPresent()) {
-            if ((findVote.get().isUpVote() && vote.isUpVote()) || (findVote.get().isDownVote() && vote.isDownVote())) {
-                findVotes.remove(findVote.get());
-                deleteVote(findVote.get().getVoteId());
+        findVotes = findVotes.stream()
+                .filter(element -> element.getAccount().getAccountId() == account.getAccountId())
+                .collect(Collectors.toList());
+
+        if (findVotes.size() != 0) {
+            Vote findVote = findVotes.get(0);
+            if ((findVote.isUpVote() && vote.isUpVote()) || (findVote.isDownVote() && vote.isDownVote())) {
+                findVotes.remove(findVote);
+                deleteVote(findVote.getVoteId());
             } else {
-                findVote.get().setUpVote(!findVote.get().isUpVote());
-                findVote.get().setDownVote(!findVote.get().isDownVote());
+                findVote.setUpVote(!findVote.isUpVote());
+                findVote.setDownVote(!findVote.isDownVote());
             }
         } else {
             Vote savedVote = voteRepository.save(vote);

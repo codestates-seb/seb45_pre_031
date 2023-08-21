@@ -52,7 +52,12 @@ public class AnswerService {
         return getAnswerResponseDto(account, savedAnswer);
     }
 
-    public void updateAnswer(long answerId, AnswerDto.Request requestDto) {
+    public void updateAnswer(long answerId, AnswerDto.Request requestDto, Object principal) {
+        Account account = accountService.findByEmail((String) principal);
+
+        if (account.getAnswers().stream().noneMatch(answer -> answer.getAnswerId() == answerId))
+            throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_ALLOW);
+
         Answer answer = requestDto.toEntity().toBuilder()
                 .answerId(answerId)
                 .build();
