@@ -49,3 +49,4 @@
 - [API 명세서](https://documenter.getpostman.com/view/15713384/2s9Xxzut34)
 - [ERD](https://dbdiagram.io/d/64d1d66202bd1c4a5e67c4fd)
 - [화면 정의서](https://www.notion.so/946eb557acbc45f4954e48f8a2422678?v=1b101e8490c347d4b52809a2334b1d0c)
+- [Figma](https://www.figma.com/file/3axgvRGBEyD2u9e2KsC1qz/stackoverflow-clone-layout?type=design&node-id=0-1&mode=design)
