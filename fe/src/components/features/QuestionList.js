@@ -240,14 +240,14 @@ const QuestionListContainer = styled.ul`
     height: 200px;
   }
   .prompt {
-    min-height: 100px;
+    min-height: 80px;
     margin-top: 16px;
     margin-bottom: 24px;
     width: 100%;
     display: flex;
     align-items: center;
     background-color: rgb(253, 247, 226);
-    border: 1px solid rgb(241, 229, 188);
+    border: 1px solid rgb(221, 180, 34);
     padding: 16px;
     max-width: 815px;
     font-weight: 600;
