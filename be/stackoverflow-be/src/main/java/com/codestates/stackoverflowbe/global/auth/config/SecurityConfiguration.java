@@ -37,7 +37,6 @@ public class SecurityConfiguration {
     private final AccountService accountService;
     private final SecurityCorsConfig corsConfig;
 
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity

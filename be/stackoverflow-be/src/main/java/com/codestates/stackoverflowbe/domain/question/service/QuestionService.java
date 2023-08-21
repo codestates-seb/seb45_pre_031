@@ -32,7 +32,6 @@ public class QuestionService {
     private final QuestionRepository questionRepository;
     private final VoteService voteService;
     private final AnswerService answerService;
-    private final TagRepository tagRepository;
 
     // 새로운 질문 생성
     public Question createQuestion(QuestionUpdateDto questionDto, Account account) {
@@ -40,7 +39,6 @@ public class QuestionService {
         Question newQuestion = new Question();
         newQuestion.setTitle(questionDto.getTitle());
         newQuestion.setBody(questionDto.getBody());
-        newQuestion.setExpectContents(questionDto.getExpectContents());
         newQuestion.setAccount(account);
         newQuestion.setViewCount(0L);
 
@@ -49,8 +47,8 @@ public class QuestionService {
     }
 
     // 모든 질문 목록 조회
-    public Page<QuestionResponseDto> getAllQuestions() {
-        return questionRepository.findAll(PageRequest.of(0, 15))
+    public Page<QuestionResponseDto> getAllQuestions(int page, int size) {
+        return questionRepository.findAll(PageRequest.of(page, size))
                 .map(this::getQuestionQuestionResponseDto);
     }
 
@@ -73,9 +71,9 @@ public class QuestionService {
     }
 
     // 특정 사용자가 작성한 질문 조회
-    public Page<QuestionResponseDto> getQuestionsByUser(Account account) {
+    public Page<QuestionResponseDto> getQuestionsByUser(int page, int size, Account account) {
         // 해당 사용자가 작성한 질문을 조회합니다.
-        return questionRepository.findByAccount(account, PageRequest.of(0, 15))
+        return questionRepository.findByAccount(account, PageRequest.of(page, size))
                 .map(this::getQuestionQuestionResponseDto);
     }
 
@@ -86,11 +84,31 @@ public class QuestionService {
                 .map(this::getQuestionQuestionResponseDto);
     }
 
-    // 인기 질문 조회
-    public Page<QuestionResponseDto> getHotQuestions(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("viewCount").descending());
-        return questionRepository.findAllByOrderByViewCountDesc(pageable)
+    // 질문 목록을 Active: 수정 시간 최신순으로 가져오는 메서드
+    public Page<QuestionResponseDto> getActiveQuestions(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("modifiedAt").descending());
+        return questionRepository.findAllByOrderByModifiedAtDesc(pageable)
                 .map(this::getQuestionQuestionResponseDto);
+    }
+
+    // 답변이 없는 질문 목록을 가져오는 메서드
+    public Page<QuestionResponseDto> getUnansweredQuestions(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return questionRepository.findAllByAnswersIsEmpty(pageable)
+                .map(this::getQuestionQuestionResponseDto);
+    }
+
+    //     질문 목록을 Score: Score 순으로 가져오는 메서드
+    public Page<QuestionResponseDto> getScoreQuestions(int page, int size) {
+        return questionRepository.findAll(PageRequest.of(page, size))
+                .map(this::getQuestionQuestionResponseDto);
+    }
+
+    public List<QuestionResponseDto> getScoreQuestionsList(Page<QuestionResponseDto> questionResponseDtos) {
+        return questionResponseDtos.stream()
+                .sorted(Comparator.comparing(questionResponseDto ->
+                        questionResponseDto.getVoteDown().size() - questionResponseDto.getVoteUp().size()))
+                .collect(Collectors.toList());
     }
 
     // 지난 주 동안 가장 많이 본 질문 조회
@@ -109,29 +127,11 @@ public class QuestionService {
                 .map(this::getQuestionQuestionResponseDto);
     }
 
-    // 질문 목록을 Active: 수정 시간 최신순으로 가져오는 메서드
-    public List<Question> getActiveQuestions() {
-        List<Question> questions = questionRepository.findAllByOrderByModifiedAtDesc();
-        return questions;
-    }
-
-//     질문 목록을 Score: Score 순으로 가져오는 메서드
-    public List<QuestionResponseDto> getScoreQuestions() {
-        List<QuestionResponseDto> questions = questionRepository.findAll().stream()
-                .map(this::getQuestionQuestionResponseDto)
-                .sorted(Comparator.comparing(questionResponseDto ->
-                        questionResponseDto.getVoteDown().size() - questionResponseDto.getVoteUp().size()))
-                .collect(Collectors.toList());
-
-        return questions;
-    }
-
-    // 답변이 없는 질문 목록을 가져오는 메서드
-    public List<QuestionResponseDto> getUnansweredQuestions() {
-        List<Question> questions = questionRepository.findAllByAnswersIsEmpty();
-        return questions.stream()
-                .map(this::getQuestionQuestionResponseDto)
-                .collect(Collectors.toList());
+    // 인기 질문 조회
+    public Page<QuestionResponseDto> getHotQuestions(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("viewCount").descending());
+        return questionRepository.findAllByOrderByViewCountDesc(pageable)
+                .map(this::getQuestionQuestionResponseDto);
     }
 
     public QuestionResponseDto getQuestionQuestionResponseDto(Question question) {
@@ -146,7 +146,6 @@ public class QuestionService {
                 .tags(question.getTags().stream()
                         .map(tag -> tag.getTagName())
                         .collect(Collectors.toList()))
-//                .profileImage()
                 .created_at(question.getCreatedAt())
                 .modified_at(question.getModifiedAt())
                 .build();

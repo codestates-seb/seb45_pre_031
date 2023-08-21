@@ -1,5 +1,5 @@
 spring:
-  h2:
+#  h2:
   #      enabled: true
   #      path: /h2
   #  datasource:
@@ -26,7 +26,7 @@ spring:
           google:
             client-id: ${G_CLIENT_ID}
             client-secret: ${G_CLIENT_SECRET}
-            redirect-uri: http://3.36.128.133/login/oauth2/code/google
+            redirect-uri: http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/login/oauth2/code/google
             scope:
               - email
               - profile
@@ -58,6 +58,3 @@ springdoc:
   default-produces-media-type: application/json
   paths-to-match:
     - /v1/**
-
-#server:
-#  port: 8888
