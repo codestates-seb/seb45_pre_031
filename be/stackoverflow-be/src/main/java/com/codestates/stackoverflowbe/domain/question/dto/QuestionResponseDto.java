@@ -13,6 +13,7 @@ public class QuestionResponseDto {
     private String title;
     private String body;
     private long views;
+    private int answersCount;
     private String displayName;
     private List<String> voteUp;
     private List<String> voteDown;
