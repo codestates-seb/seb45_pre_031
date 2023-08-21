@@ -3,9 +3,79 @@ import MsFirstIcon from "../assets/icons/MsFirstIcon";
 import MsSecondIcon from "../assets/icons/MsSecondIcon";
 import MsThirdIcon from "../assets/icons/MsThirdIcon";
 import MsFourthIcon from "../assets/icons/MsFourthIcon";
+import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { useState } from "react";
+import axios from "axios";
+import { signUpFailure, signUpSuccess } from "../redux/actions/loginAction";
 
 
-function MembershipPage() {
+
+function MembershipPage (props) {
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [ displayName, setDisplayName ] = useState('');
+  const [ email, setEmail ] = useState('');
+  const [ password, setPassword ] = useState('');
+  const [ emailError, setEmailError ] = useState(false);
+  const [ passwordError, setPasswordError ] = useState(false);
+
+  const onDisplayNameHandler = (e) => {
+    setDisplayName(e.currentTarget.value);
+  };
+
+  const onEmailHandler = (e) => {
+    setEmail(e.currentTarget.value);
+  };
+
+  const onPasswordHandler = (e) => {
+    setPassword(e.currentTarget.value);
+  };
+
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePassword = (password) => {
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    return passwordRegex.test(password);
+  };
+
+  const onSignUpHandler = async (e) => {
+    // 페이지 리로드 방지
+    e.preventDefault();
+
+    // 이메일 input 값이 비어있거나 형식에 맞지 않게 입력 받을 경우 error 메시지 표출
+    if (email === "") {
+      setEmailError("Email cannot be empty.");
+    } else if (!validateEmail(email)) {
+      setEmailError("The email is not a valid email address.");
+    }
+
+    // 비밀번호 input 값이 비어있거나 형식에 맞지 않게 입력 받을 경우 error 메시지 표출
+    if (password === "") {
+      setPasswordError("Password cannot be empty.");
+    } else if (!validatePassword(password)) {
+      setPasswordError("The password is not a valid password.");
+    }
+
+    try {
+      const response = await axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/accounts/signup", { displayName, email, password })
+      if (response.status === 200) {
+        dispatch(signUpSuccess("회원가입 성공"));
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+      dispatch(signUpFailure());
+    }
+
+  };
+
   return (
     <MembershipPageContainer>
       <MembershipContentContainer>
@@ -46,21 +116,37 @@ function MembershipPage() {
             <SignUpForm>
               <SignUpInputForm>
                 <MsLabel>Display name</MsLabel>
-                <SignUpInput />
+                <SignUpInput className="signup-displyname-input"
+                  type="text"
+                  value={displayName}
+                  onChange={onDisplayNameHandler} />
               </SignUpInputForm>
               <SignUpInputForm>
                 <MsLabel>Email</MsLabel>
-                <SignUpInput />
+                <SignUpInput
+                  className={`signup-email-input ${emailError ? "error" : ""}`}
+                  type="email"
+                  value={email}
+                  onChange={onEmailHandler} />
+                  {emailError &&
+                    <ErrorText>{emailError}</ErrorText>}
               </SignUpInputForm>
               <SignUpInputForm className="signup-password-form">
                 <MsLabel>Password</MsLabel>
-                <SignUpInput />
+                <SignUpInput
+                  className={`signup-password-input ${passwordError ? "error" : ""}`}
+                  type="password"
+                  value={password}
+                  onChange={onPasswordHandler}/>
+                  {passwordError &&
+                  <ErrorText>{passwordError}</ErrorText>}
               </SignUpInputForm>
               <MsCreatePwRuleTextBox>
-                <p>Passwords must contain at least eight characters, including at least 1 letter and 1 number.</p>
+                <p>Passwords must contain at least six characters, including at least 1 letter and 1 number.</p>
               </MsCreatePwRuleTextBox>
               <MsBtnContainer>
-                <SignUpBtn>Sign up</SignUpBtn>
+                <SignUpBtn
+                  onClick={onSignUpHandler}>Sign up</SignUpBtn>
               </MsBtnContainer>
               <MsTermsTextBox>
                 By clicking “Sign up”, you agree to our
@@ -321,4 +407,10 @@ const SignUpTextBelowContainer = styled.div`
       color: hsl(206,100%,52%);
     }
   }
+`;
+
+const ErrorText = styled.p`
+  font-size: 12px;
+  color: hsl(358, 68%, 59%);
+  margin-top: 4px;
 `;

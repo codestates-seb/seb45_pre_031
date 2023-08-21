@@ -8,6 +8,10 @@ export const PASSWORD_MISMATCH_ERROR = 'PASSWORD_MISMATCH_ERROR';
 
 export const LOGIN_USER = 'LOGIN_USER';
 
+export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
+export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE';
+
+
 
 export const loginSuccess = (token) => ({
     type: LOGIN_SUCCESS,
@@ -25,8 +29,8 @@ export const emailMismatchError = (error) => ({
   });
 
 export const passwordMismatchError = (error) => ({
-type: PASSWORD_MISMATCH_ERROR,
-payload: error,
+    type: PASSWORD_MISMATCH_ERROR,
+    payload: error,
 });
 
 export const loginUser = (dataToSubmit) => {
@@ -39,3 +43,12 @@ export const loginUser = (dataToSubmit) => {
         payload: request,
     }; // 반환하여 request에 넣어줌
 };
+
+export const signUpSuccess = () => ({
+    type: SIGN_UP_SUCCESS,
+  });
+
+  export const signUpFailure = (error) => ({
+    type: SIGN_UP_FAILURE,
+    payload: error,
+  });
