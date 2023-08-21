@@ -82,7 +82,7 @@ public class OAuth2AccountSuccessHandler extends SimpleUrlAuthenticationSuccessH
         String displayName = account.getDisplayName();
 
         //FE 애플리케이션 쪽의 URI 생성.
-        String uri = createURI(request, accessToken, refreshToken, displayName).toString();
+        String uri = createURI(request, accessToken, refreshToken).toString();
 //        LoginResponseDto loginResponseDto = new LoginResponseDto(displayName);
 //
 //        Gson gson = new Gson();
@@ -122,22 +122,21 @@ public class OAuth2AccountSuccessHandler extends SimpleUrlAuthenticationSuccessH
 
         return refreshToken;
     }
-    private Object createURI(HttpServletRequest request, String accessToken, String refreshToken, String displayName) {
+    private Object createURI(HttpServletRequest request, String accessToken, String refreshToken) {
         // HTTP 요청의 쿼리 파라미터나 헤더를 구성하기 위한 Map
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("access_token", accessToken);
         queryParams.add("refresh_token", refreshToken);
-        queryParams.add("displayName", displayName);
 
-        String requestScheme = request.getScheme();
-        String requestHost = request.getServerName();
-        int requestPort = request.getServerPort();
+//        String requestScheme = request.getScheme();
+//        String requestHost = request.getServerName();
+//        int requestPort = request.getServerPort();
 
 
         //http://localhost/receive-token.html?access_token=XXX&refresh_token=YYY 형식으로 받도록 함.
         return UriComponentsBuilder
                 .newInstance()
-                .scheme(requestScheme)
+                .scheme("http")
 //                .host("localhost")
 //                .port(80)
 //                .path("/receive-token.html")
