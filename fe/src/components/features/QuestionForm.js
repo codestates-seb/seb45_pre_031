@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router";
 import axios from "axios";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -10,6 +11,8 @@ function QuestionForm() {
 
   const [isTitleValid, setIsTitleValid] = useState(true);
   const [isBodyValid, setIsBodyValid] = useState(true);
+
+  const navigate = useNavigate();
 
   const handleTitleChange = (e) => {
     setTitleValue(e.target.value);
@@ -42,22 +45,25 @@ function QuestionForm() {
   };
 
   const handleSubmit = async () => {
-    console.log("Post요청", "title:", titleValue, "body:", bodyValue);
-    if (!isTitleValid || !isBodyValid) {
+    if (titleValue.trim().length === 0 || !isTitleValid || !isBodyValid) {
       alert("Please ensure that the title and body meet the requirements.");
       return;
     }
+    console.log("Post요청", "title:", titleValue, "body:", bodyValue);
     try {
       const response = await axios.post("http://localhost:8080/v1/questions", {
         title: titleValue,
         body: bodyValue,
       });
-      if (response.status === 201) {
+      if (response.status >= 200 && response.status < 300) {
         alert("Question successfully posted!");
+        navigate("/");
       } else {
-        console.error("Error posting question: Unknown server error");
+        alert("Error posting question: server error");
+        console.error("Server responded with an error:", response.data.message || "Unknown server error");
       }
     } catch (error) {
+      alert("Error while trying to post question:", error);
       console.error("Error while trying to post question:", error);
     }
   };
