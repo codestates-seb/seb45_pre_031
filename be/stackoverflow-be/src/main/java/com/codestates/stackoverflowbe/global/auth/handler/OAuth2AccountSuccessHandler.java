@@ -28,7 +28,7 @@ import java.util.Map;
 //OAuth2 인증이 성공한 이후 동작 (SimpleUrlAuthenticationSuccessHandler : 인증 성공했을 때 URL 지정 등 역할 수행)
 public class OAuth2AccountSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    private static String URL_S3_ENDPOINT = "http://seveneleven-stackoverflow-s3.s3-website.ap-northeast-2.amazonaws.com";
+    private static String URL_S3_ENDPOINT = "http://se-sof.s3-website.ap-northeast-2.amazonaws.com";
 
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
@@ -127,8 +127,8 @@ public class OAuth2AccountSuccessHandler extends SimpleUrlAuthenticationSuccessH
 //                .port(80)
 //                .path("/receive-token.html")
 //                .path("/login") // 이후 URI 수정
-                .host("http://seveneleven-stackoverflow-s3.s3-website.ap-northeast-2.amazonaws.com") //"http://seveneleven-stackoverflow-s3.s3-website.ap-northeast-2.amazonaws.com"
-                .path("/login")
+                .host("http://se-sof.s3-website.ap-northeast-2.amazonaws.com") //"http://seveneleven-stackoverflow-s3.s3-website.ap-northeast-2.amazonaws.com"
+                .path("/")
 //                .port(requestPort) //S3는 80포트
                 .queryParams(queryParams)
                 .build()
