@@ -85,7 +85,7 @@ function LoginPage () {
         localStorage.setItem("refresh_token", refreshToken);
 
         // 토큰을 헤더에 포함시켜서 요청
-        axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+        axios.defaults.headers.common["Authorization"] = `${accessToken}`;
 
         // 유저 display name 받아오기
 
