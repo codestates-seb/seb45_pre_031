@@ -31,9 +31,13 @@ jobs:
         working-directory: ${{ env.working-directory }}
 
       - name: Docker build
+        env:
+          G_CLIENT_ID: ${{secrets.G_CLIENT_ID}}
+          G_CLIENT_SECRET: ${{secrets.G_CLIENT_SECRET}}
+          JWT_SECRET_KEY: ${{secrets.JWT_SECRET_KEY}}
         run: |
           docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
-          docker build --build-arg G_CLIENT_ID=${{env.G_CLIENT_ID}} --build-arg G_CLIENT_SECRET=${{env.G_CLIENT_SECRET}} --build-arg JWT_SECRET_KEY=${{env.JWT_SECRET_KEY}} -t 7elenven-cicd . 
+          docker build -t 7elenven-cicd . 
           docker tag 7elenven-cicd leest/7eleven-cicd:${GITHUB_SHA::7}
           docker push leest/7eleven-cicd:${GITHUB_SHA::7}
         working-directory: ${{ env.working-directory }}
@@ -51,7 +55,7 @@ jobs:
           host: ${{ secrets.AWS_SSH_HOST }}  # ipv4
           username: ${{ secrets.AWS_SSH_USERNAME }} # ubuntu
           key: ${{ secrets.AWS_SSH_KEY }} #
-#          port: ${{ secrets.AWS_SSH_PORT }} #
+          #          port: ${{ secrets.AWS_SSH_PORT }} #
           envs: GITHUB_SHA
           script: |
             sudo docker rm -f server
