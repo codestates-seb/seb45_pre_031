@@ -79,7 +79,6 @@ public class AccountService {
             return findAccount.get().toResponse(); //이미 DB에 저장된 정보가 있다면 반환
         }
 
-        verifyExistsEmail(accountPostDto.getEmail()); // 기존 DB에 저장된 이름인지 확인하여 MemberExists 에러 반환
         // DB에 저장된 정보가 없다면
         List<String> roles = authorityUtils.createRoles(accountPostDto.getEmail());
         Account beSavedAccount = new Account(

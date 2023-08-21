@@ -50,7 +50,8 @@ public class AnswerController {
     @PatchMapping("/{answer-id}")
     public ResponseEntity<HttpStatus> patchAnswer(@PathVariable("answer-id") @Positive long answerId,
                                                   @Valid @RequestBody AnswerDto.Request requestDto) {
-        answerService.updateAnswer(answerId, requestDto);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        answerService.updateAnswer(answerId, requestDto, principal);
 
         return ResponseEntity.noContent().build();
     }

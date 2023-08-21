@@ -93,14 +93,14 @@ public class QuestionService {
 
     // 답변이 없는 질문 목록을 가져오는 메서드
     public Page<QuestionResponseDto> getUnansweredQuestions(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("questionId").descending());
         return questionRepository.findAllByAnswersIsEmpty(pageable)
                 .map(this::getQuestionQuestionResponseDto);
     }
 
     //     질문 목록을 Score: Score 순으로 가져오는 메서드
     public Page<QuestionResponseDto> getScoreQuestions(int page, int size) {
-        return questionRepository.findAll(PageRequest.of(page, size))
+        return questionRepository.findAll(PageRequest.of(page, size, Sort.by("questionId").descending()))
                 .map(this::getQuestionQuestionResponseDto);
     }
 
@@ -114,7 +114,7 @@ public class QuestionService {
     // 지난 주 동안 가장 많이 본 질문 조회
     public Page<QuestionResponseDto> getWeekQuestions(int page, int size) {
         LocalDateTime weekAgo = LocalDateTime.now().minus(7, ChronoUnit.DAYS);
-        Pageable pageable = PageRequest.of(page, size, Sort.by("viewCount").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("viewCount").descending().and(Sort.by("questionId").descending()));
         return questionRepository.findByCreatedAtAfterOrderByViewCountDesc(weekAgo, pageable)
                 .map(this::getQuestionQuestionResponseDto);
     }
@@ -122,7 +122,7 @@ public class QuestionService {
     // 지난 달 동안 가장 많이 본 질문 조회
     public Page<QuestionResponseDto> getMonthQuestions(int page, int size) {
         LocalDateTime monthAgo = LocalDateTime.now().minus(30, ChronoUnit.DAYS);
-        Pageable pageable = PageRequest.of(page, size, Sort.by("viewCount").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("viewCount").descending().and(Sort.by("questionId").descending()));
         return questionRepository.findByCreatedAtAfterOrderByViewCountDesc(monthAgo, pageable)
                 .map(this::getQuestionQuestionResponseDto);
     }
@@ -139,6 +139,7 @@ public class QuestionService {
                 .questionId(question.getQuestionId())
                 .title(question.getTitle())
                 .body(question.getBody())
+                .answersCount(question.getAnswers().size())
                 .views(question.getViewCount())
                 .displayName(question.getAccount().getDisplayName())
                 .voteUp(voteService.getUpVoteAccounts(question.getVotes()))
