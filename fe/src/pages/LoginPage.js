@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { styled } from "styled-components";
 import { useDispatch } from "react-redux";
 import axios from "axios";
-import { loginSuccess, loginFailure, emailMismatchError, passwordMismatchError } from "../redux/actions/loginAction";
+import { loginSuccess } from "../redux/actions/loginAction";
 import PasswordModal from "../components/features/PasswordModal";
 
 function LoginPage () {
@@ -15,8 +15,6 @@ function LoginPage () {
   const [ password, setPassword ] = useState("");
   const [ emailError, setEmailError ] = useState(false);
   const [ passwordError, setPasswordError ] = useState(false);
-  const [ emailMismatchErrorText, setEmailMismatchErrorText] = useState("");
-  const [ passwordMismatchErrorText, setPasswordMismatchErrorText] = useState("");
   const [ isModalOpen, setIsModalOpen ] = useState(false);
 
   const modalHandler = () => {
@@ -72,7 +70,7 @@ function LoginPage () {
 
     // 유효한 이메일과 비밀번호를 입력할 경우 서버로 전송
     try {
-      const response = await axios.post("http://localhost:8080/v1/accounts/authenticate", { email, password });
+      const response = await axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/accounts/authenticate", { email, password });
       if (response.status === 200) {
         // 서버에서 토큰을 받음
         const accessToken = response.headers.Authorization;
@@ -155,15 +153,13 @@ function LoginPage () {
                 <LoginLabel>Email</LoginLabel>
               </div>
               <LoginInput
-                className={`login-email-input ${emailError || emailMismatchErrorText ? "error" : ""}`}
+                className={`login-email-input ${emailError? "error" : ""}`}
                 type="email"
                 value={email}
                 onChange={onEmailHandler}
                 />
                 {emailError &&
                   <ErrorText>{emailError}</ErrorText>}
-                {emailMismatchErrorText &&
-                  <ErrorText>{emailMismatchErrorText}</ErrorText>}
             </LoginInputForm>
             <LoginInputForm className="login-password-form">
               <div>
@@ -176,15 +172,13 @@ function LoginPage () {
                     /> : null}
               </div>
               <LoginInput
-                className={`login-password-input ${passwordError || passwordMismatchErrorText ? "error" : ""}`}
+                className={`login-password-input ${passwordError ? "error" : ""}`}
                 type="password"
                 value={password}
                 onChange={onPasswordHandler}
                 />
                 {passwordError &&
                   <ErrorText>{passwordError}</ErrorText>}
-                {passwordMismatchErrorText &&
-                  <ErrorText>{passwordMismatchErrorText}</ErrorText>}
             </LoginInputForm>
             <LoginBtnContainer>
               <LoginBtn

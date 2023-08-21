@@ -1,4 +1,4 @@
-import { LOGIN_SUCCESS, LOGIN_FAILURE, EMAIL_MISMATCH_ERROR, PASSWORD_MISMATCH_ERROR, LOGIN_USER } from '../actions/loginAction';
+import { LOGIN_SUCCESS, LOGIN_FAILURE, EMAIL_MISMATCH_ERROR, PASSWORD_MISMATCH_ERROR, LOGIN_USER, SIGN_UP_SUCCESS, SIGN_UP_FAILURE } from '../actions/loginAction';
 
 const initialState = {
     token: null,
@@ -40,6 +40,18 @@ const initialState = {
           ...state,
           loginSuccess: action.payload.loginSuccess
         }
+
+      case SIGN_UP_SUCCESS:
+        return {
+          ...state,
+          error: null,
+        };
+
+      case SIGN_UP_FAILURE:
+        return {
+          ...state,
+          error: action.error,
+        };
 
       default:
         return state;
