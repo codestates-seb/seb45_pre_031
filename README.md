@@ -1,4 +1,4 @@
-![header](https://capsule-render.vercel.app/api?type=waving&&color=gradient&&text=Hi&animation=twinkling&fontColor=333)
+![image](https://github.com/codestates-seb/seb45_pre_031/assets/75276860/d5fb10e2-d776-4458-a484-69050d4417e9)![header](https://capsule-render.vercel.app/api?type=waving&&color=gradient&&text=Hi&animation=twinkling&fontColor=333)
 
 # 프로젝트 : 
 
@@ -15,14 +15,12 @@
 <br/>
 
 ### 1-1. FE 기술 스택
-<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white">
- <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=HTML5&logoColor=white">
- <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=CSS3&logoColor=white">
-<img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=TypeScript&logoColor=white">
-<img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black"/>
+| HTML | CSS | Java Script | React | Redux |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------|-----------------------------------------------|-----------------------------------------------|-----------------------------------------------|
+|<img src="https://img.icons8.com/?size=512&id=20909&format=png" width=75px ></img> |<img src="https://img.icons8.com/?size=512&id=21278&format=png" width=75px ></img> |<img src="https://img.icons8.com/?size=512&id=108784&format=png" width=75px ></img> |<img src="https://img.icons8.com/?size=512&id=123603&format=png" width=75px ></img> |<img src="https://img.icons8.com/?size=512&id=jD-fJzVguBmw&format=png" width=75px ></img> |
 
 ### 1-2. BE 기술 스택
-|JAVA 11|Spring|Spring Boot|Spring Security|AWS|MySql|JWT|
+| JAVA 11 | Spring | Spring Boot | Spring Security | AWS | MySql | JWT |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------|-----------------------------------------------|-----------------------------------------------|-----------------------------------------------|-----------------------------------------------|-----------------------------------------------|
 |<img src="https://img.icons8.com/?size=512&id=13679&format=png" width=75px ></img>|<img src="https://img.icons8.com/?size=512&id=90519&format=png" width=75px ></img> |<img src="https://img.icons8.com/?size=512&id=90519&format=png" width=75px ></img>|<img src="https://img.icons8.com/?size=512&id=16231&format=png" width=75px ></img>|<img src="https://img.icons8.com/?size=512&id=33039&format=png" width=75px ></img>|<img src="https://img.icons8.com/?size=512&id=UFXRpPFebwa2&format=png" width=75px ></img>|<img src="https://img.icons8.com/?size=512&id=15451&format=png" width=75px ></img>
 
