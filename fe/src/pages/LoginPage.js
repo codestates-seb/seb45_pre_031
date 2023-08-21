@@ -77,7 +77,7 @@ function LoginPage () {
 
       if (response.status === 200) {
         // 서버에서 토큰을 받음
-        const accessToken = response.headers.Authorization;
+        const accessToken = response.headers.getAuthorization();
         const refreshToken = response.headers.get("Refresh");
 
         // 토큰을 로컬 스토리지에 저장

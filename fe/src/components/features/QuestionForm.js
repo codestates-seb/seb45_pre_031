@@ -51,7 +51,7 @@ function QuestionForm() {
     }
     console.log("Post요청", "title:", titleValue, "body:", bodyValue);
     try {
-      const response = await axios.post("http://localhost:8080/v1/questions", {
+      const response = await axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/questions", {
         title: titleValue,
         body: bodyValue,
       });

@@ -28,7 +28,7 @@ function QuestionList() {
       setIsPending(true);
       try {
         const response = await axios.get(
-          `http://localhost:8080/v1/questions/tabQuestion?page=${pageNumber}&tab=${tab}`
+          `http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com//v1/questions/tabQuestion?page=${pageNumber}&tab=${tab}`
         );
         if (response.status >= 200 && response.status < 300) {
           setQuestionData(response.data.data);
