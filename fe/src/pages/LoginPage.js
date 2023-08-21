@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { styled } from "styled-components";
 import { useDispatch } from "react-redux";
 import axios from "axios";
-import { loginSuccess } from "../redux/actions/loginAction";
+import { loginSuccess, loginFailure } from "../redux/actions/loginAction";
 import PasswordModal from "../components/features/PasswordModal";
 
 function LoginPage () {
@@ -16,6 +16,8 @@ function LoginPage () {
   const [ emailError, setEmailError ] = useState(false);
   const [ passwordError, setPasswordError ] = useState(false);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
+
+  const [ googleLoginError, setGoogleLoginError ] = useState(false);
 
   const modalHandler = () => {
     setIsModalOpen(!isModalOpen);
@@ -125,12 +127,14 @@ function LoginPage () {
         navigate("/");
 
       } catch (error) {
-        console.error("토큰 저장 중 에러:", error);
-        dispatch(loginFailure("토큰 저장 중 에러가 발생했습니다."));
+        console.error("로그인 에러:", error);
+        // 로그인 에러 처리
+        dispatch(loginFailure("로그인 중 에러가 발생했습니다."));
+        // 오류 메시지 표출
+        setGoogleLoginError(true);
+        // 로그인 페이지로 리다이렉션
+        navigate("/login");
       }
-    } else {
-      console.error("Google 로그인 오류");
-      dispatch(loginFailure("Google 로그인 오류가 발생했습니다."));
     }
   }, [dispatch, navigate]); */
 
@@ -142,9 +146,11 @@ function LoginPage () {
         </LoginLogoContiner>
         <LoginBtnContainer>
           <GoogleLoginBtn
+            onClick={googleLoginHandler}
             >
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1024px-Google_%22G%22_Logo.svg.png" alt="" />
             Log in with Google</GoogleLoginBtn>
+            {googleLoginError && <p>Google 로그인 오류가 발생했습니다.</p>}
         </LoginBtnContainer>
         <LoginFormContainer>
           <LoginForm>
