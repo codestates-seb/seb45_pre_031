@@ -1,6 +1,9 @@
 
-# 프로젝트 : 
+# 프로젝트 : StackOverFlow 클론 코딩
+---
+## Team Project Period<br/>
 
+2023-08-09 ~ 2023-08-23
 ---
 ##  Docs
 - **[노션](https://www.notion.so/7-ELEVEN-b1616d8b43914952b225cc24e371da9a)**
