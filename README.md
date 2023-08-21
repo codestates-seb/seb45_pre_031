@@ -14,9 +14,9 @@
 <br/>
 
 ### 1-1. FE 기술 스택
-| HTML | CSS | Java Script | React | Redux |
+| HTML | CSS | Java Script | React | Redux | Styled-Components |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------|-----------------------------------------------|-----------------------------------------------|-----------------------------------------------|
-|<img src="https://img.icons8.com/?size=512&id=20909&format=png" width=75px ></img> |<img src="https://img.icons8.com/?size=512&id=21278&format=png" width=75px ></img> |<img src="https://img.icons8.com/?size=512&id=108784&format=png" width=75px ></img> |<img src="https://img.icons8.com/?size=512&id=123603&format=png" width=75px ></img> |<img src="https://img.icons8.com/?size=512&id=jD-fJzVguBmw&format=png" width=75px ></img> |
+|<img src="https://img.icons8.com/?size=512&id=20909&format=png" width=75px ></img> |<img src="https://img.icons8.com/?size=512&id=21278&format=png" width=75px ></img> |<img src="https://img.icons8.com/?size=512&id=108784&format=png" width=75px ></img> |<img src="https://img.icons8.com/?size=512&id=123603&format=png" width=75px ></img> |<img src="https://img.icons8.com/?size=512&id=jD-fJzVguBmw&format=png" width=75px ></img> |<img src="https://img.icons8.com/?size=512&id=ttxR7mXaDvqS&format=png" width=75px ></img>|
 
 ### 1-2. BE 기술 스택
 | JAVA 11 | Spring | Spring Boot | Spring Security | AWS | MySql | JWT |
