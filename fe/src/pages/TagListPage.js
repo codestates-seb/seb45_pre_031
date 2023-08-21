@@ -24,6 +24,7 @@ export default TagListPage;
 const StyledTagListPage = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
   .top {
     display: flex;
     flex-direction: row;
