@@ -7,8 +7,10 @@ import com.codestates.stackoverflowbe.global.auth.jwt.JwtTokenizer;
 import com.codestates.stackoverflowbe.global.auth.login.dto.LoginResponseDto;
 import com.codestates.stackoverflowbe.global.auth.utils.CustomAuthorityUtils;
 import com.google.gson.Gson;
+import com.nimbusds.openid.connect.sdk.Display;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.DisplayName;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -48,6 +50,7 @@ public class OAuth2AccountSuccessHandler extends SimpleUrlAuthenticationSuccessH
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         //OAuth2인증이 성공
         log.info("# OAuth2AccountSuccessHandler success!");
+
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         String email = (String) oAuth2User.getAttributes().get("email");
         String name = (String) oAuth2User.getAttributes().get("name");
@@ -91,6 +94,8 @@ public class OAuth2AccountSuccessHandler extends SimpleUrlAuthenticationSuccessH
 //        response.setContentType("application/json");
 //        response.setCharacterEncoding("UTF-8");
 //        response.getWriter().write(result);
+
+        response.setHeader("displayName", displayName);
 
         //SimpleUrlAuthenticationSuccessHandler에서 제공하는 sendRedirect() 메서드를 이용해 Frontend 애플리케이션 쪽으로 리다이렉트
         getRedirectStrategy().sendRedirect(request, response, uri);
