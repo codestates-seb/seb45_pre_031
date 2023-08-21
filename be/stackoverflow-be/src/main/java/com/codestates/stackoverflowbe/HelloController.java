@@ -12,7 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -20,7 +22,6 @@ import java.util.Map;
 @Tag(name = "Sample", description = "Test Controller")
 @RequiredArgsConstructor
 public class HelloController {
-
     private final Map<Long, Map<String, Object>> samples = new HashMap<>();
 
     @PostConstruct
@@ -32,7 +33,6 @@ public class HelloController {
         sample1.put("sample2", "hgd@gmail.com");
         sample1.put("sample3", "010-1234-1234");
     }
-
 
     @Operation(summary = "Request Post test", description = "Response name, email, phone")
     @PostMapping("/sample")

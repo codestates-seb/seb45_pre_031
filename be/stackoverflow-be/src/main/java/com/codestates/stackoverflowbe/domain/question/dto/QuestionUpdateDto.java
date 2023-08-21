@@ -15,5 +15,4 @@ import java.util.List;
 public class QuestionUpdateDto {
     private String title;
     private String body;
-    private String expectContents;
 }

@@ -37,9 +37,6 @@ public class Answer extends BaseTimeEntity {
     @JoinColumn(name = "QUESTION_ID")
     private Question question;
 
-//    @OneToMany(mappedBy = "answer")
-//    private List<QuestionComment> questionComments = new ArrayList<>();
-
     @OneToMany(mappedBy = "answer")
     private List<AnswerComment> answerComments = new ArrayList<>();
 

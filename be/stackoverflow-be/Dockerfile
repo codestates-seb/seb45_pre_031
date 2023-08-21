@@ -1,8 +1,9 @@
 # (1) base-image
 FROM openjdk:11
-ENV G_CLIENT_ID=878122611174-g9hqmo37ags1ie4e1md9ikmstet5dm65.apps.googleusercontent.com \
-    G_CLIENT_SECRET=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 \
-    JWT_SECRET_KEY=kevin1234123412341234123412341234
+
+#ENV G_CLIENT_ID=878122611174-g9hqmo37ags1ie4e1md9ikmstet5dm65.apps.googleusercontent.com \
+#    G_CLIENT_SECRET=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 \
+#    JWT_SECRET_KEY=kevin1234123412341234123412341234
 
 # (2) COPY에서 사용될 경로 변수
 ARG JAR_FILE=build/libs/*-SNAPSHOT.jar
