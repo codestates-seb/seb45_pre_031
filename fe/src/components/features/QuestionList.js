@@ -8,7 +8,8 @@ import { useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 
 function QuestionList() {
-  const [questionData, setQuestionData] = useState([]);
+  const [questionData, setQuestionData] = useState(mok);
+  const [pageInfoData, setPageInfoData] = useState({});
   const [tab, setTab] = useState("newest");
   const [pageNumber, setPageNumber] = useState(1);
 
@@ -22,10 +23,12 @@ function QuestionList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/v1/questions?tab=${tab}&page=${pageNumber}&size=15`);
-
-        if (response.data.statusCode === 200) {
+        const response = await axios.get(
+          `http://localhost:8080/v1/questions/tabQuestion?page=${pageNumber}&tab=${tab}`
+        );
+        if (response.status >= 200 && response.status < 300) {
           setQuestionData(response.data.data);
+          setPageInfoData(response.data.pageInfo);
         } else {
           console.error("Server responded with an error:", response.data.message || "Unknown server error");
         }
@@ -73,9 +76,8 @@ function QuestionList() {
 
     return "1 minute ago";
   }
-
-  useEffect(() => console.log("tab:", tab, "page:", pageNumber), [tab, pageNumber]);
   useEffect(() => console.log("data:", questionData), [questionData]);
+  useEffect(() => console.log("pageInfo:", pageInfoData), [pageInfoData]);
   return (
     <StyledQuestionList>
       <HeaderContainer>
@@ -83,10 +85,10 @@ function QuestionList() {
         <AskQuestionBtn>Ask Question</AskQuestionBtn>
       </HeaderContainer>
       <FiterContainer>
-        <span className="questionCount">{questionData.length || "22,345,751"} quesitons</span>
+        <span className="questionCount">{pageInfoData.totalElements} quesitons</span>
         <Fiter>
           {filterOptions.map((option, index) => (
-            <FilterOption key={index} onClick={() => handleTab(option)} isSelected={tab === option}>
+            <FilterOption key={index} onClick={() => handleTab(option)} selected={tab === option}>
               {option}
             </FilterOption>
           ))}
@@ -98,27 +100,33 @@ function QuestionList() {
             <Question key={question.questionId}>
               <div className="leftSide">
                 <LeftSideInfo>
-                  <span className="votes">{question.votes.length} votes</span>
+                  <span className="votes">{question.voteUp.length - question.voteDown.length} votes</span>
                 </LeftSideInfo>
                 <LeftSideInfo>
-                  <span className="answersAndViews">{question.answers.length} asnswers</span>
+                  <span className="answersAndViews">{question.answersCount} asnswers</span>
                 </LeftSideInfo>
                 <LeftSideInfo>
-                  <span className="answersAndViews">{question.viewCount} views</span>
+                  <span className="answersAndViews">{question.views} views</span>
                 </LeftSideInfo>
               </div>
               <div className="rightSide">
                 <QuestionTitle onClick={() => goToDetail(question.questionId)}> {question.title} </QuestionTitle>
                 <QuestionSummury>{question.body}</QuestionSummury>
                 <TagAndUserInfoContainer>
-                  <TagContainer>{question.tags && question.tags.map((tag) => <Tag>{tag}</Tag>)}</TagContainer>
+                  <TagContainer>
+                    {question.tags && question.tags.map((tag, index) => <Tag key={index}>{tag}</Tag>)}
+                  </TagContainer>
                   <UserInfoContainer>
                     <img className="userAvatar" alt="userAvatar" src={logo} />
                     <div className="userName">
-                      <span>{question.account.displayName}</span>
+                      <span>{question.displayName}</span>
                     </div>
                     <div className="createdAt">
-                      <span>{formatRelativeTime(question.createdAt)}</span>
+                      <span>
+                        {tab === "Active"
+                          ? formatRelativeTime(question.modified_at)
+                          : formatRelativeTime(question.created_at)}
+                      </span>
                     </div>
                   </UserInfoContainer>
                 </TagAndUserInfoContainer>
@@ -128,7 +136,7 @@ function QuestionList() {
       </QuestionListContainer>
       <PaginationContainer>
         <StyledReactPaginate
-          pageCount={Math.ceil(questionData.length / 15) || 20}
+          pageCount={Math.ceil(pageInfoData.totalPages) || 20}
           pageRangeDisplayed={5}
           marginPagesDisplayed={1}
           previousLabel={"Prev"}
@@ -149,8 +157,8 @@ const StyledQuestionList = styled.div`
   padding: 24px;
   padding-right: 0px;
   width: 100vw;
-  max-width: 727px;
-  min-width: 428px;
+  width: 726px;
+  min-width: 726px;
 `;
 
 const HeaderContainer = styled.div`
@@ -159,7 +167,6 @@ const HeaderContainer = styled.div`
   justify-content: space-between;
   min-height: 50px;
   margin-bottom: 12px;
-
   .headerTitle {
     font-size: 26px;
     font-weight: 400;
@@ -190,8 +197,7 @@ const FilterOption = styled.div`
   font-size: 12px;
   align-items: center;
   padding: 9.6px;
-  background-color: ${(props) => (props.isSelected ? "rgb(219, 219, 219)" : "transparent")};
-
+  background-color: ${(props) => (props.selected ? "rgb(219, 219, 219)" : "transparent")};
   border-right: 1px solid rgb(214, 217, 220);
   &:last-of-type {
     border-right: none;
@@ -199,7 +205,6 @@ const FilterOption = styled.div`
   &:hover {
     background-color: hsl(210, 8%, 97.5%);
   }
-  //selected: hwb(210deg 89.2% 9.2%);
 `;
 
 const QuestionListContainer = styled.ul`
@@ -214,7 +219,6 @@ const Question = styled.li`
   flex-direction: row;
   padding: 16px;
   height: 124px;
-
   border-bottom: 1px solid rgb(214, 217, 220);
   .leftSide {
     display: flex;
@@ -242,10 +246,14 @@ const LeftSideInfo = styled.div`
   }
 `;
 const QuestionTitle = styled.h3`
+  max-width: 565px;
   padding-right: 24px;
   margin-bottom: 2px;
   font-weight: 400;
   font-size: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: hsl(206, 100%, 40%);
   &:hover {
     color: hsl(206, 100%, 52%);
@@ -269,10 +277,13 @@ const TagAndUserInfoContainer = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  width: 565px;
 `;
 const TagContainer = styled.ul`
   display: flex;
   flex-direction: row;
+  max-width: 340px;
+  overflow: hidden;
   height: 26px;
   list-style: none;
 `;
@@ -341,3 +352,47 @@ const StyledReactPaginate = styled(ReactPaginate)`
     }
   }
 `;
+
+const mok = [
+  {
+    questionId: 5,
+    title: "test title ",
+    body: "test body5test titletest title",
+    views: 0,
+    displayName: "김매니저",
+    voteUp: ["d"],
+    voteDown: ["fdf", "dfsdf,"],
+    tags: [],
+    created_at: "2023-08-21T00:43:05.281618",
+    modified_at: "2023-08-21T00:43:05.281618",
+    answersCount: 0,
+  },
+  {
+    questionId: 2,
+    title:
+      "test title2test title2test titlest tst title2test title2test title2test title2test t2test title2test title2test title2test title2test title2test title2",
+    body: "tesbody5tesbody5st title2test title2tst titst tst titlevitlevst tstitlevst t title2test title2test t2test title2test title2test title2test tle2test title2test test title2test title2test title2test title2test tst tst tst title2test title2test t",
+    views: 2,
+    displayName: "호랑이",
+    voteUp: [],
+    voteDown: [],
+    tags: [],
+    created_at: "2023-08-15T00:40:05.281618",
+    modified_at: "2023-08-15T00:40:05.281618",
+    answersCount: 0,
+  },
+  {
+    questionId: 1,
+    title:
+      "test titlst title2test title2test tst title2test title2test tst title2test title2test tst title2test title2test tst title2test title2test te",
+    body: "test body5test body5test body5test title2test title2test body5tetest title2test title2st body5test body5test body5test body5test body5test body5test body5test body5test body5test body5test body5test body5",
+    views: 0,
+    displayName: "굄",
+    voteUp: [],
+    voteDown: [],
+    tags: ["r31r", "javascript", "javascript", "javascript", "javascript"],
+    created_at: "2023-07-21T00:27:05.281618",
+    modified_at: "2023-07-21T00:27:05.281618",
+    answersCount: 1,
+  },
+];

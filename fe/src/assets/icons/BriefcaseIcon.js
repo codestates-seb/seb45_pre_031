@@ -1,7 +1,7 @@
 const BriefcaseIcon = () => (
   <svg
     aria-hidden="true"
-    class="svg-icon iconBriefcaseSm"
+    className="svg-icon iconBriefcaseSm"
     width="14"
     height="14"
     viewBox="0 0 14 14"
