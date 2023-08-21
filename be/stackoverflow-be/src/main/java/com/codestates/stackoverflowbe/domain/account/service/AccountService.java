@@ -74,12 +74,12 @@ public class AccountService {
 
     //POST(OAuth2.0 회원 등록) : OAuth2.0 를 통해 가입된 회원 정보 저장 (DB에 해당 정보 존재하면 메서드 리턴하고 존재하지 않으면 저장)
     public AccountDto.Response createAccountOAuth2(AccountDto.Post accountPostDto) {
-        verifyExistsEmail(accountPostDto.getEmail());
         Optional<Account> findAccount = accountRepository.findByEmail(accountPostDto.getEmail());
         if(findAccount.isPresent()) {
             return findAccount.get().toResponse(); //이미 DB에 저장된 정보가 있다면 반환
         }
 
+        verifyExistsEmail(accountPostDto.getEmail()); // 기존 DB에 저장된 이름인지 확인하여 MemberExists 에러 반환
         // DB에 저장된 정보가 없다면
         List<String> roles = authorityUtils.createRoles(accountPostDto.getEmail());
         Account beSavedAccount = new Account(
