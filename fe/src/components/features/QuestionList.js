@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import AskQuestionBtn from "../atoms/AskQuestionBtn";
 import logo from "../../assets/images/logo.png";
+import Spinner from "../../assets/images/Spinner.gif";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -8,10 +9,12 @@ import { useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 
 function QuestionList() {
-  const [questionData, setQuestionData] = useState(mok);
+  const [questionData, setQuestionData] = useState(null);
   const [pageInfoData, setPageInfoData] = useState({});
   const [tab, setTab] = useState("newest");
   const [pageNumber, setPageNumber] = useState(1);
+
+  const [isPending, setIsPending] = useState(false);
 
   const filterOptions = ["Newest", "Active", "Unanswered", "Score", "Pop(week)", "Pop(month)"];
 
@@ -22,6 +25,7 @@ function QuestionList() {
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsPending(true);
       try {
         const response = await axios.get(
           `http://localhost:8080/v1/questions/tabQuestion?page=${pageNumber}&tab=${tab}`
@@ -34,6 +38,8 @@ function QuestionList() {
         }
       } catch (error) {
         console.error("Error while trying to fetch questions:", error);
+      } finally {
+        setIsPending(false);
       }
     };
 
@@ -85,7 +91,7 @@ function QuestionList() {
         <AskQuestionBtn>Ask Question</AskQuestionBtn>
       </HeaderContainer>
       <FiterContainer>
-        <span className="questionCount">{pageInfoData.totalElements} quesitons</span>
+        <span className="questionCount">{pageInfoData.totalElements || 0} quesitons</span>
         <Fiter>
           {filterOptions.map((option, index) => (
             <FilterOption key={index} onClick={() => handleTab(option)} selected={tab === option}>
@@ -95,7 +101,11 @@ function QuestionList() {
         </Fiter>
       </FiterContainer>
       <QuestionListContainer>
-        {questionData &&
+        {isPending ? (
+          <div className="load">
+            <img src={Spinner} alt="spinner" />
+          </div>
+        ) : questionData ? (
           questionData.map((question) => (
             <Question key={question.questionId}>
               <div className="leftSide">
@@ -103,7 +113,7 @@ function QuestionList() {
                   <span className="votes">{question.voteUp.length - question.voteDown.length} votes</span>
                 </LeftSideInfo>
                 <LeftSideInfo>
-                  <span className="answersAndViews">{question.answersCount} asnswers</span>
+                  <span className="answersAndViews">{question.answersCount} answers</span>
                 </LeftSideInfo>
                 <LeftSideInfo>
                   <span className="answersAndViews">{question.views} views</span>
@@ -132,7 +142,14 @@ function QuestionList() {
                 </TagAndUserInfoContainer>
               </div>
             </Question>
-          ))}
+          ))
+        ) : (
+          <div className="load">
+            <div className="prompt">
+              <span>Sorry, we're having trouble loading the data. Please try again later.</span>
+            </div>
+          </div>
+        )}
       </QuestionListContainer>
       <PaginationContainer>
         <StyledReactPaginate
@@ -212,6 +229,29 @@ const QuestionListContainer = styled.ul`
   margin-left: -24px;
   list-style: none;
   margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .load {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+    height: 200px;
+  }
+  .prompt {
+    min-height: 80px;
+    margin-top: 16px;
+    margin-bottom: 24px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    background-color: rgb(253, 247, 226);
+    border: 1px solid rgb(221, 180, 34);
+    padding: 16px;
+    max-width: 815px;
+    font-weight: 600;
+  }
 `;
 
 const Question = styled.li`
@@ -352,47 +392,3 @@ const StyledReactPaginate = styled(ReactPaginate)`
     }
   }
 `;
-
-const mok = [
-  {
-    questionId: 5,
-    title: "test title ",
-    body: "test body5test titletest title",
-    views: 0,
-    displayName: "김매니저",
-    voteUp: ["d"],
-    voteDown: ["fdf", "dfsdf,"],
-    tags: [],
-    created_at: "2023-08-21T00:43:05.281618",
-    modified_at: "2023-08-21T00:43:05.281618",
-    answersCount: 0,
-  },
-  {
-    questionId: 2,
-    title:
-      "test title2test title2test titlest tst title2test title2test title2test title2test t2test title2test title2test title2test title2test title2test title2",
-    body: "tesbody5tesbody5st title2test title2tst titst tst titlevitlevst tstitlevst t title2test title2test t2test title2test title2test title2test tle2test title2test test title2test title2test title2test title2test tst tst tst title2test title2test t",
-    views: 2,
-    displayName: "호랑이",
-    voteUp: [],
-    voteDown: [],
-    tags: [],
-    created_at: "2023-08-15T00:40:05.281618",
-    modified_at: "2023-08-15T00:40:05.281618",
-    answersCount: 0,
-  },
-  {
-    questionId: 1,
-    title:
-      "test titlst title2test title2test tst title2test title2test tst title2test title2test tst title2test title2test tst title2test title2test te",
-    body: "test body5test body5test body5test title2test title2test body5tetest title2test title2st body5test body5test body5test body5test body5test body5test body5test body5test body5test body5test body5test body5",
-    views: 0,
-    displayName: "굄",
-    voteUp: [],
-    voteDown: [],
-    tags: ["r31r", "javascript", "javascript", "javascript", "javascript"],
-    created_at: "2023-07-21T00:27:05.281618",
-    modified_at: "2023-07-21T00:27:05.281618",
-    answersCount: 1,
-  },
-];
