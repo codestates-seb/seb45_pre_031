@@ -3,21 +3,32 @@ import AskQuestionBtn from "../atoms/AskQuestionBtn";
 import logo from "../../assets/images/logo.png";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+import ReactPaginate from "react-paginate";
 
 function QuestionList() {
-  const [data, setData] = useState("");
+  const [questionData, setQuestionData] = useState(mok);
+  const [pageInfoData, setPageInfoData] = useState({});
   const [tab, setTab] = useState("newest");
   const [pageNumber, setPageNumber] = useState(1);
+
+  const filterOptions = ["Newest", "Active", "Unanswered", "Score", "Pop(week)", "Pop(month)"];
+
+  const navigate = useNavigate();
+  const goToDetail = (questionId) => {
+    navigate(`/questiondetail/${questionId}`);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/question?tab=${tab}&page=${pageNumber}`
+          `http://localhost:8080/v1/questions/tabQuestion?page=${pageNumber}&tab=${tab}`
         );
-
-        if (response.data.success) {
-          setData(response.data);
+        if (response.status >= 200 && response.status < 300) {
+          setQuestionData(response.data.data);
+          setPageInfoData(response.data.pageInfo);
         } else {
           console.error("Server responded with an error:", response.data.message || "Unknown server error");
         }
@@ -25,6 +36,7 @@ function QuestionList() {
         console.error("Error while trying to fetch questions:", error);
       }
     };
+
     fetchData();
   }, [tab, pageNumber]);
 
@@ -37,17 +49,35 @@ function QuestionList() {
     setPageNumber(selectedPage);
   };
 
-  const handlePageInput = (e) => {
-    if (e.key === "Enter") {
-      const inputValue = parseInt(e.target.value);
-      if (!isNaN(inputValue)) {
-        setPageNumber(inputValue);
-      }
-    }
-  };
+  function formatRelativeTime(dateString) {
+    const now = new Date();
+    const inputDate = new Date(dateString);
 
-  useEffect(() => console.log("tab:", tab, "page:", pageNumber), [tab, pageNumber]);
+    const seconds = Math.floor((now - inputDate) / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const months = Math.floor(days / 30);
+    const years = Math.floor(days / 365);
 
+    if (years > 1) return `${years} years ago`;
+    if (years === 1) return "1 year ago";
+
+    if (months > 1) return `${months} months ago`;
+    if (months === 1) return "1 month ago";
+
+    if (days > 1) return `${days} days ago`;
+    if (days === 1) return "1 day ago";
+
+    if (hours > 1) return `${hours} hours ago`;
+    if (hours === 1) return "1 hour ago";
+
+    if (minutes > 1) return `${minutes} minutes ago`;
+
+    return "1 minute ago";
+  }
+  useEffect(() => console.log("data:", questionData), [questionData]);
+  useEffect(() => console.log("pageInfo:", pageInfoData), [pageInfoData]);
   return (
     <StyledQuestionList>
       <HeaderContainer>
@@ -55,111 +85,64 @@ function QuestionList() {
         <AskQuestionBtn>Ask Question</AskQuestionBtn>
       </HeaderContainer>
       <FiterContainer>
-        <span className="questionCount">{data.questions_count} quesitons</span>
+        <span className="questionCount">{pageInfoData.totalElements} quesitons</span>
         <Fiter>
-          <FiterOption onClick={() => handleTab("newest")}>Newest</FiterOption>
-          <FiterOption onClick={() => handleTab("active")}>Active</FiterOption>
-          <FiterOption onClick={() => handleTab("unanswered")}>Unanswered</FiterOption>
-          <FiterOption onClick={() => handleTab("score")}>Score</FiterOption>
-
-          <FiterOption onClick={() => handleTab("popular")}>Pop(week)</FiterOption>
-          <FiterOption onClick={() => handleTab("popular")}>Pop(month)</FiterOption>
+          {filterOptions.map((option, index) => (
+            <FilterOption key={index} onClick={() => handleTab(option)} selected={tab === option}>
+              {option}
+            </FilterOption>
+          ))}
         </Fiter>
       </FiterContainer>
       <QuestionListContainer>
-        {data &&
-          data.question_data.map((question) => (
-            <Question>
+        {questionData &&
+          questionData.map((question) => (
+            <Question key={question.questionId}>
               <div className="leftSide">
                 <LeftSideInfo>
-                  <span className="votes">{question.vote_up.length - question.vote_down.length} votes</span>
+                  <span className="votes">{question.voteUp.length - question.voteDown.length} votes</span>
                 </LeftSideInfo>
                 <LeftSideInfo>
-                  <span className="answersAndViews">{question.answers_count} asnswers</span>
+                  <span className="answersAndViews">{question.answersCount} asnswers</span>
                 </LeftSideInfo>
                 <LeftSideInfo>
                   <span className="answersAndViews">{question.views} views</span>
                 </LeftSideInfo>
               </div>
               <div className="rightSide">
-                <QuestionTitle> {question.title} </QuestionTitle>
-                <QuestionSummury>{question.bodyHTML}</QuestionSummury>
+                <QuestionTitle onClick={() => goToDetail(question.questionId)}> {question.title} </QuestionTitle>
+                <QuestionSummury>{question.body}</QuestionSummury>
                 <TagAndUserInfoContainer>
                   <TagContainer>
-                    {question.tags.map((tag) => (
-                      <>
-                        <Tag>{tag}</Tag>
-                      </>
-                    ))}
+                    {question.tags && question.tags.map((tag, index) => <Tag key={index}>{tag}</Tag>)}
                   </TagContainer>
                   <UserInfoContainer>
                     <img className="userAvatar" alt="userAvatar" src={logo} />
                     <div className="userName">
-                      <span>{question.avatarUrl}</span>
+                      <span>{question.displayName}</span>
                     </div>
                     <div className="createdAt">
-                      <span>5 mins ago</span>
+                      <span>
+                        {tab === "Active"
+                          ? formatRelativeTime(question.modified_at)
+                          : formatRelativeTime(question.created_at)}
+                      </span>
                     </div>
                   </UserInfoContainer>
                 </TagAndUserInfoContainer>
               </div>
             </Question>
           ))}
-        <Question>
-          <div className="leftSide">
-            <LeftSideInfo>
-              <span className="votes">0 votes</span>
-            </LeftSideInfo>
-            <LeftSideInfo>
-              <span className="answersAndViews">0 asnswers</span>
-            </LeftSideInfo>
-            <LeftSideInfo>
-              <span className="answersAndViews">0 views</span>
-            </LeftSideInfo>
-          </div>
-          <div className="rightSide">
-            <QuestionTitle> What is JavaScript? </QuestionTitle>
-            <QuestionSummury>
-              JavaScript is a scripting or programming language that allows you to implement complex features on web
-              pages — every time a web page does more than just sit there and display static information for you to look
-              at — displaying timely content updates, interactive maps, animated 2D/3D graphics, scrolling video
-              jukeboxes, etc. — you can bet that JavaScript is probably involved. It is the third layer of the layer
-              cake of standard web technologies, two of which (HTML and CSS) we have covered in much more detail in
-              other parts of the Learning Area.
-            </QuestionSummury>
-            <TagAndUserInfoContainer>
-              <TagContainer>
-                <Tag>javascript</Tag>
-                <Tag>about</Tag>
-              </TagContainer>
-              <UserInfoContainer>
-                <img className="userAvatar" alt="userAvatar" src={logo} />
-                <div className="userName">
-                  <span>HongGilDong</span>
-                </div>
-                <div className="createdAt">
-                  <span>5 mins ago</span>
-                </div>
-              </UserInfoContainer>
-            </TagAndUserInfoContainer>
-          </div>
-        </Question>
-        <Question>Question2</Question>
-        <Question>Question3</Question>
-        <Question>Question4</Question>
-        <Question>Question5</Question>
-        <Question>Question6</Question>
       </QuestionListContainer>
       <PaginationContainer>
-        <Paginator>Prev</Paginator>
-        <Paginator onClick={() => handlePage(1)}>1</Paginator>
-        <Paginator onClick={() => handlePage(2)}>2</Paginator>
-        <Paginator onClick={() => handlePage(3)}>3</Paginator>
-        <Paginator onClick={() => handlePage(4)}>4</Paginator>
-        <Paginator onClick={() => handlePage(5)}>5</Paginator>
-        <PageInput onKeyUp={handlePageInput} />
-        <Paginator onClick={() => handlePage(1592)}>1592</Paginator>
-        <Paginator>Next</Paginator>
+        <StyledReactPaginate
+          pageCount={Math.ceil(pageInfoData.totalPages) || 20}
+          pageRangeDisplayed={5}
+          marginPagesDisplayed={1}
+          previousLabel={"Prev"}
+          nextLabel={"Next"}
+          onPageChange={({ selected }) => handlePage(selected + 1)}
+        />
       </PaginationContainer>
     </StyledQuestionList>
   );
@@ -174,8 +157,8 @@ const StyledQuestionList = styled.div`
   padding: 24px;
   padding-right: 0px;
   width: 100vw;
-  max-width: 727px;
-  min-width: 428px;
+  width: 726px;
+  min-width: 726px;
 `;
 
 const HeaderContainer = styled.div`
@@ -184,7 +167,6 @@ const HeaderContainer = styled.div`
   justify-content: space-between;
   min-height: 50px;
   margin-bottom: 12px;
-
   .headerTitle {
     font-size: 26px;
     font-weight: 400;
@@ -210,12 +192,12 @@ const Fiter = styled.div`
   height: 36px;
 `;
 
-const FiterOption = styled.div`
+const FilterOption = styled.div`
   display: flex;
   font-size: 12px;
   align-items: center;
   padding: 9.6px;
-
+  background-color: ${(props) => (props.selected ? "rgb(219, 219, 219)" : "transparent")};
   border-right: 1px solid rgb(214, 217, 220);
   &:last-of-type {
     border-right: none;
@@ -223,7 +205,6 @@ const FiterOption = styled.div`
   &:hover {
     background-color: hsl(210, 8%, 97.5%);
   }
-  //selected: hwb(210deg 89.2% 9.2%);
 `;
 
 const QuestionListContainer = styled.ul`
@@ -238,7 +219,6 @@ const Question = styled.li`
   flex-direction: row;
   padding: 16px;
   height: 124px;
-
   border-bottom: 1px solid rgb(214, 217, 220);
   .leftSide {
     display: flex;
@@ -266,10 +246,14 @@ const LeftSideInfo = styled.div`
   }
 `;
 const QuestionTitle = styled.h3`
+  max-width: 565px;
   padding-right: 24px;
   margin-bottom: 2px;
   font-weight: 400;
   font-size: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   color: hsl(206, 100%, 40%);
   &:hover {
     color: hsl(206, 100%, 52%);
@@ -293,10 +277,13 @@ const TagAndUserInfoContainer = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  width: 565px;
 `;
 const TagContainer = styled.ul`
   display: flex;
   flex-direction: row;
+  max-width: 340px;
+  overflow: hidden;
   height: 26px;
   list-style: none;
 `;
@@ -342,27 +329,70 @@ const PaginationContainer = styled.div`
   margin-bottom: 20px;
 `;
 
-const Paginator = styled.div`
+const StyledReactPaginate = styled(ReactPaginate)`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 6px 10px 6px 10px;
-  border-radius: 6px;
+  flex-direction: row;
+  list-style: none;
 
-  margin-right: 6px;
-  border: 1px solid rgb(214, 217, 220);
-  font-size: 12px;
-  &:hover {
-    background-color: hsl(210, 8%, 97.5%);
+  a {
+    padding: 6px 8px 6px 8px;
+    border-radius: 6px;
+    margin-right: 6px;
+    border: 1px solid rgb(214, 217, 220);
+    font-size: 12px;
+
+    &:hover {
+      background-color: rgb(189, 190, 191);
+    }
+  }
+  li.selected {
+    a {
+      color: white;
+      background-color: rgb(244, 130, 37);
+    }
   }
 `;
 
-const PageInput = styled.input`
-  display: flex;
-  padding: 6px 10px 6px 10px;
-  border-radius: 6px;
-  width: 48px;
-  margin-right: 6px;
-  border: 1px solid rgb(214, 217, 220);
-  font-size: 12px;
-`;
+const mok = [
+  {
+    questionId: 5,
+    title: "test title ",
+    body: "test body5test titletest title",
+    views: 0,
+    displayName: "김매니저",
+    voteUp: ["d"],
+    voteDown: ["fdf", "dfsdf,"],
+    tags: [],
+    created_at: "2023-08-21T00:43:05.281618",
+    modified_at: "2023-08-21T00:43:05.281618",
+    answersCount: 0,
+  },
+  {
+    questionId: 2,
+    title:
+      "test title2test title2test titlest tst title2test title2test title2test title2test t2test title2test title2test title2test title2test title2test title2",
+    body: "tesbody5tesbody5st title2test title2tst titst tst titlevitlevst tstitlevst t title2test title2test t2test title2test title2test title2test tle2test title2test test title2test title2test title2test title2test tst tst tst title2test title2test t",
+    views: 2,
+    displayName: "호랑이",
+    voteUp: [],
+    voteDown: [],
+    tags: [],
+    created_at: "2023-08-15T00:40:05.281618",
+    modified_at: "2023-08-15T00:40:05.281618",
+    answersCount: 0,
+  },
+  {
+    questionId: 1,
+    title:
+      "test titlst title2test title2test tst title2test title2test tst title2test title2test tst title2test title2test tst title2test title2test te",
+    body: "test body5test body5test body5test title2test title2test body5tetest title2test title2st body5test body5test body5test body5test body5test body5test body5test body5test body5test body5test body5test body5",
+    views: 0,
+    displayName: "굄",
+    voteUp: [],
+    voteDown: [],
+    tags: ["r31r", "javascript", "javascript", "javascript", "javascript"],
+    created_at: "2023-07-21T00:27:05.281618",
+    modified_at: "2023-07-21T00:27:05.281618",
+    answersCount: 1,
+  },
+];

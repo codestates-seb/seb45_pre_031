@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router";
 import axios from "axios";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -10,6 +11,8 @@ function QuestionForm() {
 
   const [isTitleValid, setIsTitleValid] = useState(true);
   const [isBodyValid, setIsBodyValid] = useState(true);
+
+  const navigate = useNavigate();
 
   const handleTitleChange = (e) => {
     setTitleValue(e.target.value);
@@ -29,11 +32,9 @@ function QuestionForm() {
 
   const handleBodyBlur = () => {
     validateBodyContent(bodyValue);
-    console.log("blur호출");
   };
 
   const validateBodyContent = (content) => {
-    //태그 없애고 텍스트만 남기기
     const textOnly = content.replace(/<[^>]+>/g, "");
 
     if (textOnly.length < 220) {
@@ -44,30 +45,28 @@ function QuestionForm() {
   };
 
   const handleSubmit = async () => {
-    if (!isTitleValid || !isBodyValid) {
+    if (titleValue.trim().length === 0 || !isTitleValid || !isBodyValid) {
       alert("Please ensure that the title and body meet the requirements.");
       return;
     }
+    console.log("Post요청", "title:", titleValue, "body:", bodyValue);
     try {
-      const response = await axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/question", {
+      const response = await axios.post("http://localhost:8080/v1/questions", {
         title: titleValue,
-        bodyHTML: bodyValue,
-        user_id: "로그인정보에서",
+        body: bodyValue,
       });
-
-      if (response.data.success) {
+      if (response.status >= 200 && response.status < 300) {
         alert("Question successfully posted!");
+        navigate("/");
       } else {
-        console.error("Error posting question:", response.data.message || "Unknown server error");
+        alert("Error posting question: server error");
+        console.error("Server responded with an error:", response.data.message || "Unknown server error");
       }
     } catch (error) {
+      alert("Error while trying to post question:", error);
       console.error("Error while trying to post question:", error);
     }
   };
-
-  useEffect(() => console.log("titleValue:", titleValue), [titleValue]);
-
-  useEffect(() => console.log("bodyValue:", bodyValue), [bodyValue]);
 
   return (
     <StyledQuestionForm>
@@ -85,7 +84,7 @@ function QuestionForm() {
             onChange={handleTitleChange}
             onBlur={handleTitleBlur}
             placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
-            hasError={!isTitleValid}
+            $hasError={!isTitleValid}
           ></TitleInput>
           {!isTitleValid && <span className="inputError">Title must be at least 15 characters.</span>}
         </TitleForm>
@@ -96,10 +95,10 @@ function QuestionForm() {
           </span>
           <StyledReactQuill
             theme="snow"
-            Value={bodyValue}
+            value={bodyValue}
             onChange={handleBodyChange}
             onBlur={handleBodyBlur}
-            hasError={!isBodyValid}
+            $hasError={!isBodyValid}
           />
           <div className="inputError">
             {!isBodyValid && <span className="inputError">Body must be at least 220 characters.</span>}
@@ -227,11 +226,11 @@ const Input = styled.input`
   margin-bottom: 2px;
   border-width: 1px;
   border-style: solid;
-  border-color: ${(props) => (props.hasError ? "red" : "#bbc0c4")};
+  border-color: ${(props) => (props.$hasError ? "red" : "#bbc0c4")};
   &:focus {
-    border-color: ${(props) => (props.hasError ? "red" : "hsl(206, 90%, 69.5%)")};
+    border-color: ${(props) => (props.$hasError ? "red" : "hsl(206, 90%, 69.5%)")};
     box-shadow: ${(props) =>
-      props.hasError ? "0 0 0 4px rgba(255, 0, 0, 0.15)" : "0 0 0 4px hsla(206, 100%, 40%, 0.15)"};
+      props.$hasError ? "0 0 0 4px rgba(255, 0, 0, 0.15)" : "0 0 0 4px hsla(206, 100%, 40%, 0.15)"};
     outline: none;
   }
   &::placeholder {
@@ -246,7 +245,7 @@ const TagsInput = styled(Input)``;
 const StyledReactQuill = styled(ReactQuill)`
   height: 360px;
   .ql-container {
-    border-color: ${(props) => (props.hasError ? "red" : "#bbc0c4")};
+    border-color: ${(props) => (props.$hasError ? "red" : "#bbc0c4")};
     border-radius: 0px 0px 6px 6px;
   }
   .ql-editor {
@@ -254,7 +253,7 @@ const StyledReactQuill = styled(ReactQuill)`
   .ql-toolbar {
     background-color: rgb(251, 251, 251);
     border-bottom: none;
-    border-color: ${(props) => (props.hasError ? "red" : "#bbc0c4")};
+    border-color: ${(props) => (props.$hasError ? "red" : "#bbc0c4")};
     border-radius: 6px 6px 0px 0px;
   }
 `;

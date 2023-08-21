@@ -5,20 +5,13 @@ import logo from "../../assets/images/logo.png";
 import search from "../../assets/images/search.png";
 import { useState } from "react";
 import SearchInfo from "../features/SearchInfo";
-import { useDispatch } from "react-redux";
-import { logoutAction } from "../../redux/actions/loginAction";
 
-function Header({ isLoggedIn, userInfo }) {
+function Header() {
   const [ isFocus, setIsFocus ] = useState(false);
-  const dispatch = useDispatch();
 
   const focusHandler = () => {
     setIsFocus(!isFocus);
   };
-
-  const logoutHandler = () => {
-    dispatch(logoutAction());
-  }
 
   return (
     <>
@@ -40,23 +33,12 @@ function Header({ isLoggedIn, userInfo }) {
             {isFocus && <SearchInfo />}
         </SearchContainer>
         <BtnContatiner>
-          {isLoggedIn ? (
-            <>
-              <UserInfo>
-                환영합니다, {userInfo.username}님
-              </UserInfo>
-              <LogoutBtn onClick={logoutHandler}>Log out</LogoutBtn>
-            </>
-          ) : (
-            <>
-             <Link to="/login">
-              <LoginBtn>Log in</LoginBtn>
-             </Link>
-              <Link to="/membership">
-                <SignupBtn>Sign up</SignupBtn>
-              </Link>
-            </>
-          )}
+          <Link to="/login">
+            <LoginBtn>Log in</LoginBtn>
+          </Link>
+          <Link to="/membership">
+            <SignupBtn>Sign up</SignupBtn>
+          </Link>
         </BtnContatiner>
       </HeaderElementContainer>
     </HeaderContainer>
@@ -205,29 +187,6 @@ const SignupBtn = styled.button`
   }
 `
 
-const LogoutBtn = styled.button`
-  padding: 8px 0.8em;
-  border-radius: 6px;
-  border: none;
-  white-space: nowrap;
-  cursor: pointer;
-  color: white;
-  background-color: hsl(206,100%,52%);
-
-  &:hover {
-    background-color: hsl(206,100%,40%);
-  }
-
-  &:active {
-    background-color: hsl(209,100%,37.5%);
-  }
-
-  &:focus {
-    box-shadow: 0 0 0 4px hsla(206, 100%, 40%, 0.15);
-    outline: none;
-  }
-`
-
 const BtnContatiner = styled.div`
   display: flex;
   align-items: center;
@@ -235,6 +194,3 @@ const BtnContatiner = styled.div`
   flex-grow: 0;
   gap: 6px;
 `;
-
-const UserInfo = styled.div`
-`

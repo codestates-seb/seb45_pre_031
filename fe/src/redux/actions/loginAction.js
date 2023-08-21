@@ -1,14 +1,21 @@
+import axios from "axios";
+
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 
 export const EMAIL_MISMATCH_ERROR = 'EMAIL_MISMATCH_ERROR';
 export const PASSWORD_MISMATCH_ERROR = 'PASSWORD_MISMATCH_ERROR';
 
-export const LOGOUT = 'LOGOUT';
+export const LOGIN_USER = 'LOGIN_USER';
 
-export const loginSuccess = (token, userInfo) => ({
+export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
+export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE';
+
+
+
+export const loginSuccess = (token) => ({
     type: LOGIN_SUCCESS,
-    payload: { token, userInfo },
+    payload: token,
 });
 
 export const loginFailure = (error) => ({
@@ -22,10 +29,26 @@ export const emailMismatchError = (error) => ({
   });
 
 export const passwordMismatchError = (error) => ({
-type: PASSWORD_MISMATCH_ERROR,
-payload: error,
+    type: PASSWORD_MISMATCH_ERROR,
+    payload: error,
 });
 
-export const logoutAction = () => ({
-    type: LOGOUT,
-});
+export const loginUser = (dataToSubmit) => {
+    // dataToSubmit으로 받은 이메일, 비밀번호 정보를
+    const request = axios.post('http://localhost:8080/v1/accounts/authenticate', dataToSubmit) // axios로 login 요청
+        .then(res => res.data)
+
+    return {
+        type: LOGIN_USER,
+        payload: request,
+    }; // 반환하여 request에 넣어줌
+};
+
+export const signUpSuccess = () => ({
+    type: SIGN_UP_SUCCESS,
+  });
+
+  export const signUpFailure = (error) => ({
+    type: SIGN_UP_FAILURE,
+    payload: error,
+  });

@@ -3,11 +3,10 @@ import { useNavigate } from "react-router";
 import { styled } from "styled-components";
 import { useDispatch } from "react-redux";
 import axios from "axios";
-import { loginSuccess, loginFailure, emailMismatchError, passwordMismatchError } from "../redux/actions/loginAction";
+import { loginSuccess, loginFailure } from "../redux/actions/loginAction";
 import PasswordModal from "../components/features/PasswordModal";
 
 function LoginPage () {
-  const LOCAL_SERVER_ADRESS = process.env.REACT_APP_LOCAL_SEVER_ADRESS;
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -16,9 +15,9 @@ function LoginPage () {
   const [ password, setPassword ] = useState("");
   const [ emailError, setEmailError ] = useState(false);
   const [ passwordError, setPasswordError ] = useState(false);
-  const [ emailMismatchErrorText, setEmailMismatchErrorText] = useState("");
-  const [ passwordMismatchErrorText, setPasswordMismatchErrorText] = useState("");
   const [ isModalOpen, setIsModalOpen ] = useState(false);
+
+  const [ googleLoginError, setGoogleLoginError ] = useState(false);
 
   const modalHandler = () => {
     setIsModalOpen(!isModalOpen);
@@ -73,33 +72,25 @@ function LoginPage () {
 
     // 유효한 이메일과 비밀번호를 입력할 경우 서버로 전송
     try {
-      const response = await axios.post(`${LOCAL_SERVER_ADRESS}/v1/accounts/authenticate`, { email, password });
-      if (response.data.success) {
+      const response = await axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/accounts/authenticate", { email, password });
+      if (response.status === 200) {
         // 서버에서 토큰을 받음
-        const accessToken = response.data.accessToken;
-        const refreshToken = response.data.refreshToken;
+        const accessToken = response.headers.Authorization;
+        const refreshToken = response.data.get("Refresh");
 
         // 토큰을 로컬 스토리지에 저장
         localStorage.setItem("access_token", accessToken);
         localStorage.setItem("refresh_token", refreshToken);
 
         // 토큰을 헤더에 포함시켜서 요청
-        axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.accessToken}`;
+        axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
          // 로그인 성공 처리
-         dispatch(loginSuccess(accessToken, response.data.userInfo));
+         dispatch(loginSuccess(accessToken));
 
          // 로그인 성공 후 리다이렉션 처리
          navigate("/");
 
-      } else if (response.data.errorType === "email_not_found") {
-        dispatch(emailMismatchError("No user found with matching email."));
-        setPasswordMismatchErrorText("");
-      } else if (response.data.errorType === "password_mismatch") {
-        dispatch(passwordMismatchError("Password dose not match."));
-        setEmailMismatchErrorText("");
-      } else {
-        dispatch(loginFailure(response.data.message));
       }
     } catch (error) {
       console.error("Error during login:", error);
@@ -108,7 +99,7 @@ function LoginPage () {
 
   const googleLoginHandler = async () => {
     try {
-      window.location.href = `${LOCAL_SERVER_ADRESS}/oauth2/authorization/google`;
+      window.location.href = "http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/oauth2/authorization/google";
     } catch (error) {
       console.error("Google 로그인 중 에러:", error);
       dispatch(loginFailure("Google 로그인 중 에러가 발생했습니다."));
@@ -136,12 +127,14 @@ function LoginPage () {
         navigate("/");
 
       } catch (error) {
-        console.error("토큰 저장 중 에러:", error);
-        dispatch(loginFailure("토큰 저장 중 에러가 발생했습니다."));
+        console.error("로그인 에러:", error);
+        // 로그인 에러 처리
+        dispatch(loginFailure("로그인 중 에러가 발생했습니다."));
+        // 오류 메시지 표출
+        setGoogleLoginError(true);
+        // 로그인 페이지로 리다이렉션
+        navigate("/login");
       }
-    } else {
-      console.error("Google 로그인 오류");
-      dispatch(loginFailure("Google 로그인 오류가 발생했습니다."));
     }
   }, [dispatch, navigate]);
 
@@ -153,9 +146,11 @@ function LoginPage () {
         </LoginLogoContiner>
         <LoginBtnContainer>
           <GoogleLoginBtn
-            onClick={googleLoginHandler}>
+            onClick={googleLoginHandler}
+            >
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1024px-Google_%22G%22_Logo.svg.png" alt="" />
             Log in with Google</GoogleLoginBtn>
+            {googleLoginError && <p>Google 로그인 오류가 발생했습니다.</p>}
         </LoginBtnContainer>
         <LoginFormContainer>
           <LoginForm>
@@ -164,15 +159,13 @@ function LoginPage () {
                 <LoginLabel>Email</LoginLabel>
               </div>
               <LoginInput
-                className={`login-email-input ${emailError || emailMismatchErrorText ? "error" : ""}`}
+                className={`login-email-input ${emailError? "error" : ""}`}
                 type="email"
                 value={email}
                 onChange={onEmailHandler}
                 />
                 {emailError &&
                   <ErrorText>{emailError}</ErrorText>}
-                {emailMismatchErrorText &&
-                  <ErrorText>{emailMismatchErrorText}</ErrorText>}
             </LoginInputForm>
             <LoginInputForm className="login-password-form">
               <div>
@@ -185,15 +178,13 @@ function LoginPage () {
                     /> : null}
               </div>
               <LoginInput
-                className={`login-password-input ${passwordError || passwordMismatchErrorText ? "error" : ""}`}
+                className={`login-password-input ${passwordError ? "error" : ""}`}
                 type="password"
                 value={password}
                 onChange={onPasswordHandler}
                 />
                 {passwordError &&
                   <ErrorText>{passwordError}</ErrorText>}
-                {passwordMismatchErrorText &&
-                  <ErrorText>{passwordMismatchErrorText}</ErrorText>}
             </LoginInputForm>
             <LoginBtnContainer>
               <LoginBtn
@@ -207,7 +198,6 @@ function LoginPage () {
         </LoginTextBelowContainer>
       </LoginContentContainet>
     </LoginPageContainer>
-
   );
 };
 
