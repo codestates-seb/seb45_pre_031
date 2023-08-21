@@ -77,20 +77,12 @@ public class OAuth2AccountSuccessHandler extends SimpleUrlAuthenticationSuccessH
         String accessToken = delegateAccessToken(username, authorities);
         String refreshToken = delegateRefreshToken(username);
 
-        //FE 애플리케이션 쪽의 URI 생성.
-        String uri = createURI(request, accessToken, refreshToken).toString();
-
-        // username(이메일)로 DB에 저장된 Account를 찾아 loginResponseDto화 하여 response에 딸려보내기.
+        // displayName 담아주기
         Account account = accountService.findByEmail(username);
         String displayName = account.getDisplayName();
-        LoginResponseDto loginResponseDto = new LoginResponseDto(displayName);
 
-        Gson gson = new Gson();
-        String result = gson.toJson(loginResponseDto);
-
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(result);
+        //FE 애플리케이션 쪽의 URI 생성.
+        String uri = createURI(request, accessToken, refreshToken, displayName).toString();
 
         //SimpleUrlAuthenticationSuccessHandler에서 제공하는 sendRedirect() 메서드를 이용해 Frontend 애플리케이션 쪽으로 리다이렉트
         getRedirectStrategy().sendRedirect(request, response, uri);
@@ -122,11 +114,12 @@ public class OAuth2AccountSuccessHandler extends SimpleUrlAuthenticationSuccessH
 
         return refreshToken;
     }
-    private Object createURI(HttpServletRequest request, String accessToken, String refreshToken) {
+    private Object createURI(HttpServletRequest request, String accessToken, String refreshToken, String displayName) {
         // HTTP 요청의 쿼리 파라미터나 헤더를 구성하기 위한 Map
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("access_token", accessToken);
         queryParams.add("refresh_token", refreshToken);
+        queryParams.add("displayName", displayName);
 
         String requestScheme = request.getScheme();
         String requestHost = request.getServerName();
