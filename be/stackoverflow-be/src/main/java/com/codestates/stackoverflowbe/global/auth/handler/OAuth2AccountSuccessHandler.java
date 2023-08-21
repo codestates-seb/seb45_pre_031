@@ -77,23 +77,20 @@ public class OAuth2AccountSuccessHandler extends SimpleUrlAuthenticationSuccessH
         String accessToken = delegateAccessToken(username, authorities);
         String refreshToken = delegateRefreshToken(username);
 
-        Account account = accountService.findByEmail(username)
+        // username(email)로 계정 찾아와서 Json 직렬화 이후 응답객체의 body에 입력하기
+        Account account = accountService.findByEmail(username);
         String displayName = account.getDisplayName();
 
         //FE 애플리케이션 쪽의 URI 생성.
         String uri = createURI(request, accessToken, refreshToken, displayName).toString();
-
-        // username(email)로 계정 찾아와서 Json 직렬화 이후 응답객체의 body에 입력하기
-        Account account = accountService.findByEmail(username);
-        String displayName = account.getDisplayName();
-        LoginResponseDto loginResponseDto = new LoginResponseDto(displayName);
-
-        Gson gson = new Gson();
-        String result = gson.toJson(loginResponseDto);
-
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(result);
+//        LoginResponseDto loginResponseDto = new LoginResponseDto(displayName);
+//
+//        Gson gson = new Gson();
+//        String result = gson.toJson(loginResponseDto);
+//
+//        response.setContentType("application/json");
+//        response.setCharacterEncoding("UTF-8");
+//        response.getWriter().write(result);
 
         //SimpleUrlAuthenticationSuccessHandler에서 제공하는 sendRedirect() 메서드를 이용해 Frontend 애플리케이션 쪽으로 리다이렉트
         getRedirectStrategy().sendRedirect(request, response, uri);
