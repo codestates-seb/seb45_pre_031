@@ -72,21 +72,18 @@ function LoginPage () {
 
     // 유효한 이메일과 비밀번호를 입력할 경우 서버로 전송
     try {
-
-      const response = await axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/accounts/authenticate", { email, password });
-
+      const response = await axios.post("http://localhost:8080/v1/accounts/authenticate", { email, password });
       if (response.status === 200) {
         // 서버에서 토큰을 받음
         const accessToken = response.headers.Authorization;
-        const refreshToken = response.data.refreshToken;
-        console.log(accessToken);
+        const refreshToken = response.data.get("Refresh");
 
         // 토큰을 로컬 스토리지에 저장
         localStorage.setItem("access_token", accessToken);
         localStorage.setItem("refresh_token", refreshToken);
 
         // 토큰을 헤더에 포함시켜서 요청
-        axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.accessToken}`;
+        axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
          // 로그인 성공 처리
          dispatch(loginSuccess(accessToken));
@@ -94,21 +91,13 @@ function LoginPage () {
          // 로그인 성공 후 리다이렉션 처리
          navigate("/");
 
-      } else if (response.data.errorType === "email_not_found") {
-        dispatch(emailMismatchError("No user found with matching email."));
-        setPasswordMismatchErrorText("");
-      } else if (response.data.errorType === "password_mismatch") {
-        dispatch(passwordMismatchError("Password dose not match."));
-        setEmailMismatchErrorText("");
-      } else {
-        dispatch(loginFailure(response.data.message));
       }
     } catch (error) {
       console.error("Error during login:", error);
     }
   };
 
-  const googleLoginHandler = async () => {
+  /* const googleLoginHandler = async () => {
     try {
       window.location.href = "http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/oauth2/authorization/google";
     } catch (error) {
@@ -145,7 +134,7 @@ function LoginPage () {
       console.error("Google 로그인 오류");
       dispatch(loginFailure("Google 로그인 오류가 발생했습니다."));
     }
-  }, [dispatch, navigate]);
+  }, [dispatch, navigate]); */
 
   return (
     <LoginPageContainer>
@@ -155,7 +144,7 @@ function LoginPage () {
         </LoginLogoContiner>
         <LoginBtnContainer>
           <GoogleLoginBtn
-            onClick={googleLoginHandler}>
+            >
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1024px-Google_%22G%22_Logo.svg.png" alt="" />
             Log in with Google</GoogleLoginBtn>
         </LoginBtnContainer>
