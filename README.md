@@ -45,4 +45,4 @@
 <br/>
 ### Project
 
-- [사용자 요구사항 정의]([http://zeldahagoshipda.com](https://docs.google.com/spreadsheets/d/1tdLBhFRqCk3BhhVWZiORQIztHyythrvUMrCedejgq8w/edit#gid=0)https://docs.google.com/spreadsheets/d/1tdLBhFRqCk3BhhVWZiORQIztHyythrvUMrCedejgq8w/edit#gid=0)
+- [사용자 요구사항 정의](https://docs.google.com/spreadsheets/d/1tdLBhFRqCk3BhhVWZiORQIztHyythrvUMrCedejgq8w/edit#gid=0)
