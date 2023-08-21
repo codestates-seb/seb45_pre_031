@@ -294,24 +294,27 @@ function QuestionDetailPage() {
   // }
 
   function loadQnA(){
-    axios.get("ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/questions/"+questionId)
-    .then(question=>setQuestion(question))
+    axios.get("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/questions/"+questionId)
+    .then(question=>setQuestion(question.data.data))
     .catch(err=>console.log(err+"질문을 가져오지 못했습니다."))
-    axios.get(`ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/answers/${questionId}`)
-    .then(answers=>setAnswers(answers))
+    axios.get("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/answers/"+questionId)
+    .then(answers=>setAnswers(answers.data.data))
     .catch(err=>console.log(err+"답변을 가져오지 못했습니다."))
-    axios.get("ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/votesResult/questionId=?"+questionId)
-    .then(questionVote=>setQuestionVote(questionVote))
+    axios.get("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/votesResult/questionId=?"+questionId)
+    .then(questionVote=>setQuestionVote(questionVote.data.data))
     .catch(err=>console.log(err+"질문의 추천 정보를 가져오지 못했습니다."))
-    axios.get("ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/votesResult/answerId=?"+questionId)
-    .then(answerVote=>setAnswerVote(answerVote))
+    axios.get("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/votesResult/answerId=?"+questionId)
+    .then(answerVote=>setAnswerVote(answerVote.data.data))
     .catch(err=>console.log(err+"답변의 추천 정보를 가져오지 못했습니다."))
+    console.log(question)
+    console.log(answers)
+    console.log(questionId)
   }
 
   useEffect(loadQnA,[])
-  console.log(question)
-  console.log(answers)
-  console.log(questionId)
+  // console.log(question)
+  // console.log(answers)
+  // console.log(questionId)
 
   function shareClick(){
     navigator.clipboard.writeText(window.location.href)
@@ -413,7 +416,7 @@ function QuestionDetailPage() {
               </ArticleQ>
               <DivAnswerContainer>
                 <SpanAnswerLength>
-                  {answers.answer.length+" Answers"}
+                  {answers.length+" Answers"}
                 </SpanAnswerLength>
                 <LabelAnswerFilter>
                   Sorted by:
