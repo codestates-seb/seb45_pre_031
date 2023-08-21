@@ -74,7 +74,7 @@ function LoginPage () {
     try {
       const response = await axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/accounts/authenticate", { email, password });
 
-      console.log(response);
+
       if (response.status === 200) {
         // 서버에서 토큰을 받음
         const accessToken = response.headers.Authorization;
@@ -87,11 +87,15 @@ function LoginPage () {
         // 토큰을 헤더에 포함시켜서 요청
         axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
+        // 유저 display name 받아오기
+
+        const displayName = response.data.DisplayName;
          // 로그인 성공 처리
-         dispatch(loginSuccess(accessToken));
+        dispatch(loginSuccess({accessToken, displayName}));
 
          // 로그인 성공 후 리다이렉션 처리
-         navigate("/");
+        navigate("/");
+
 
       }
     } catch (error) {
@@ -207,6 +211,7 @@ function LoginPage () {
   );
 };
 
+export default LoginPage;
 
 const LoginPageContainer = styled.section`
   width: 100%;
@@ -402,4 +407,3 @@ const ErrorText = styled.p`
   margin-top: 4px;
 `;
 
-export default LoginPage;
