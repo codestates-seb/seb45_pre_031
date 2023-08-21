@@ -25,8 +25,6 @@
 |JAVA 11|Spring Boot|AWS|
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------|-----------------------------------------------|
 |<img src="https://img.icons8.com/?size=512&id=13679&format=png" width=100px ></img>|<img src="https://img.icons8.com/?size=512&id=90519&format=png" width=100px ></img>|<img src="https://img.icons8.com/?size=512&id=33039&format=png" width=100px ></img>|
-- Java 11
-- Spring Boot 2.7
 
 <br/>
 
