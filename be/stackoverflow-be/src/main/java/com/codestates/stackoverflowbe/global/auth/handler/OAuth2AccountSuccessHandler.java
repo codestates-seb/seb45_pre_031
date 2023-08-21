@@ -76,7 +76,7 @@ public class OAuth2AccountSuccessHandler extends SimpleUrlAuthenticationSuccessH
     private void redirect(HttpServletRequest request, HttpServletResponse response,
                           String username, List<String> authorities) throws IOException {
 
-        // accessToken과 refreshToekn 생성
+        // accessToken과 refreshToken 생성
         String accessToken = delegateAccessToken(username, authorities);
         String refreshToken = delegateRefreshToken(username);
 
@@ -85,15 +85,15 @@ public class OAuth2AccountSuccessHandler extends SimpleUrlAuthenticationSuccessH
         String displayName = account.getDisplayName();
 
         //FE 애플리케이션 쪽의 URI 생성.
-        String uri = createURI(request, accessToken, refreshToken, displayName).toString();
-//        LoginResponseDto loginResponseDto = new LoginResponseDto(displayName);
-//
-//        Gson gson = new Gson();
-//        String result = gson.toJson(loginResponseDto);
-//
-//        response.setContentType("application/json");
-//        response.setCharacterEncoding("UTF-8");
-//        response.getWriter().write(result);
+        String uri = createURI(request, accessToken, refreshToken).toString();
+        LoginResponseDto loginResponseDto = new LoginResponseDto(displayName);
+
+        Gson gson = new Gson();
+        String result = gson.toJson(loginResponseDto);
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(result);
 
 //        response.setHeader("displayName", displayName);
 
@@ -127,12 +127,11 @@ public class OAuth2AccountSuccessHandler extends SimpleUrlAuthenticationSuccessH
 
         return refreshToken;
     }
-    private Object createURI(HttpServletRequest request, String accessToken, String refreshToken, String displayName) {
+    private Object createURI(HttpServletRequest request, String accessToken, String refreshToken) {
         // HTTP 요청의 쿼리 파라미터나 헤더를 구성하기 위한 Map
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("access_token", accessToken);
         queryParams.add("refresh_token", refreshToken);
-        queryParams.add("displayName", displayName);
 
 //        String requestScheme = request.getScheme();
 //        String requestHost = request.getServerName();
