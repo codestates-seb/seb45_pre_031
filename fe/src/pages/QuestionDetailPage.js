@@ -238,8 +238,42 @@ const askAll = {
 
 function QuestionDetailPage() {
 
-  const [question, setQuestion] = useState({})
-  const [answers, setAnswers] = useState([])
+  const [question, setQuestion] = useState({
+    questionId: "001", // primary key
+    created_at: "Mon Aug 14 2023 11:11:22 GMT+0900 (한국 표준시)",
+    modified_at: "Mon Aug 15 2023 11:11:22 GMT+0900 (한국 표준시)",
+    views: 252,
+    title: "koans 과제 진행 중 npm install 오류로 인해 정상 작동 되지 않습니다",
+    displayName: "dubipy", // 작성자 닉네임
+    voteUp: ['hongsik','jang'], // post 현재 로그인 계정 추가
+    voteDown: ['honggildong','boby','james'], // post 현재 로그인 계정 추가
+    tags: ['javascript', 'react', 'discord'],
+    body:
+    "<p>--------------- 질문 내용 ---------------</p>",
+    avatarUrl: "https://avatars.githubusercontent.com/u/97888923?s=64&u=12b18768cdeebcf358b70051283a3ef57be6a20f&v=4", //프로필 이미지 없어질 수 있음
+  })
+  const [answers, setAnswers] = useState([{
+    answer_id: "DC_kwDOHOApLM4AKg6M",
+    created_at: "Mon Aug 14 2023 11:11:22 GMT+0900 (한국 표준시)",
+    modified_at: "Mon Aug 14 2023 11:11:22 GMT+0900 (한국 표준시)",
+    voteUp: ['hongsik','jang'],
+    voteDown: ['honggildong','boby','james'],
+    displayName: "Kingsenal",
+    body:
+      "안녕하세요.",
+    avatarUrl: "https://avatars.githubusercontent.com/u/79903256?s=64&v=4",
+  },
+  {
+    answer_id: "DC_kwDOHOApLM4AKg6M",
+    created_at: "Mon Aug 14 2023 11:11:22 GMT+0900 (한국 표준시)",//date 기본값,
+    modified_at: "Mon Aug 14 2023 11:11:22 GMT+0900 (한국 표준시)",
+    voteUp: ['hongsik','jang'],
+    voteDown: ['honggildong','boby','james'],
+    displayName: "Kingsenal",
+    body:
+      "코드스테이츠 교육 엔지니어 권준혁",
+    avatarUrl: "https://avatars.githubusercontent.com/u/79903256?s=64&v=4",
+  },])
   const [questionVote, setQuestionVote] = useState(0)
   const [answerVote, setAnswerVote] = useState(0)
 
@@ -397,7 +431,7 @@ function QuestionDetailPage() {
                     ▲
                   </ButtonUpDown>
                   <DivVote>
-                    {answers.answer[0].voteUp.length - answers.answer[0].voteDown.length}
+                    {answers[0].voteUp.length - answers[0].voteDown.length}
                   </DivVote>
                   <ButtonUpDown>
                     ▼
@@ -405,7 +439,7 @@ function QuestionDetailPage() {
                 </SpanVoteContainer>
                 <SpanQContainer>
                   <DivQText>
-                    {answers.answer[0].body}
+                    {answers[0].body}
                   </DivQText>
                   <DivShareEditProfile>
                     <SpanShare>
@@ -420,10 +454,10 @@ function QuestionDetailPage() {
                       </span>
                     </SpanShare>
                     <SpanProfile>
-                      <div>{"asked "+new Intl.DateTimeFormat("en-GB",{month: 'short', day: 'numeric'}).format(new Date(answers.answer[0].created_at))}</div>
+                      <div>{"asked "+new Intl.DateTimeFormat("en-GB",{month: 'short', day: 'numeric'}).format(new Date(answers[0].created_at))}</div>
                       <SpanProfileUser>
                         <img
-                          src={answers.answer[0].avatarUrl}
+                          src={answers[0].avatarUrl}
                           alt=""
                           width="32px" height="32px"
                         />
@@ -444,7 +478,7 @@ function QuestionDetailPage() {
                     ▲
                   </ButtonUpDown>
                   <DivVote>
-                    {answers.answer[1].voteUp.length - answers.answer[0].voteDown.length}
+                    {answers[1].voteUp.length - answers[1].voteDown.length}
                   </DivVote>
                   <ButtonUpDown>
                     ▼
@@ -452,7 +486,7 @@ function QuestionDetailPage() {
                 </SpanVoteContainer>
                 <SpanQContainer>
                   <DivQText>
-                    {answers.answer[1].body}
+                    {answers[1].body}
                   </DivQText>
                   <DivShareEditProfile>
                     <SpanShare>
@@ -468,11 +502,11 @@ function QuestionDetailPage() {
                     </SpanShare>
                     <SpanProfile>
                       <div>
-                        {"asked "+new Intl.DateTimeFormat("en-GB",{month: 'short', day: 'numeric'}).format(new Date(answers.answer[1].created_at))}
+                        {"asked "+new Intl.DateTimeFormat("en-GB",{month: 'short', day: 'numeric'}).format(new Date(answers[1].created_at))}
                       </div>
                       <SpanProfileUser>
                         <img
-                          src={answers.answer[1].avatarUrl}
+                          src={answers[1].avatarUrl}
                           alt=""
                           width="32px" height="32px"
                         />
