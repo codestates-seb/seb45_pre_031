@@ -153,7 +153,7 @@ function QuestionList() {
       </QuestionListContainer>
       <PaginationContainer>
         <StyledReactPaginate
-          pageCount={Math.ceil(pageInfoData.totalPages) || 20}
+          pageCount={pageInfoData.totalPages || 20}
           pageRangeDisplayed={5}
           marginPagesDisplayed={1}
           previousLabel={"Prev"}
