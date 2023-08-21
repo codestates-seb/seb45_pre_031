@@ -22,9 +22,9 @@
 <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black"/>
 
 ### 1-2. BE 기술 스택
-|JAVA 11|Spring|Spring Boot|AWS|MySql|
+|JAVA 11|Spring|Spring Boot|Spring Security|AWS|MySql|
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------|-----------------------------------------------|-----------------------------------------------|-----------------------------------------------|
-|<img src="https://img.icons8.com/?size=512&id=13679&format=png" width=100px ></img>|<img src="https://img.icons8.com/?size=512&id=90519&format=png" width=100px ></img> |<img src="https://img.icons8.com/?size=512&id=90519&format=png" width=100px ></img>|<img src="https://img.icons8.com/?size=512&id=33039&format=png" width=100px ></img>|<img src="https://img.icons8.com/?size=512&id=UFXRpPFebwa2&format=png" width=100px ></img>|
+|<img src="https://img.icons8.com/?size=512&id=13679&format=png" width=100px ></img>|<img src="https://img.icons8.com/?size=512&id=90519&format=png" width=100px ></img> |<img src="https://img.icons8.com/?size=512&id=90519&format=png" width=100px ></img>|<img src="https://img.icons8.com/?size=512&id=16231&format=png"width=100px ></img>|<img src="https://img.icons8.com/?size=512&id=33039&format=png" width=100px ></img>|<img src="https://img.icons8.com/?size=512&id=UFXRpPFebwa2&format=png" width=100px ></img>|
 
 <br/>
 
