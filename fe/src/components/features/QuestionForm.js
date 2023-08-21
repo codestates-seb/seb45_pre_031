@@ -29,11 +29,9 @@ function QuestionForm() {
 
   const handleBodyBlur = () => {
     validateBodyContent(bodyValue);
-    console.log("blur호출");
   };
 
   const validateBodyContent = (content) => {
-    //태그 없애고 텍스트만 남기기
     const textOnly = content.replace(/<[^>]+>/g, "");
 
     if (textOnly.length < 220) {
@@ -44,7 +42,7 @@ function QuestionForm() {
   };
 
   const handleSubmit = async () => {
-    console.log("title:", titleValue, "body:", bodyValue);
+    console.log("Post요청", "title:", titleValue, "body:", bodyValue);
     if (!isTitleValid || !isBodyValid) {
       alert("Please ensure that the title and body meet the requirements.");
       return;
@@ -63,10 +61,6 @@ function QuestionForm() {
       console.error("Error while trying to post question:", error);
     }
   };
-
-  useEffect(() => console.log("titleValue:", titleValue), [titleValue]);
-
-  useEffect(() => console.log("bodyValue:", bodyValue), [bodyValue]);
 
   return (
     <StyledQuestionForm>
