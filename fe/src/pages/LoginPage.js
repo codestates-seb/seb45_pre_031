@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { styled } from "styled-components";
 import { useDispatch } from "react-redux";
@@ -97,7 +97,7 @@ function LoginPage () {
     }
   };
 
-  const googleLoginHandler = async () => {
+  /* const googleLoginHandler = async () => {
     try {
       window.location.href = "http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/oauth2/authorization/google";
     } catch (error) {
@@ -136,7 +136,7 @@ function LoginPage () {
         navigate("/login");
       }
     }
-  }, [dispatch, navigate]);
+  }, [dispatch, navigate]); */
 
   return (
     <LoginPageContainer>
