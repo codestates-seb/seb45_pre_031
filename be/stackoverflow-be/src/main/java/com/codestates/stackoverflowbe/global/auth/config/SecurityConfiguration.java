@@ -28,14 +28,13 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 
 @Configuration
-@RequiredArgsConstructor
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfiguration {
 
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
     private final AccountService accountService;
-
     private final SecurityCorsConfig corsConfig;
 
     @Bean
@@ -76,35 +75,30 @@ public class SecurityConfiguration {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        // 자격증명 (예: 쿠키, 인증 헤더 등)을 허용
-        configuration.setAllowCredentials(true);
-        //모든 출처(Origin)에 대해 스크립트 기반 HTTP 통신 허용 (단, configuration.setAllowCredentials(true)와 함께 적용 불가!)
-//        configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:80",
-                "http://localhost:8080",
-                "http://localhost:3000",
-                "http://seveneleven-stackoverflow-s3.s3-website.ap-northeast-2.amazonaws.com",
-                "3.36.128.133:8080",
-                "3.36.128.133:80"));
-
-        //4가지 HTTP Method에 대한 HTTP 통신 허용
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE", "OPTIONS"));
-
-//        configuration.setAllowedHeaders(Arrays.asList("Authorization"));
-        configuration.addExposedHeader("Authorization");
-//        configuration.addExposedHeader("Refresh");
-
-
-        // CorsConfigurationSource 인터페이스 구현 클래스인 UrlBasedCorsConfigurationSource 클래스 객체 생성
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-
-        // 모든 URL에 상기 CORS 정책 적용
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+//    @Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        // 자격증명 (예: 쿠키, 인증 헤더 등)을 허용
+//        configuration.setAllowCredentials(true);
+//        //모든 출처(Origin)에 대해 스크립트 기반 HTTP 통신 허용 (단, configuration.setAllowCredentials(true)와 함께 적용 불가!)
+////        configuration.setAllowedOrigins(Arrays.asList("*"));
+//        configuration.setAllowedOrigins(Arrays.asList("http://localhost:80",
+//                "http://localhost:8080",
+//                "http://localhost:3000",
+//                "http://seveneleven-stackoverflow-s3.s3-website.ap-northeast-2.amazonaws.com",
+//                "3.36.128.133:8080",
+//                "3.36.128.133:80"));
+//
+//        //4가지 HTTP Method에 대한 HTTP 통신 허용
+//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE", "OPTIONS"));
+//
+//        // CorsConfigurationSource 인터페이스 구현 클래스인 UrlBasedCorsConfigurationSource 클래스 객체 생성
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//
+//        // 모든 URL에 상기 CORS 정책 적용
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
 
     public class CustomFilterConfigurer extends AbstractHttpConfigurer<CustomFilterConfigurer, HttpSecurity> {
 
