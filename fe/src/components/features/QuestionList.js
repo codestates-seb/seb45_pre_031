@@ -318,17 +318,14 @@ const QuestionTitle = styled.h3`
 `;
 const QuestionSummury = styled.div`
   font-size: 13px;
-  height: 34px;
+  height: 32.2px;
   max-width: 565px;
   overflow: hidden;
-  text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  margin-top: -2px;
   margin-bottom: 8px;
 `;
-
 const TagAndUserInfoContainer = styled.div`
   display: flex;
   flex-direction: row;
