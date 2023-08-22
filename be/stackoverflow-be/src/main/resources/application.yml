@@ -1,14 +1,10 @@
 spring:
-#  h2:
-  #      enabled: true
-  #      path: /h2
-  #  datasource:
-  #    url: jdbc:h2:mem:stackoverflow
   datasource:
-    url: jdbc:mysql://seveneleven.c1vvhrsbxo9y.ap-northeast-2.rds.amazonaws.com:3306/stackoverflow?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
-    username: admin
-    password: 12341234
+    url: jdbc:mysql://127.0.0.1:3306/stackoverflow?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+    username: smiledk
+    password: 1112
     driver-class-name: com.mysql.cj.jdbc.Driver
+
 
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
@@ -19,6 +15,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        jdbc:
+          time_zone: Asia/Seoul
   security:
     oauth2:
       client:
@@ -57,4 +55,8 @@ springdoc:
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
   paths-to-match:
+
     - /v1/**
+
+server:
+  port: 8888

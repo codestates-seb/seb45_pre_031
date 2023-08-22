@@ -2,16 +2,16 @@ package com.codestates.stackoverflowbe.domain.comment.controller;
 
 import com.codestates.stackoverflowbe.domain.comment.dto.request.QuestionCommentRequestDto;
 import com.codestates.stackoverflowbe.domain.comment.dto.response.QuestionCommentResponseDto;
-import com.codestates.stackoverflowbe.domain.comment.entity.QuestionComment;
 import com.codestates.stackoverflowbe.domain.comment.service.QuestionCommentService;
 import com.codestates.stackoverflowbe.global.constants.HttpStatusCode;
 import com.codestates.stackoverflowbe.global.response.MultiResponseDto;
-import com.codestates.stackoverflowbe.global.response.SingleResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -30,8 +30,9 @@ public class QuestionCommentController {
 
     @Operation(summary = "Create Question Comment API", description = "질문 댓글 저장 기능")
     @PostMapping
-    public ResponseEntity<QuestionComment> postComment(@RequestBody QuestionCommentRequestDto.Post requestCommentDto) {
-        QuestionComment questionComment = questionCommentService.saveComment(requestCommentDto);
+    public ResponseEntity<HttpStatus> postComment(@RequestBody QuestionCommentRequestDto.Post requestCommentDto) {
+        Object accountEmail = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        QuestionCommentResponseDto questionComment = questionCommentService.saveComment(requestCommentDto, accountEmail);
 
         URI location = UriComponentsBuilder
                 .newInstance()
@@ -46,7 +47,9 @@ public class QuestionCommentController {
     @PatchMapping("/{id}")
     public ResponseEntity<Void> patchComment(@PathVariable("id") Long id,
                                                              @RequestBody QuestionCommentRequestDto.Patch requestCommentDto) {
-        questionCommentService.updateComment(id, requestCommentDto);
+        Object accountEmail = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        questionCommentService.updateComment(id, requestCommentDto, accountEmail);
 
         return ResponseEntity.noContent().build();
     }
@@ -69,7 +72,8 @@ public class QuestionCommentController {
     @Operation(summary = "Delete Question Comment API", description = "질문 댓글 삭제 기능")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteComment(@PathVariable("id") Long id) {
-        questionCommentService.deleteComment(id);
+        Object accountEmail = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        questionCommentService.deleteComment(id, accountEmail);
         return ResponseEntity.noContent().build();
     }
 }

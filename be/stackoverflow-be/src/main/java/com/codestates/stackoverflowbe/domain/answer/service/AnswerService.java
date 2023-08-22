@@ -35,6 +35,7 @@ public class AnswerService {
     public AnswerDto.Response createAnswer(AnswerDto.Request requestDto, Object principal) {
         // 요청을 보낸 사용자의 정보를 가져옵니다.
         Account account = accountService.findByEmail((String) principal);
+
         Question findQuestion = questionRepository.findById(requestDto.getQuestionId()).orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
 

@@ -3,6 +3,8 @@ package com.codestates.stackoverflowbe.domain.account.entity;
 import com.codestates.stackoverflowbe.domain.account.dto.AccountDto;
 import com.codestates.stackoverflowbe.domain.account.dto.AccountPageResponseDto;
 import com.codestates.stackoverflowbe.domain.answer.entity.Answer;
+import com.codestates.stackoverflowbe.domain.comment.entity.AnswerComment;
+import com.codestates.stackoverflowbe.domain.comment.entity.QuestionComment;
 import com.codestates.stackoverflowbe.domain.question.entity.Question;
 import com.codestates.stackoverflowbe.global.audit.BaseTimeEntity;
 import com.codestates.stackoverflowbe.domain.vote.entity.Vote;
@@ -44,8 +46,23 @@ public class Account extends BaseTimeEntity {
     @OneToMany(mappedBy = "account")
     private List<Answer> answers = new ArrayList<>();
 
+    @OneToMany(mappedBy = "account")
+    private List<AnswerComment> answerComments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "account")
+    private List<QuestionComment> questionComments = new ArrayList<>();
+
     public void addAnswer(Answer answer) {
         answers.add(answer);
+    }
+
+
+    public void update(AnswerComment answerComment) {
+        this.answerComments.add(answerComment);
+    }
+
+    public void update(QuestionComment questionComment) {
+        this.questionComments.add(questionComment);
     }
 
 //    @JsonIgnore

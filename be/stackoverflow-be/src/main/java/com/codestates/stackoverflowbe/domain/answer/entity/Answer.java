@@ -46,4 +46,8 @@ public class Answer extends BaseTimeEntity {
     public void addVote(Vote vote) {
         votes.add(vote);
     }
+
+    public void addAnswerComment(AnswerComment answerComment) {
+        this.answerComments.add(answerComment);
+    }
 }
