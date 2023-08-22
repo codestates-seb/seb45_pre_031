@@ -25,12 +25,13 @@ function Header() {
   const logoutHandler = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
+    localStorage.removeItem("displayName")
 
     // 로그아웃 액션 호출
     dispatch(logoutAction());
 
     // 홈 페이지로 이동
-    navigate("/");
+    navigate("/login");
 
   };
 
