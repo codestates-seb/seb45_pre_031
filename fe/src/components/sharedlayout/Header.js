@@ -1,16 +1,37 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import logo from "../../assets/images/logo.png";
 import search from "../../assets/images/search.png";
 import { useState } from "react";
 import SearchInfo from "../features/SearchInfo";
+import { logoutAction } from '../../redux/actions/loginAction';
+import { useDispatch, useSelector } from "react-redux";
 
 function Header() {
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const isLoggedIn = useSelector(state => state.login.isLoggedIn);
+  const DisplayName = useSelector(state => state.login.DisplayName);
+
   const [ isFocus, setIsFocus ] = useState(false);
 
   const focusHandler = () => {
     setIsFocus(!isFocus);
+  };
+
+  const logoutHandler = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+
+    // 로그아웃 액션 호출
+    dispatch(logoutAction());
+
+    // 홈 페이지로 이동
+    navigate("/");
+
   };
 
   return (
@@ -33,12 +54,21 @@ function Header() {
             {isFocus && <SearchInfo />}
         </SearchContainer>
         <BtnContatiner>
-          <Link to="/login">
-            <LoginBtn>Log in</LoginBtn>
-          </Link>
-          <Link to="/membership">
-            <SignupBtn>Sign up</SignupBtn>
-          </Link>
+          {isLoggedIn ? (
+            <>
+            <UserDisplayName>로그인성공님</UserDisplayName>
+            <LogoutBtn onClick={logoutHandler}>Log out</LogoutBtn>
+          </>
+          ) : (
+            <>
+            <Link to="/login">
+              <LoginBtn>Log in</LoginBtn>
+            </Link>
+            <Link to="/membership">
+              <SignupBtn>Sign up</SignupBtn>
+            </Link>
+            </>
+          )}
         </BtnContatiner>
       </HeaderElementContainer>
     </HeaderContainer>
@@ -194,3 +224,29 @@ const BtnContatiner = styled.div`
   flex-grow: 0;
   gap: 6px;
 `;
+
+const UserDisplayName = styled.p`
+`
+
+const LogoutBtn = styled.button`
+  padding: 8px 0.8em;
+  border-radius: 6px;
+  border: none;
+  white-space: nowrap;
+  cursor: pointer;
+  color: hsl(205,47%,42%);
+  background-color: hsl(205,46%,92%);
+
+  &:hover {
+    background-color: hsl(205,57%,81%);
+  }
+
+  &:active {
+    background-color: hsl(205,56%,76%);
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 4px hsla(206, 100%, 40%, 0.15);
+    outline: none;
+  }
+`

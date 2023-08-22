@@ -73,23 +73,31 @@ function LoginPage () {
     // 유효한 이메일과 비밀번호를 입력할 경우 서버로 전송
     try {
       const response = await axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/accounts/authenticate", { email, password });
+
+
       if (response.status === 200) {
         // 서버에서 토큰을 받음
-        const accessToken = response.headers.Authorization;
-        const refreshToken = response.data.get("Refresh");
+        const accessToken = response.headers.getAuthorization();
+        const refreshToken = response.headers.get("Refresh");
 
         // 토큰을 로컬 스토리지에 저장
         localStorage.setItem("access_token", accessToken);
         localStorage.setItem("refresh_token", refreshToken);
 
         // 토큰을 헤더에 포함시켜서 요청
-        axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+        axios.defaults.headers.common["Authorization"] = `${accessToken}`;
 
+        // 유저 display name 받아오기
+
+        const displayName = response.data.DisplayName;
          // 로그인 성공 처리
-         dispatch(loginSuccess(accessToken));
+        dispatch(loginSuccess({accessToken, displayName}));
+
+        console.log(response)
 
          // 로그인 성공 후 리다이렉션 처리
-         navigate("/");
+        /* navigate("/"); */
+
 
       }
     } catch (error) {
@@ -100,6 +108,10 @@ function LoginPage () {
   const googleLoginHandler = async () => {
     try {
       window.location.href = "http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/oauth2/authorization/google";
+
+
+
+
     } catch (error) {
       console.error("Google 로그인 중 에러:", error);
       dispatch(loginFailure("Google 로그인 중 에러가 발생했습니다."));
@@ -110,21 +122,25 @@ function LoginPage () {
     const urlSearchParams = new URLSearchParams(window.location.search);
     const accessToken = urlSearchParams.get("access_token");
     const refreshToken = urlSearchParams.get("refresh_token");
+    const displayName = urlSearchParams.get("displayName");
 
     if (accessToken && refreshToken) {
       try {
         // 로컬 스토리지에 토큰 저장
         localStorage.setItem("access_token", accessToken);
         localStorage.setItem("refresh_token", refreshToken);
+        localStorage.setItem("displayName", displayName)
+
+        console.log(displayName);
 
         // 토큰을 헤더에 포함시켜서 요청
         axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
         // 로그인 성공 처리
-        dispatch(loginSuccess(accessToken));
+        dispatch(loginSuccess({accessToken}));
 
         // 로그인 성공 후 리다이렉션 처리
-        navigate("/");
+       /* navigate("/"); */
 
       } catch (error) {
         console.error("로그인 에러:", error);
@@ -133,7 +149,7 @@ function LoginPage () {
         // 오류 메시지 표출
         setGoogleLoginError(true);
         // 로그인 페이지로 리다이렉션
-        navigate("/login");
+       /* navigate("/login");  */
       }
     }
   }, [dispatch, navigate]);
@@ -201,6 +217,7 @@ function LoginPage () {
   );
 };
 
+export default LoginPage;
 
 const LoginPageContainer = styled.section`
   width: 100%;
@@ -396,4 +413,3 @@ const ErrorText = styled.p`
   margin-top: 4px;
 `;
 
-export default LoginPage;

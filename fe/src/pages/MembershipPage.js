@@ -21,6 +21,7 @@ function MembershipPage (props) {
   const [ password, setPassword ] = useState('');
   const [ emailError, setEmailError ] = useState(false);
   const [ passwordError, setPasswordError ] = useState(false);
+  const [ isUserExist, setIsUserExist ] = useState(false);
 
   const onDisplayNameHandler = (e) => {
     setDisplayName(e.currentTarget.value);
@@ -65,12 +66,18 @@ function MembershipPage (props) {
 
     try {
       const response = await axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/accounts/signup", { displayName, email, password })
-      if (response.status === 200) {
+      console.log(response)
+      console.log({ displayName: displayName, email: email, password: password});
+
+      if (response.status === 201) {
         dispatch(signUpSuccess("회원가입 성공"));
         navigate("/login");
+      } else if (response.status === 409) {
+        dispatch(signUpFailure("회원가입 실패"));
       }
     } catch (error) {
       console.error("Error during login:", error);
+      setIsUserExist("User already exist.");
       dispatch(signUpFailure());
     }
 
@@ -124,12 +131,14 @@ function MembershipPage (props) {
               <SignUpInputForm>
                 <MsLabel>Email</MsLabel>
                 <SignUpInput
-                  className={`signup-email-input ${emailError ? "error" : ""}`}
+                  className={`signup-email-input ${emailError || isUserExist ? "error" : ""}`}
                   type="email"
                   value={email}
                   onChange={onEmailHandler} />
-                  {emailError &&
+                  {emailError && !isUserExist &&
                     <ErrorText>{emailError}</ErrorText>}
+                  {isUserExist &&
+                  <ErrorText>{isUserExist}</ErrorText>}
               </SignUpInputForm>
               <SignUpInputForm className="signup-password-form">
                 <MsLabel>Password</MsLabel>
