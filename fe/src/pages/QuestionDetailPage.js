@@ -1,19 +1,18 @@
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
+
 import NavBar from "../components/sharedlayout/NavBar";
 import Aside from "../components/sharedlayout/Aside";
 
 import AskQuestionBtn from "../components/atoms/AskQuestionBtn";
 
 import Answer from "../components/features/Answer";
-
 import Footer from "../components/sharedlayout/Footer";
 
-import React, { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import axios from "axios";
-
-import { useParams } from "react-router-dom";
 
 const DivAllContainer = styled.div`
   display: flex;
@@ -172,11 +171,6 @@ const SelectAnswerFilter = styled.select`
   padding: 5px;
   font-size: 13px;
 `
-const ArticleA = styled.article`
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  margin-bottom: 24px;
-`
 const ArticleNewA = styled.article`
 `
 const H2YourAnswer = styled.h2`
@@ -197,116 +191,49 @@ const SubmitPost = styled.input`
   color: white;
   background-color: hsl(206, 100%, 52%);
 `
-///// 임시 DB 시작 /////
-const askAll = {
-  questionId: "001", // primary key
-  created_at: "Mon Aug 14 2023 11:11:22 GMT+0900 (한국 표준시)",
-  modified_at: "Mon Aug 15 2023 11:11:22 GMT+0900 (한국 표준시)",
-  views: 252,
-  title: "koans 과제 진행 중 npm install 오류로 인해 정상 작동 되지 않습니다",
-  displayName: "dubipy", // 작성자 닉네임
-  voteUp: ['hongsik','jang'], // post 현재 로그인 계정 추가
-  voteDown: ['honggildong','boby','james'], // post 현재 로그인 계정 추가
-  tags: ['javascript', 'react', 'discord'],
-  body:
-  "<p>--------------- 질문 내용 ---------------</p>",
-  avatarUrl: //프로필 이미지 없어질 수 있음
-    "https://avatars.githubusercontent.com/u/97888923?s=64&u=12b18768cdeebcf358b70051283a3ef57be6a20f&v=4",
-  answer: [{
-    answer_id: "DC_kwDOHOApLM4AKg6M",
-    created_at: "Mon Aug 14 2023 11:11:22 GMT+0900 (한국 표준시)",
-    modified_at: "Mon Aug 14 2023 11:11:22 GMT+0900 (한국 표준시)",
-    voteUp: ['hongsik','jang'],
-    voteDown: ['honggildong','boby','james'],
-    displayName: "Kingsenal",
-    body:
-      "안녕하세요.",
-    avatarUrl: "https://avatars.githubusercontent.com/u/79903256?s=64&v=4",
-  },
-  {
-    answer_id: "DC_kwDOHOApLM4AKg6M",
-    created_at: "Mon Aug 14 2023 11:11:22 GMT+0900 (한국 표준시)",//date 기본값,
-    modified_at: "Mon Aug 14 2023 11:11:22 GMT+0900 (한국 표준시)",
-    voteUp: ['hongsik','jang'],
-    voteDown: ['honggildong','boby','james'],
-    displayName: "Kingsenal",
-    body:
-      "코드스테이츠 교육 엔지니어 권준혁",
-    avatarUrl: "https://avatars.githubusercontent.com/u/79903256?s=64&v=4",
-  },]
-}
-///// 임시 DB 끝 /////
 
 function QuestionDetailPage() {
 
   const [question, setQuestion] = useState({
-    questionId: "001", // primary key
+    questionId: "001",
     created_at: "Mon Aug 14 2023 11:11:22 GMT+0900 (한국 표준시)",
     modified_at: "Mon Aug 15 2023 11:11:22 GMT+0900 (한국 표준시)",
-    views: 252,
-    title: "koans 과제 진행 중 npm install 오류로 인해 정상 작동 되지 않습니다",
-    displayName: "dubipy", // 작성자 닉네임
-    voteUp: ['hongsik','jang'], // post 현재 로그인 계정 추가
-    voteDown: ['honggildong','boby','james'], // post 현재 로그인 계정 추가
-    tags: ['javascript', 'react', 'discord'],
+    views: "views",
+    title: "제목",
+    displayName: "displayName",
+    voteUp: ["onePerson"],
+    voteDown: ["onePerson","twoPerson"],
+    tags: ["javascript", "react"],
     body:
-    "<p>--------------- 질문 내용 ---------------</p>",
-    avatarUrl: "https://avatars.githubusercontent.com/u/97888923?s=64&u=12b18768cdeebcf358b70051283a3ef57be6a20f&v=4", //프로필 이미지 없어질 수 있음
+    "<p> 질문 내용 DB </p>",
   })
   const [answers, setAnswers] = useState([{
-    answer_id: "DC_kwDOHOApLM4AKg6M",
+    answer_id: "007",
     created_at: "Mon Aug 14 2023 11:11:22 GMT+0900 (한국 표준시)",
     modified_at: "Mon Aug 14 2023 11:11:22 GMT+0900 (한국 표준시)",
-    voteUp: ['hongsik','jang'],
-    voteDown: ['honggildong','boby','james'],
-    displayName: "Kingsenal",
+    voteUp: ["onePerson"],
+    voteDown: ["onePerson","twoPerson"],
+    displayName: "displayName",
     body:
-      "안녕하세요.",
-    avatarUrl: "https://avatars.githubusercontent.com/u/79903256?s=64&v=4",
-  },
-  {
-    answer_id: "DC_kwDOHOApLM4AKg6M",
-    created_at: "Mon Aug 14 2023 11:11:22 GMT+0900 (한국 표준시)",//date 기본값,
-    modified_at: "Mon Aug 14 2023 11:11:22 GMT+0900 (한국 표준시)",
-    voteUp: ['hongsik','jang'],
-    voteDown: ['honggildong','boby','james'],
-    displayName: "Kingsenal",
-    body:
-      "코드스테이츠 교육 엔지니어 권준혁",
-    avatarUrl: "https://avatars.githubusercontent.com/u/79903256?s=64&v=4",
-  },])
-  const [questionVote, setQuestionVote] = useState(0)
-  const [answerVote, setAnswerVote] = useState(0)
+      "<p> 글 내용 DB <p>",
+  }])
 
   const { questionId } = useParams();
 
+  const navigate = useNavigate();
+
   const [newAnswerValue, setNewAnswerValue] = useState('');
 
-  // fetch 사용 코드
-  // function loadQnA(){
-  //   fetch("ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/questions/"+questionId)
-  //   .then(res=>res)
-  //   .then(question=>setQuestion(question))
-  //   .catch(err=>console.log(err))
-  //   fetch("ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/answers/"+questionId)
-  //   .then(res=>res)
-  //   .then(answers=>setAnswers(answers))
-  //   .catch(err=>console.log(err))
-  // }
+  const [login, setLogin] = useState(false)
 
   function loadQnA(){
     axios.get("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/questions/"+questionId)
     .then(question=>setQuestion(question.data.data))
     .catch(err=>console.log(err+"질문을 가져오지 못했습니다."))
-    axios.get("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/answers/"+questionId)
+    axios.get("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/answer?questionId="+questionId)
     .then(answers=>setAnswers(answers.data.data))
     .catch(err=>console.log(err+"답변을 가져오지 못했습니다."))
-    axios.get("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/votesResult/questionId=?"+questionId)
-    .then(questionVote=>setQuestionVote(questionVote.data.data))
-    .catch(err=>console.log(err+"질문의 추천 정보를 가져오지 못했습니다."))
-    axios.get("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/votesResult/answerId=?"+questionId)
-    .then(answerVote=>setAnswerVote(answerVote.data.data))
-    .catch(err=>console.log(err+"답변의 추천 정보를 가져오지 못했습니다."))
+    localStorage.getItem("access_token")? setLogin(true) : setLogin(false)
   }
 
   useEffect(loadQnA,[])
@@ -314,6 +241,18 @@ function QuestionDetailPage() {
   function shareClick(){
     navigator.clipboard.writeText(window.location.href)
     .then(res=>alert('링크가 복사되었습니다.'))
+  }
+
+  function addComment(){
+    login? console.log("댓글기능 개발중") : navigate("/login")
+  }
+
+  function postSend(){
+    axios.post(
+      `http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/answer?questionId=${questionId}&body=${newAnswerValue}`,
+    )
+    .then(res=>console.log(res+"포스팅에 성공했습니다."))
+    .catch(err=>console.log(err+"포스팅에 실패했습니다."))
   }
 
   return(
@@ -399,7 +338,7 @@ function QuestionDetailPage() {
                           width="32px" height="32px"
                         />
                         <span>
-                          <DivUserName>name</DivUserName>
+                          <DivUserName>{question.displayName}</DivUserName>
                           <DivFollow>follow</DivFollow>
                         </span>
                       </SpanProfileUser>
@@ -407,37 +346,45 @@ function QuestionDetailPage() {
                   </DivShareEditProfile>
                 </SpanQContainer>
                 <span></span>
-                <SpanComment>Add a comment</SpanComment>
+                <SpanComment onClick={addComment}>Add a comment</SpanComment>
               </ArticleQ>
               <DivAnswerContainer>
                 <SpanAnswerLength>
                   {answers.length+" Answers"}
                 </SpanAnswerLength>
-                <LabelAnswerFilter>
-                  Sorted by:
-                </LabelAnswerFilter>
-                <SelectAnswerFilter>
-                  <option>Highest score (default)</option>
-                  <option>Trending (recent votes count more)</option>
-                  <option>Date modified (newest first)</option>
-                  <option>Date created (oldest first)</option>
-                </SelectAnswerFilter>
+                <span>
+                  <LabelAnswerFilter>
+                    Sorted by:
+                  </LabelAnswerFilter>
+                  <SelectAnswerFilter>
+                    <option>Highest score (default)</option>
+                    <option>Trending (recent votes count more)</option>
+                    <option>Date modified (newest first)</option>
+                    <option>Date created (oldest first)</option>
+                  </SelectAnswerFilter>
+                </span>
               </DivAnswerContainer>
               {answers.map(answer=><Answer answer={answer} shareClick={shareClick} />)}
               <ArticleNewA>
-                <form
-                  method="POST"
-                  action={"http://host/v1/answer/questionId=?"+questionId}
-                >
+                <form>
                   <H2YourAnswer>
                     Your Answer
                   </H2YourAnswer>
                   <DivQuill>
-                    <ReactQuill theme="snow" value={newAnswerValue} onChange={setNewAnswerValue} />
+                    <ReactQuill
+                      name="data"
+                      theme="snow"
+                      value={newAnswerValue}
+                      onChange={(e)=>{setNewAnswerValue(e)}}
+                    />
                   </DivQuill>
                   <SubmitPost
                     type="submit"
                     value="Post Your Answer"
+                    onClick={(e)=>{
+                      e.preventDefault()
+                      postSend()}
+                    }
                    />
                 </form>
               </ArticleNewA>
