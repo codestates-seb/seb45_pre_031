@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import AskQuestionBtn from "../atoms/AskQuestionBtn";
-import logo from "../../assets/images/logo.png";
 import Spinner from "../../assets/images/Spinner.gif";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -53,6 +52,7 @@ function QuestionList() {
 
   const handlePage = (selectedPage) => {
     setPageNumber(selectedPage);
+    window.scrollTo(0, 0);
   };
 
   function formatRelativeTime(dateString) {
@@ -81,6 +81,17 @@ function QuestionList() {
     if (minutes > 1) return `${minutes} minutes ago`;
 
     return "1 minute ago";
+  }
+
+  function processContent(content) {
+    // <와 > 사이 태그를 제거
+    let convertedContent = content.replace(/<[^>]+>/g, "");
+    // &lt;와 &gt;를 <와 >로 변환
+    convertedContent = convertedContent.replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+    // &nbsp;를 일반 공백으로 변환
+    convertedContent = convertedContent.replace(/&nbsp;/g, " ");
+
+    return convertedContent;
   }
 
   return (
@@ -119,14 +130,21 @@ function QuestionList() {
                 </LeftSideInfo>
               </div>
               <div className="rightSide">
-                <QuestionTitle onClick={() => goToDetail(question.questionId)}> {question.title} </QuestionTitle>
-                <QuestionSummury>{question.body}</QuestionSummury>
+                <QuestionTitle
+                  onClick={() => {
+                    goToDetail(question.questionId);
+                    window.scrollTo(0, 0);
+                  }}
+                >
+                  {" "}
+                  {question.title}{" "}
+                </QuestionTitle>
+                <QuestionSummury>{processContent(question.body)}</QuestionSummury>
                 <TagAndUserInfoContainer>
                   <TagContainer>
                     {question.tags && question.tags.map((tag, index) => <Tag key={index}>{tag}</Tag>)}
                   </TagContainer>
                   <UserInfoContainer>
-                    <img className="userAvatar" alt="userAvatar" src={logo} />
                     <div className="userName">
                       <span>{question.displayName}</span>
                     </div>
@@ -302,11 +320,11 @@ const QuestionSummury = styled.div`
   font-size: 13px;
   height: 34px;
   max-width: 565px;
+  overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  overflow: hidden;
   margin-top: -2px;
   margin-bottom: 8px;
 `;
