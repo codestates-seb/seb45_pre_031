@@ -11,7 +11,7 @@ import ReactPaginate from "react-paginate";
 function QuestionList() {
   const [questionData, setQuestionData] = useState(null);
   const [pageInfoData, setPageInfoData] = useState({});
-  const [tab, setTab] = useState("newest");
+  const [tab, setTab] = useState("Newest");
   const [pageNumber, setPageNumber] = useState(1);
 
   const [isPending, setIsPending] = useState(false);
@@ -82,8 +82,7 @@ function QuestionList() {
 
     return "1 minute ago";
   }
-  useEffect(() => console.log("data:", questionData), [questionData]);
-  useEffect(() => console.log("pageInfo:", pageInfoData), [pageInfoData]);
+
   return (
     <StyledQuestionList>
       <HeaderContainer>
