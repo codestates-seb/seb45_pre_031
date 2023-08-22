@@ -46,19 +46,16 @@
 ---
 
 #### Account
-* [x] Account 생성
-* [x] Account 읽기
-* [x] Account 수정
-* [ ] Account 삭제
+* [x] Account CRUD
+* [x] Accoutn Security
 ### Question
-* [x] Question 생성
-* [x] Question 조회
-* [x] Question 수정
-* [x] Question 삭제
+* [x] Question CRUD
+* [x] Question board tab list
 ### Comment 
-* [x] Comment 생성
-* [ ] Comment 조회
-* [ ] Comment 수정
-* [ ] Comment 삭제
+* [x] Comment CRUD
 ### Answer
-
+* [x] Answer CRUD
+### Vote
+* [x] Vote CRUD
+### Tag
+* [x] Tag CRUD
