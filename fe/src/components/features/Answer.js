@@ -72,7 +72,7 @@ const DivFollow = styled.div`
   color: rgb(106, 115, 124);
 `
 
-function Answer({answer, shareClick}){
+function Answer({answer, shareClick, login, deletePost}){
     return(
       <ArticleA>
         <SpanVoteContainer>
@@ -103,8 +103,8 @@ function Answer({answer, shareClick}){
               <span onClick={shareClick}>
                 Share
               </span>
-              <span>
-                Improve this question
+              <span onClick={deletePost}>
+                {login? "Delete" : "Improve this question"}
               </span>
               <span>
                 Follow
