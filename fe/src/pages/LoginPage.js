@@ -134,7 +134,10 @@ function LoginPage () {
         // displayName 불러오기
         axios.get("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/auth/oauth")
           .then(response => {
-            const displayName = response.data.DisplayName;
+            console.log(response);
+            const displayName = response.data.displayName;
+
+            console.log(displayName);
 
             // 로그인 성공 처리
             dispatch(loginSuccess({ accessToken, displayName }));
