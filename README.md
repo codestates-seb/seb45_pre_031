@@ -66,16 +66,16 @@
 </style>
 
 #### Account
-<span class="custom-checkbox">[ ]</span> CRUD
-<span class="custom-checkbox">[ ]</span> Security
+- ✅ Account CRUD
+- ✅ Account Security
 ### Question
-* [x] Question CRUD
-* [x] Question board tab list
+- ✅ Question CRUD
+- ✅ Question board tab list
 ### Comment 
-* [x] Comment CRUD
+- ✅ Comment CRUD
 ### Answer
-* [x] Answer CRUD
+- ✅ Answer CRUD
 ### Vote
-* [x] Vote CRUD
+- ✅ Vote CRUD
 ### Tag
-* [x] Tag CRUD
+- ✅ Tag CRUD
