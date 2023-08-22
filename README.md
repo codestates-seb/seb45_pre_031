@@ -47,13 +47,13 @@
 <br/>
 #### Account
 <br/>
-1. [ ] Account 생성
+* [ ] Account 생성
 <br/>
-2. [ ]Account 읽기
+* [ ] Account 읽기
 <br/>
-3. [ ]Account 수정
+* [ ] Account 수정
 <br/>
-4. [ ] Account 삭제
+* [ ] Account 삭제
 <br/>
 ### Question
 <br/>
