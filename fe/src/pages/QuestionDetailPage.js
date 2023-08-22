@@ -427,7 +427,11 @@ function QuestionDetailPage() {
               <ArticleNewA>
                 <form
                   method="POST"
-                  action={"http://host/v1/answer/questionId=?"+questionId}
+                  action={
+                    axios("http://host/v1/answer/questionId=?"+questionId,{data: newAnswerValue})
+                    .then(res=>console.log(res+"포스팅에 성공했습니다."))
+                    .catch(err=>console.log(err+"포스팅에 실패했습니다."))
+                  }
                 >
                   <H2YourAnswer>
                     Your Answer
