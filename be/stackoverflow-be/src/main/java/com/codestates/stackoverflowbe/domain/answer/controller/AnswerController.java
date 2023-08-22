@@ -33,7 +33,9 @@ public class AnswerController {
 
     @Operation(summary = "Create Answer API", description = "답변 생성 기능")
     @PostMapping
-    public ResponseEntity<HttpStatus> postAnswer(@RequestParam long questionId, @RequestParam String body) {
+
+    public ResponseEntity<HttpStatus> postAnswer(@RequestParam long questionId,
+                                                 @RequestParam String body) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         AnswerDto.Response responseDto = answerService.createAnswer(questionId, body, principal);
 

@@ -6,8 +6,8 @@ spring:
   #    url: jdbc:h2:mem:stackoverflow
   datasource:
     url: jdbc:mysql://seveneleven.c1vvhrsbxo9y.ap-northeast-2.rds.amazonaws.com:3306/stackoverflow?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
-    username: admin
-    password: 12341234
+    username: ${MYSQL_ID} # 유저네임
+    password: ${MYSQL_PASSWORD} # 비밀번호
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -58,3 +58,7 @@ springdoc:
   default-produces-media-type: application/json
   paths-to-match:
     - /v1/**
+
+mail:
+  admin:
+    address: ${ADMIN_EMAIL}

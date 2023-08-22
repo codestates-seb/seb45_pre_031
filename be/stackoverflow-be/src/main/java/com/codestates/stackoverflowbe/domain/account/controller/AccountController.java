@@ -71,7 +71,7 @@ public class AccountController {
     }
 
 
-    // 제발 되라
+    @Operation(summary = "Patch a Account Information", description = "특정 계정 정보 수정")
     @PatchMapping("/{accountId}")
     public ResponseEntity patchAccount(@Valid @RequestBody AccountDto.Patch accountPatchDto,
                                        @Positive @PathVariable("accountId") long accountId) {
@@ -80,6 +80,7 @@ public class AccountController {
             return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Delete a Account", description = "특정 계정 삭제")
     @DeleteMapping("/{accountId}")
     public ResponseEntity deleteAccount(@Valid @PathVariable("accountId") long accountId) {
             accountService.deleteAccount(accountId);

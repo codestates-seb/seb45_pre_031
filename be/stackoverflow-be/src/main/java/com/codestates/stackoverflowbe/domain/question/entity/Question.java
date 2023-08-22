@@ -28,7 +28,7 @@ public class Question extends BaseTimeEntity {
     @Column
     private String title;
 
-    @Column(length = 10000)
+    @Lob
     private String body;
 
     @ManyToOne
@@ -84,5 +84,9 @@ public class Question extends BaseTimeEntity {
     public void updateQuestion(QuestionUpdateRequestDto updateDto) {
         this.setTitle(updateDto.getTitle());
         this.setBody(updateDto.getBody());
+    }
+
+    public void addQuestionComment(QuestionComment questionComment) {
+        this.questionComments.add(questionComment);
     }
 }

@@ -12,6 +12,9 @@ jobs:
       G_CLIENT_ID: ${{secrets.G_CLIENT_ID}}
       G_CLIENT_SECRET: ${{secrets.G_CLIENT_SECRET}}
       JWT_SECRET_KEY: ${{secrets.JWT_SECRET_KEY}}
+      MYSQL_ID: ${{secrets.MYSQL_ID}}
+      MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
+      ADMIN_EMAIL: ${{secrets.ADMIN_EMAIL}}
       working-directory: ./be/stackoverflow-be
 
     steps:
@@ -33,7 +36,13 @@ jobs:
       - name: Docker build
         run: |
           docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
-          docker build --build-arg G_CLIENT_ID=${{env.G_CLIENT_ID}} --build-arg G_CLIENT_SECRET=${{env.G_CLIENT_SECRET}} --build-arg JWT_SECRET_KEY=${{env.JWT_SECRET_KEY}} -t 7elenven-cicd . 
+          docker build --build-arg G_CLIENT_ID="${{env.G_CLIENT_ID}}" \
+          --build-arg G_CLIENT_SECRET="${{env.G_CLIENT_SECRET}}" \
+          --build-arg JWT_SECRET_KEY="${{env.JWT_SECRET_KEY}}" \
+          --build-arg MYSQL_ID="${{env.MYSQL_ID}}" \
+          --build-arg MYSQL_PASSWORD="${{env.MYSQL_PASSWORD}}" \
+          --build-arg ADMIN_EMAIL="${{env.ADMIN_EMAIL}}" \
+          -t 7elenven-cicd . 
           docker tag 7elenven-cicd leest/7eleven-cicd:${GITHUB_SHA::7}
           docker push leest/7eleven-cicd:${GITHUB_SHA::7}
         working-directory: ${{ env.working-directory }}
@@ -57,4 +66,4 @@ jobs:
             sudo docker rm -f server
             sudo docker pull leest/7eleven-cicd:${GITHUB_SHA::7}
             sudo docker tag leest/7eleven-cicd:${GITHUB_SHA::7} 7eleven-cicd
-            sudo docker run -d --name server -p 8080:8080 7eleven-cicd
+            sudo docker run -d --name server -e TZ=Asia/Seoul -p 8080:8080 7eleven-cicd
