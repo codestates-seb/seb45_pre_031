@@ -58,3 +58,6 @@
 - ✅ Vote CRUD
 ### Tag
 - ✅ Tag CRUD
+### ect
+- ✅ 구글 Oauth2 구현
+- ✅ JWT 토큰 발급 및 인증
