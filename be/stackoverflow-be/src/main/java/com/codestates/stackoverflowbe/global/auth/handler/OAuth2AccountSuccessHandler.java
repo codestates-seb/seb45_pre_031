@@ -132,6 +132,7 @@ public class OAuth2AccountSuccessHandler extends SimpleUrlAuthenticationSuccessH
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("access_token", accessToken);
         queryParams.add("refresh_token", refreshToken);
+        //queryParams.add("displayName", displayName)
 
 //        String requestScheme = request.getScheme();
 //        String requestHost = request.getServerName();
