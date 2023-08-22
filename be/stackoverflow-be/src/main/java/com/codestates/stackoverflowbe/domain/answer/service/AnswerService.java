@@ -32,16 +32,16 @@ public class AnswerService {
     private final VoteRepository voteRepository;
     private final VoteService voteService;
 
-    public AnswerDto.Response createAnswer(AnswerDto.Request requestDto, Object principal) {
+    public AnswerDto.Response createAnswer(long questionId, String body, Object principal) {
         // 요청을 보낸 사용자의 정보를 가져옵니다.
         Account account = accountService.findByEmail((String) principal);
-
-        Question findQuestion = questionRepository.findById(requestDto.getQuestionId()).orElseThrow(() ->
+        Question findQuestion = questionRepository.findById(questionId).orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
 
 
-        Answer answer = requestDto.toEntity().toBuilder()
+        Answer answer = Answer.builder()
                 .account(account)
+                .body(body)
                 .votes(new ArrayList<>())
                 .question(findQuestion)
                 .build();

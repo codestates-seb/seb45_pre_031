@@ -1,5 +1,6 @@
 package com.codestates.stackoverflowbe.global.auth.utils;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,7 +12,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class CustomAuthorityUtils {
-    private String adminMailAddress = "superadmin@gmail.com"; // 추후 환경변수 설정으로 은닉
+    @Value("${mail.admin.address}")
+    private String adminMailAddress; // 추후 환경변수 설정으로 은닉
 
     private final List<GrantedAuthority> ADMIN_ROLES = AuthorityUtils.createAuthorityList("ROLE_ADMIN", "ROLE_USER");
     private final List<GrantedAuthority> USER_ROLES = AuthorityUtils.createAuthorityList("ROLE_USER");
