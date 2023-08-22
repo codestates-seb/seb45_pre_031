@@ -247,6 +247,10 @@ function QuestionDetailPage() {
     login? console.log("댓글기능 개발중") : navigate("/login")
   }
 
+  function deletePost(){
+    login? console.log("del url") : console.log('')
+  }
+
   function postSend(){
     axios.post(
       `http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/answer?questionId=${questionId}&body=${newAnswerValue}`,
@@ -298,13 +302,21 @@ function QuestionDetailPage() {
             <MainMain>
               <ArticleQ>
                 <SpanVoteContainer>
-                  <ButtonUpDown>
+                  <ButtonUpDown onClick={
+                    axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/voteWriting/questionId="+questionId+"&upVote=true")
+                    .then(res=>console.log(res+"추천하였습니다."))
+                    .catch(err=>console.log(err+"추천에 실패했습니다."))
+                  }>
                     ▲
                   </ButtonUpDown>
                   <DivVote>
                     {question.voteUp.length - question.voteDown.length}
                   </DivVote>
-                  <ButtonUpDown>
+                  <ButtonUpDown onClick={
+                    axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/voteWriting/questionId="+questionId+"&downVote=true")
+                    .then(res=>console.log(res+"비추천하였습니다."))
+                    .catch(err=>console.log(err+"비추천에 실패했습니다."))
+                  }>
                     ▼
                   </ButtonUpDown>
                 </SpanVoteContainer>
@@ -322,8 +334,8 @@ function QuestionDetailPage() {
                       <span onClick={shareClick}>
                         Share
                       </span>
-                      <span>
-                        Improve this question
+                      <span onClick={deletePost}>
+                        {login? "Delete" : "Improve this question"}
                       </span>
                       <span>
                         Follow
@@ -364,7 +376,7 @@ function QuestionDetailPage() {
                   </SelectAnswerFilter>
                 </span>
               </DivAnswerContainer>
-              {answers.map(answer=><Answer answer={answer} shareClick={shareClick} />)}
+              {answers.map(answer=><Answer answer={answer} shareClick={shareClick} login={login} deletePost={deletePost} />)}
               <ArticleNewA>
                 <form>
                   <H2YourAnswer>
