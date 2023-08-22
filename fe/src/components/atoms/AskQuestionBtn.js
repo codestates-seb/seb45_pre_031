@@ -16,17 +16,6 @@ function AskQuestionBtn() {
   return <Btn onClick={handleClick}>Ask Question</Btn>;
 }
 
-/////////////////////로그인 없이 formPage 테스트시 위에 것 주석 처리, 아래 것 주석 해제
-// import styled from "styled-components";
-// import { Link } from "react-router-dom";
-// function AskQuestionBtn() {
-//   return (
-//     <Link to="/questionform">
-//       <Btn>Ask Question</Btn>
-//     </Link>
-//   );
-// }
-////////////////////////////////////
 export default AskQuestionBtn;
 
 const Btn = styled.button`
