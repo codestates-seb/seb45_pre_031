@@ -1,19 +1,18 @@
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
+
 import NavBar from "../components/sharedlayout/NavBar";
 import Aside from "../components/sharedlayout/Aside";
 
 import AskQuestionBtn from "../components/atoms/AskQuestionBtn";
 
 import Answer from "../components/features/Answer";
-
 import Footer from "../components/sharedlayout/Footer";
 
-import React, { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import axios from "axios";
-
-import { useParams } from "react-router-dom";
 
 const DivAllContainer = styled.div`
   display: flex;
@@ -226,6 +225,8 @@ function QuestionDetailPage() {
 
   const { questionId } = useParams();
 
+  const navigate = useNavigate();
+
   const [newAnswerValue, setNewAnswerValue] = useState('');
 
   function loadQnA(){
@@ -244,13 +245,13 @@ function QuestionDetailPage() {
     .then(res=>alert('링크가 복사되었습니다.'))
   }
 
+  const token = localStorage.getItem("access_token");
   const postSend = (e) => {
-    e.preventDefault()
-    console.log(questionId)
+    console.log("llllllllll")
     axios.post(
-      "http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/answer/questionId=?"+questionId,
-      JSON.stringify({body: newAnswerValue}),
-      {headers:{"Content-Type": "application/json"}}
+      "http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/answer/questionId=?"+questionId+"&body="+newAnswerValue,
+      {headers:{"Authorization": token}},
+      {body: {data: newAnswerValue}}
     )
     .then(res=>console.log(res+"포스팅에 성공했습니다."))
     .catch(err=>console.log(err+"포스팅에 실패했습니다."))
@@ -366,9 +367,11 @@ function QuestionDetailPage() {
               {answers.map(answer=><Answer answer={answer} shareClick={shareClick} />)}
               <ArticleNewA>
                 <form
-                  method="POST"
-                  // action={"http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/answer/questionId=?"+questionId}
-                  onsubmit={postSend}
+                  // name="newAnswerPost"
+                  // method="POST"
+                  // action={"http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/answer?questionId="+questionId+"&body="+newAnswerValue}
+                  // onsubmit={postSend}
+                  onsubmit="return false"
                 >
                   <H2YourAnswer>
                     Your Answer
@@ -384,6 +387,7 @@ function QuestionDetailPage() {
                   <SubmitPost
                     type="submit"
                     value="Post Your Answer"
+                    onClick={postSend}
                    />
                 </form>
               </ArticleNewA>
