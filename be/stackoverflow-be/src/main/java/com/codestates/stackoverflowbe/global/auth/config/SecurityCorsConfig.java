@@ -29,6 +29,7 @@ public class SecurityCorsConfig {
 //        //응답 헤더에 Authorization 헤더를 노출하도록 설정
         config.addExposedHeader("Authorization");
         config.addExposedHeader("Refresh");
+        config.addExposedHeader("displayName");
 
         config.addAllowedHeader("*"); //모든 header만 허용
         config.addAllowedMethod("GET"); //특정 메소드만 허용
