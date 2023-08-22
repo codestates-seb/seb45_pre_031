@@ -3,7 +3,7 @@
 ---
 ## Team Project Period<br/>
 
-2023-08-09 ~ 2023-08-23
+2023-08-04 ~ 2023-08-23
 ---
 ##  Docs
 - **[노션](https://www.notion.so/7-ELEVEN-b1616d8b43914952b225cc24e371da9a)**
