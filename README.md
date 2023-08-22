@@ -44,27 +44,6 @@
 
 ## 3. 핵심 기능 
 ---
-
-<style>
-.custom-checkbox {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 1px solid #999;
-  border-radius: 3px;
-  background-color: #fff;
-  text-align: center;
-  line-height: 1;
-  font-size: 14px;
-  margin-right: 10px;
-}
-
-.custom-checkbox.checked {
-  background-color: #66bb6a;
-  color: #fff;
-}
-</style>
-
 #### Account
 - ✅ Account CRUD
 - ✅ Account Security
