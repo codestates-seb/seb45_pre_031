@@ -14,7 +14,7 @@ function Header() {
   const navigate = useNavigate();
 
   const isLoggedIn = useSelector(state => state.login.isLoggedIn);
-  const DisplayName = useSelector(state => state.login.DisplayName);
+  const displayName = useSelector(state => state.login.displayName);
 
   const [ isFocus, setIsFocus ] = useState(false);
 
@@ -56,9 +56,11 @@ function Header() {
         <BtnContatiner>
           {isLoggedIn ? (
             <>
-            <UserDisplayName>로그인성공님</UserDisplayName>
-            <LogoutBtn onClick={logoutHandler}>Log out</LogoutBtn>
-          </>
+              <UserDisplayName>
+                <a href="#none">{displayName}</a> 님
+              </UserDisplayName>
+              <LogoutBtn onClick={logoutHandler}>Log out</LogoutBtn>
+            </>
           ) : (
             <>
             <Link to="/login">
@@ -226,6 +228,17 @@ const BtnContatiner = styled.div`
 `;
 
 const UserDisplayName = styled.p`
+  font-family: inherit;
+  font-size: 14px;
+  margin-left: 10px;
+  margin-right: 10px;
+  text-align: center;
+
+  > a {
+    font-weight: 600;
+    text-decoration: none;
+    color: black;
+  }
 `
 
 const LogoutBtn = styled.button`
