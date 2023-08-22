@@ -4,9 +4,18 @@ export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 export const EMAIL_MISMATCH_ERROR = 'EMAIL_MISMATCH_ERROR';
 export const PASSWORD_MISMATCH_ERROR = 'PASSWORD_MISMATCH_ERROR';
 
-export const loginSuccess = (token) => ({
+export const LOGIN_USER = 'LOGIN_USER';
+
+export const SIGN_UP_SUCCESS = 'SIGN_UP_SUCCESS';
+export const SIGN_UP_FAILURE = 'SIGN_UP_FAILURE';
+
+export const LOGOUT = 'LOGOUT';
+
+
+
+export const loginSuccess = (accessToken, DisplayName) => ({
     type: LOGIN_SUCCESS,
-    payload: token,
+    payload: { accessToken, DisplayName }
 });
 
 export const loginFailure = (error) => ({
@@ -20,6 +29,21 @@ export const emailMismatchError = (error) => ({
   });
 
 export const passwordMismatchError = (error) => ({
-type: PASSWORD_MISMATCH_ERROR,
-payload: error,
+    type: PASSWORD_MISMATCH_ERROR,
+    payload: error,
 });
+
+export const logoutAction = () => {
+    return {
+        type: LOGOUT,
+    }
+};
+
+export const signUpSuccess = () => ({
+    type: SIGN_UP_SUCCESS,
+  });
+
+  export const signUpFailure = (error) => ({
+    type: SIGN_UP_FAILURE,
+    payload: error,
+  });

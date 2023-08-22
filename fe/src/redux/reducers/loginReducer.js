@@ -1,8 +1,10 @@
-import { LOGIN_SUCCESS, LOGIN_FAILURE, EMAIL_MISMATCH_ERROR, PASSWORD_MISMATCH_ERROR } from '../actions/loginAction';
+import { LOGIN_SUCCESS, LOGIN_FAILURE, EMAIL_MISMATCH_ERROR, PASSWORD_MISMATCH_ERROR, LOGIN_USER, SIGN_UP_SUCCESS, SIGN_UP_FAILURE, LOGOUT } from '../actions/loginAction';
 
 const initialState = {
-    token: null,
+    isLoggedIn: false,
+    accessToken: null,
     error: null,
+    DisplayName: null,
   };
 
   const loginReducer = (state = initialState, action) => {
@@ -10,30 +12,65 @@ const initialState = {
       case LOGIN_SUCCESS:
         return {
           ...state,
-          token: action.payload,
+          isLoggedIn: true,
+          accessToken: action.payload.accessToken,
           error: null,
+          DisplayName: action.payload.DisplayName,
         };
 
       case LOGIN_FAILURE:
         return {
           ...state,
-          token: null,
-          error: action.payload,
+          isLoggedIn: false,
+          accessToken: null,
+          error: null,
+          DisplayName: null,
         };
 
       case EMAIL_MISMATCH_ERROR:
         return {
           ...state,
-          token: null,
-          error: action.payload,
+          isLoggedIn: false,
+          accessToken: null,
+          error: null,
+          DisplayName: null,
         };
 
       case PASSWORD_MISMATCH_ERROR:
         return {
           ...state,
-          token: null,
-          error: action.payload,
+          isLoggedIn: false,
+          accessToken: null,
+          error: null,
+          DisplayName: null,
       };
+
+      case LOGIN_USER:
+        return {
+          ...state,
+          loginSuccess: action.payload.loginSuccess
+        }
+
+      case LOGOUT:
+        return {
+          ...state,
+          isLoggedIn: false,
+          accessToken: null,
+          error: null,
+          DisplayName: null,
+        };
+
+      case SIGN_UP_SUCCESS:
+        return {
+          ...state,
+          error: null,
+        };
+
+      case SIGN_UP_FAILURE:
+        return {
+          ...state,
+          error: action.error,
+        };
 
       default:
         return state;

@@ -1,7 +1,7 @@
 const ExclamationMarkIcon = () => (
   <svg
     aria-hidden="true"
-    class="svg-icon iconInfoSm"
+    className="svg-icon iconInfoSm"
     width="14"
     height="14"
     viewBox="0 0 14 14"
