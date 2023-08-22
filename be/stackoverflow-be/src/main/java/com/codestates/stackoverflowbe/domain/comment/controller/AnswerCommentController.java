@@ -1,24 +1,21 @@
 package com.codestates.stackoverflowbe.domain.comment.controller;
 
 import com.codestates.stackoverflowbe.domain.comment.dto.request.AnswerCommentRequestDto;
-import com.codestates.stackoverflowbe.domain.comment.dto.request.QuestionCommentRequestDto;
 import com.codestates.stackoverflowbe.domain.comment.dto.response.AnswerCommentResponseDto;
-import com.codestates.stackoverflowbe.domain.comment.dto.response.QuestionCommentResponseDto;
-import com.codestates.stackoverflowbe.domain.comment.entity.AnswerComment;
-import com.codestates.stackoverflowbe.domain.comment.entity.QuestionComment;
 import com.codestates.stackoverflowbe.domain.comment.service.AnswerCommentService;
-import com.codestates.stackoverflowbe.domain.comment.service.QuestionCommentService;
 import com.codestates.stackoverflowbe.global.constants.HttpStatusCode;
 import com.codestates.stackoverflowbe.global.response.MultiResponseDto;
-import com.codestates.stackoverflowbe.global.response.SingleResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.net.URI;
 
@@ -34,13 +31,14 @@ public class AnswerCommentController {
 
     @Operation(summary = "Create Answer Comment API", description = "답변 댓글 저장 기능")
     @PostMapping
-    public ResponseEntity<SingleResponseDto<?>> postComment(@RequestBody AnswerCommentRequestDto.Post requestCommentDto) {
-        AnswerComment answerComment = answerCommentService.saveComment(requestCommentDto);
+    public ResponseEntity<HttpStatus> postComment(@RequestBody AnswerCommentRequestDto.Post requestCommentDto) {
+        Object accountEmail = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        AnswerCommentResponseDto answerCommentResponseDto = answerCommentService.saveComment(requestCommentDto, accountEmail);
 
         URI location = UriComponentsBuilder
                 .newInstance()
                 .path(COMMENT_DEFAULT_URL + "/{commentId}")
-                .buildAndExpand(answerComment.getCommentId())
+                .buildAndExpand(answerCommentResponseDto.getCommentId())
                 .toUri();
 
         return ResponseEntity.created(location).build();
@@ -48,9 +46,10 @@ public class AnswerCommentController {
 
     @Operation(summary = "Update Answer Comment API", description = "답변 댓글 수정 기능")
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> patchComment(@PathVariable("id") Long id,
-                                                             @RequestBody AnswerCommentRequestDto.Patch requestCommentDto) {
-        answerCommentService.updateComment(id, requestCommentDto);
+    public ResponseEntity<HttpStatus> patchComment(@PathVariable("id") @Positive Long answerCommentId,
+                                             @Valid @RequestBody AnswerCommentRequestDto.Patch requestCommentDto) {
+        Object accountEmail = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        answerCommentService.updateComment(answerCommentId, requestCommentDto, accountEmail);
 
         return ResponseEntity.noContent().build();
     }
@@ -72,8 +71,9 @@ public class AnswerCommentController {
 
     @Operation(summary = "Delete Answer Comment API", description = "답변 댓글 삭제 기능")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteComment(@PathVariable("id") Long id) {
-        answerCommentService.deleteComment(id);
+    public ResponseEntity<Void> deleteComment(@PathVariable("id") Long commentId) {
+        Object accountEmail = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        answerCommentService.deleteComment(commentId, accountEmail);
         return ResponseEntity.noContent().build();
     }
 }

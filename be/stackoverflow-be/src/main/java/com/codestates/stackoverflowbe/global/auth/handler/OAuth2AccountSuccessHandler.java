@@ -60,6 +60,7 @@ public class OAuth2AccountSuccessHandler extends SimpleUrlAuthenticationSuccessH
 
         saveAccount(email, name); // email을 DB에 저장하여 관리하며 매핑하기
         redirect(request, response, email, authorities);
+
 //        String profile = (String) oAuth2User.getAttributes().get("profile");
 //        Account account = buildOAuth2Account(email, profile);
 //        Account saveAccount = accountService.createAccountOAuth2(account);

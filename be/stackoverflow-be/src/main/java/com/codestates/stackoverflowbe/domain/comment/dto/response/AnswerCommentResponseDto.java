@@ -1,8 +1,5 @@
 package com.codestates.stackoverflowbe.domain.comment.dto.response;
 
-import com.codestates.stackoverflowbe.domain.account.entity.Account;
-import com.codestates.stackoverflowbe.domain.answer.entity.Answer;
-import com.codestates.stackoverflowbe.domain.question.entity.Question;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +13,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class AnswerCommentResponseDto {
 
-    private String content;
+    private Long commentId;
+
+    private String contents;
 
     private Long accountId;
 

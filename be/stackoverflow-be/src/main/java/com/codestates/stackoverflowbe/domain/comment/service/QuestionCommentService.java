@@ -9,6 +9,8 @@ import com.codestates.stackoverflowbe.domain.comment.entity.QuestionComment;
 import com.codestates.stackoverflowbe.domain.comment.repository.QuestionCommentRepository;
 import com.codestates.stackoverflowbe.domain.question.entity.Question;
 import com.codestates.stackoverflowbe.domain.question.repository.QuestionRepository;
+import com.codestates.stackoverflowbe.global.exception.BusinessLogicException;
+import com.codestates.stackoverflowbe.global.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -27,13 +30,12 @@ public class QuestionCommentService {
     private final QuestionRepository questionRepository;
 
     @Transactional
-    public QuestionComment saveComment(QuestionCommentRequestDto.Post requestCommentDto) {
+    public QuestionCommentResponseDto saveComment(QuestionCommentRequestDto.Post requestCommentDto, Object accountEmail) {
 
-        Account account = accountRepository.findById(requestCommentDto.getAccountId())
-                .orElseThrow(() -> new EntityNotFoundException("not found account"));
+        Account account = verifyExistsAccount(accountEmail);
 
         Question question = questionRepository.findById(requestCommentDto.getQuestionId())
-                .orElseThrow(() -> new EntityNotFoundException("not found question"));
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
 
         QuestionComment questionComment = QuestionComment.builder()
                 .contents(requestCommentDto.getContents())
@@ -41,19 +43,37 @@ public class QuestionCommentService {
                 .question(question)
                 .build();
 
-        return questionCommentRepository.save(questionComment);
+        QuestionComment savedComment = questionCommentRepository.save(questionComment);
+        account.update(savedComment);
+        question.addQuestionComment(savedComment);
+
+        return QuestionCommentResponseDto.builder()
+                .commentId(questionComment.getCommentId())
+                .build();
     }
 
     @Transactional
-    public void updateComment(Long id, QuestionCommentRequestDto.Patch requestCommentDto) {
-        QuestionComment savedQuestionComment = verifyExistsComment(id);
-        savedQuestionComment.update(requestCommentDto.getContents());
+    public void updateComment(Long questionId, QuestionCommentRequestDto.Patch requestCommentDto, Object accountEmail) {
+        Account account = verifyExistsAccount(accountEmail);
+
+        boolean hasComment = account.getQuestionComments().stream().anyMatch(comment -> Objects.equals(comment.getCommentId(), questionId));
+
+        if (!hasComment) throw new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND);
+
+
+        QuestionComment questionComment = verifyExistsComment(questionId);
+        questionComment.update(Optional.ofNullable(requestCommentDto.getContents()).orElse(questionComment.getContents()));
     }
 
 
     @Transactional
-    public void deleteComment(Long id) {
-        QuestionComment questionComment = verifyExistsComment(id);
+    public void deleteComment(Long questionCommentId, Object accountEmail) {
+        Account account = verifyExistsAccount(accountEmail);
+        QuestionComment questionComment = verifyExistsComment(questionCommentId);
+
+        boolean hasComment = account.getAnswerComments().stream().anyMatch(comment -> Objects.equals(comment.getCommentId(), questionCommentId));
+
+        if (!hasComment) throw new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND);
 
         questionCommentRepository.delete(questionComment);
     }
@@ -67,17 +87,24 @@ public class QuestionCommentService {
     @Transactional(readOnly = true)
     public Page<QuestionCommentResponseDto> findcomments(int page, int size, Long questionId) {
         Question question = questionRepository.findById(questionId).orElseThrow(() -> new IllegalArgumentException("not found"));
-//        Question question1 = questionService.findQuestionById(questionId);
 
             Page<QuestionCommentResponseDto> pageComments = questionCommentRepository.findByQuestion_QuestionId(questionId, PageRequest.of(page, size))
                 .map(comment -> QuestionCommentResponseDto.builder()
-                        .content(comment.getContents())
+                        .contents(comment.getContents())
+                        .accountId(comment.getAccount().getAccountId())
                         .questionId(question.getQuestionId())
                         .displayName(comment.getAccount().getDisplayName())
+                        .email(comment.getAccount().getEmail())
                         .createAt(comment.getCreatedAt())
                         .modifiedAt(comment.getModifiedAt())
                         .build());
 
         return pageComments;
+    }
+
+    @Transactional(readOnly = true)
+    public Account verifyExistsAccount(Object principal) {
+        return accountRepository.findByEmail((String) principal)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
     }
 }
