@@ -1,4 +1,6 @@
 spring:
+  jackson:
+      time-zone: Asia/Seoul
 #  h2:
   #      enabled: true
   #      path: /h2
