@@ -20,7 +20,8 @@ public enum ExceptionCode {
     TAG_NOT_FOUND(404, "Tag not found"),
     TAG_EXISTS(409, "Tag exists"),
     EMAIL_NOT_FOUND(404, "Email not found"),
-    EMAIL_EXISTS(404, "Email exists");
+    EMAIL_EXISTS(404, "Email exists"),
+    NOT_AUTHENTICATED(401, "Not authenticated");
 
     @Getter
     private int status;
