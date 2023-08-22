@@ -1,5 +1,6 @@
 package com.codestates.stackoverflowbe.global.auth.controller;
 
+import com.codestates.stackoverflowbe.domain.account.entity.Account;
 import com.codestates.stackoverflowbe.domain.account.service.AccountService;
 import com.codestates.stackoverflowbe.global.auth.login.dto.LoginDto;
 import com.codestates.stackoverflowbe.global.auth.login.dto.LoginResponseDto;
@@ -38,8 +39,10 @@ public class AuthController {
         Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication()).orElseThrow(()
                 -> new BusinessLogicException(ExceptionCode.NOT_AUTHENTICATED));
 
-        Map<String, Object> claims = (Map<String, Object>) authentication.getPrincipal();
-        LoginResponseDto loginResponseDto = new LoginResponseDto((String) claims.get("displayName"));
+//        Map<String, Object> claims = (Map<String, Object>) authentication.getPrincipal();
+
+        Account account = accountService.findByEmail((String) authentication.getPrincipal());
+        LoginResponseDto loginResponseDto = new LoginResponseDto(account.getDisplayName());
         return ResponseEntity.ok(loginResponseDto);
     }
 }
