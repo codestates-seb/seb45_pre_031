@@ -70,11 +70,12 @@ public class Account extends BaseTimeEntity {
     private List<String> roles = new ArrayList<>();
 
 
-    public Account(long accountId, String email, String password, List<String> roles) {
+    public Account(long accountId, String email, String password, List<String> roles, String displayName) {
         this.accountId = accountId;
         this.email = email;
         this.password = password;
         this.roles = roles;
+        this.displayName = displayName;
     }
 
     public Account(String email) {
