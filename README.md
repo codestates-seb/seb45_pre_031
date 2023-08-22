@@ -27,6 +27,9 @@
 |<img src="https://img.icons8.com/?size=512&id=13679&format=png" width=75px ></img>|<img src="https://img.icons8.com/?size=512&id=90519&format=png" width=75px ></img> |<img src="https://img.icons8.com/?size=512&id=90519&format=png" width=75px ></img>|<img src="https://img.icons8.com/?size=512&id=16231&format=png" width=75px ></img>|<img src="https://img.icons8.com/?size=512&id=33039&format=png" width=75px ></img>|<img src="https://img.icons8.com/?size=512&id=UFXRpPFebwa2&format=png" width=75px ></img>|<img src="https://img.icons8.com/?size=512&id=15451&format=png" width=75px ></img>
 
 ### Tools
+| Git | GitHub | Discord |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------|-----------------------------------------------|
+|<img src="https://img.icons8.com/?size=512&id=xBKl2pdJg5kk&format=png" width=75px ></img> |<img src="https://img.icons8.com/?size=512&id=12599&format=png" width=75px ></img>| <img src="https://img.icons8.com/?size=512&id=iSpYyK95XXZn&format=png" width=75px ></img>|
 
 ---
 
