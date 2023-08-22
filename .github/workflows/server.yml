@@ -66,4 +66,4 @@ jobs:
             sudo docker rm -f server
             sudo docker pull leest/7eleven-cicd:${GITHUB_SHA::7}
             sudo docker tag leest/7eleven-cicd:${GITHUB_SHA::7} 7eleven-cicd
-            sudo docker run -d --name server -p 8080:8080 7eleven-cicd
+            sudo docker run -d --name server -e TZ=Asia/Seoul -p 8080:8080 7eleven-cicd
