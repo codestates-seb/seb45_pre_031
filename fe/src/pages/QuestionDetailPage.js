@@ -298,13 +298,21 @@ function QuestionDetailPage() {
             <MainMain>
               <ArticleQ>
                 <SpanVoteContainer>
-                  <ButtonUpDown>
+                  <ButtonUpDown onClick={
+                    axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/voteWriting/questionId="+questionId+"&upVote=true")
+                    .then(res=>console.log(res+"추천하였습니다."))
+                    .catch(err=>console.log(err+"추천에 실패했습니다."))
+                  }>
                     ▲
                   </ButtonUpDown>
                   <DivVote>
                     {question.voteUp.length - question.voteDown.length}
                   </DivVote>
-                  <ButtonUpDown>
+                  <ButtonUpDown onClick={
+                    axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/voteWriting/questionId="+questionId+"&downVote=true")
+                    .then(res=>console.log(res+"비추천하였습니다."))
+                    .catch(err=>console.log(err+"비추천에 실패했습니다."))
+                  }>
                     ▼
                   </ButtonUpDown>
                 </SpanVoteContainer>

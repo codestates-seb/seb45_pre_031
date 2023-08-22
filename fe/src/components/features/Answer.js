@@ -1,3 +1,4 @@
+import axios from "axios"
 import { styled } from "styled-components"
 
 const ArticleA = styled.article`
@@ -75,13 +76,21 @@ function Answer({answer, shareClick}){
     return(
       <ArticleA>
         <SpanVoteContainer>
-          <ButtonUpDown>
+          <ButtonUpDown onClick={
+            axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/voteWriting/answerId="+answer.answerId+"&upVote=true")
+            .then(res=>console.log(res+"추천하였습니다."))
+            .catch(err=>console.log(err+"추천에 실패했습니다."))
+          }>
             ▲
           </ButtonUpDown>
           <DivVote>
             {answer.voteUp.length - answer.voteDown.length}
           </DivVote>
-          <ButtonUpDown>
+          <ButtonUpDown onClick={
+            axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/voteWriting/answerId="+answer.answerId+"&downVote=true")
+            .then(res=>console.log(res+"추천하였습니다."))
+            .catch(err=>console.log(err+"추천에 실패했습니다."))
+          }>
             ▼
           </ButtonUpDown>
         </SpanVoteContainer>
