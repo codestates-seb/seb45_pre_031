@@ -53,7 +53,7 @@
 <br/>
 * [ ] 체크 박스 Account 수정
 <br/>
-* [ ] 체크 박스 Account 삭제
+- [ ] 체크 박스 아이템 1
 <br/>
 ### Question
 <br/>
