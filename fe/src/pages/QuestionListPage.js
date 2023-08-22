@@ -33,4 +33,10 @@ const StyledQuestionListPage = styled.div`
     display: flex;
     flex-direction: row;
   }
+
+  @media (max-width: 980px) {
+    .top > Aside {
+      display: none;
+    }
+  }
 `;
