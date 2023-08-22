@@ -28,7 +28,7 @@ public class Question extends BaseTimeEntity {
     @Column
     private String title;
 
-    @Column
+    @Column(length = 10000)
     private String body;
 
     @ManyToOne

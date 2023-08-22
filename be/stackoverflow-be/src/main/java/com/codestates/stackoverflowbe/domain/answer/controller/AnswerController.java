@@ -60,8 +60,8 @@ public class AnswerController {
     @GetMapping
     public ResponseEntity<MultiResponseDto<AnswerDto.Response>> getAnswers(@Positive @RequestParam(defaultValue = "1") int page,
                                                                            @Positive @RequestParam(defaultValue = "15") int size,
-                                                                           @RequestBody AnswerDto.Request requestDto) {
-        Page<AnswerDto.Response> pageResponseDtos = answerService.findAnswers(page - 1, size, requestDto.getQuestionId());
+                                                                           @RequestParam int questionId) {
+        Page<AnswerDto.Response> pageResponseDtos = answerService.findAnswers(page - 1, size, questionId);
 
         return ResponseEntity.ok(MultiResponseDto.<AnswerDto.Response>builder().status(HttpStatusCode.OK.getStatusCode()).message(HttpStatusCode.OK.getMessage()).data(pageResponseDtos.getContent()).page(pageResponseDtos).build());
     }

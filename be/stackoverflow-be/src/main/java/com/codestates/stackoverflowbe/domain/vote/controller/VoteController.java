@@ -35,10 +35,18 @@ public class VoteController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "Get All Votes API", description = "글의 모든 투표 조회 기능")
-    @GetMapping("/votesResult")
-    public ResponseEntity<SingleResponseDto<VoteDto.Response>> getQuestionVotes(@Positive @RequestBody VoteDto.Request requestDto) {
-        VoteDto.Response responseDto = voteService.getVotes(requestDto);
+    @Operation(summary = "Get Question Votes API", description = "질문의 모든 투표 조회 기능")
+    @GetMapping("/voteQuestionResult")
+    public ResponseEntity<SingleResponseDto<VoteDto.Response>> getQuestionVotes(@Positive @RequestParam long questionId) {
+        VoteDto.Response responseDto = voteService.getQuestionVotes(questionId);
+
+        return ResponseEntity.ok(SingleResponseDto.<VoteDto.Response>builder().status(HttpStatusCode.OK.getStatusCode()).message(HttpStatusCode.OK.getMessage()).data(responseDto).build());
+    }
+
+    @Operation(summary = "Get Answer Votes API", description = "답변의 모든 투표 조회 기능")
+    @GetMapping("/voteAnswerResult")
+    public ResponseEntity<SingleResponseDto<VoteDto.Response>> getAnswerVotes(@Positive @RequestParam long answerId) {
+        VoteDto.Response responseDto = voteService.getAnswerVotes(answerId);
 
         return ResponseEntity.ok(SingleResponseDto.<VoteDto.Response>builder().status(HttpStatusCode.OK.getStatusCode()).message(HttpStatusCode.OK.getMessage()).data(responseDto).build());
     }
