@@ -8,9 +8,10 @@ import Answer from "../components/features/Answer";
 
 import Footer from "../components/sharedlayout/Footer";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import axios from "axios";
 
 import { useParams } from "react-router-dom";
 
@@ -50,11 +51,18 @@ const SpanSubTitleRight = styled.span`
   font-size: 13px;
 `;
 const DivMainAside = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: 1080px;
-`;
+
+  /* display: flex;
+  justify-content: space-between; */
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  @media screen and(max-width: 979px) {
+    grid-template-columns: 5fr 0;
+  }
+
+`
 const MainMain = styled.main`
+  margin: 12px 0;
   width: 100%;
 `;
 const ArticleQ = styled.article`
@@ -72,7 +80,8 @@ const ButtonUpDown = styled.button`
   padding: 10px;
   background-color: transparent;
   font-size: 13px;
-`;
+  cursor: pointer;
+`
 const DivVote = styled.div`
   width: 45px;
   height: 45px;
@@ -84,13 +93,14 @@ const SpanComment = styled.span`
   padding: 0 3px 2px;
   font-size: 13px;
   color: rgb(131, 140, 149);
-`;
+  cursor: pointer;
+`
 const SpanQContainer = styled.span`
   margin-bottom: 16px;
 `;
 const DivQText = styled.div``;
 const UlTags = styled.ul`
-  margin: 24px 0 24px 0;
+  margin: 24px 0;
   list-style: none;
 `;
 const LiTag = styled.li`
@@ -110,7 +120,8 @@ const DivShareEditProfile = styled.div`
 const SpanShare = styled.span`
   color: rgb(106, 115, 124);
   font-size: 13px;
-  & span {
+  cursor: pointer;
+  & span{
     margin-right: 8px;
   }
 `;
@@ -223,9 +234,91 @@ const askAll = {
 ///// 임시 DB 끝 /////
 
 function QuestionDetailPage() {
-  const [newAnswerValue, setNewAnswerValue] = useState("");
+
+  const [question, setQuestion] = useState({
+    questionId: "001", // primary key
+    created_at: "Mon Aug 14 2023 11:11:22 GMT+0900 (한국 표준시)",
+    modified_at: "Mon Aug 15 2023 11:11:22 GMT+0900 (한국 표준시)",
+    views: 252,
+    title: "koans 과제 진행 중 npm install 오류로 인해 정상 작동 되지 않습니다",
+    displayName: "dubipy", // 작성자 닉네임
+    voteUp: ['hongsik','jang'], // post 현재 로그인 계정 추가
+    voteDown: ['honggildong','boby','james'], // post 현재 로그인 계정 추가
+    tags: ['javascript', 'react', 'discord'],
+    body:
+    "<p>--------------- 질문 내용 ---------------</p>",
+    avatarUrl: "https://avatars.githubusercontent.com/u/97888923?s=64&u=12b18768cdeebcf358b70051283a3ef57be6a20f&v=4", //프로필 이미지 없어질 수 있음
+  })
+  const [answers, setAnswers] = useState([{
+    answer_id: "DC_kwDOHOApLM4AKg6M",
+    created_at: "Mon Aug 14 2023 11:11:22 GMT+0900 (한국 표준시)",
+    modified_at: "Mon Aug 14 2023 11:11:22 GMT+0900 (한국 표준시)",
+    voteUp: ['hongsik','jang'],
+    voteDown: ['honggildong','boby','james'],
+    displayName: "Kingsenal",
+    body:
+      "안녕하세요.",
+    avatarUrl: "https://avatars.githubusercontent.com/u/79903256?s=64&v=4",
+  },
+  {
+    answer_id: "DC_kwDOHOApLM4AKg6M",
+    created_at: "Mon Aug 14 2023 11:11:22 GMT+0900 (한국 표준시)",//date 기본값,
+    modified_at: "Mon Aug 14 2023 11:11:22 GMT+0900 (한국 표준시)",
+    voteUp: ['hongsik','jang'],
+    voteDown: ['honggildong','boby','james'],
+    displayName: "Kingsenal",
+    body:
+      "코드스테이츠 교육 엔지니어 권준혁",
+    avatarUrl: "https://avatars.githubusercontent.com/u/79903256?s=64&v=4",
+  },])
+  const [questionVote, setQuestionVote] = useState(0)
+  const [answerVote, setAnswerVote] = useState(0)
+
   const { questionId } = useParams();
-  return (
+
+  const [newAnswerValue, setNewAnswerValue] = useState('');
+
+  // fetch 사용 코드
+  // function loadQnA(){
+  //   fetch("ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/questions/"+questionId)
+  //   .then(res=>res)
+  //   .then(question=>setQuestion(question))
+  //   .catch(err=>console.log(err))
+  //   fetch("ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/answers/"+questionId)
+  //   .then(res=>res)
+  //   .then(answers=>setAnswers(answers))
+  //   .catch(err=>console.log(err))
+  // }
+
+  function loadQnA(){
+    axios.get("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/questions/"+questionId)
+    .then(question=>setQuestion(question.data.data))
+    .catch(err=>console.log(err+"질문을 가져오지 못했습니다."))
+    axios.get("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/answers/"+questionId)
+    .then(answers=>setAnswers(answers.data.data))
+    .catch(err=>console.log(err+"답변을 가져오지 못했습니다."))
+    axios.get("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/votesResult/questionId=?"+questionId)
+    .then(questionVote=>setQuestionVote(questionVote.data.data))
+    .catch(err=>console.log(err+"질문의 추천 정보를 가져오지 못했습니다."))
+    axios.get("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/votesResult/answerId=?"+questionId)
+    .then(answerVote=>setAnswerVote(answerVote.data.data))
+    .catch(err=>console.log(err+"답변의 추천 정보를 가져오지 못했습니다."))
+    console.log(question)
+    console.log(answers)
+    console.log(questionId)
+  }
+
+  useEffect(loadQnA,[])
+  // console.log(question)
+  // console.log(answers)
+  // console.log(questionId)
+
+  function shareClick(){
+    navigator.clipboard.writeText(window.location.href)
+    .then(res=>alert('링크가 복사되었습니다.'))
+  }
+
+  return(
     <div>
       <DivAllContainer>
         <NavBar />
@@ -236,54 +329,77 @@ function QuestionDetailPage() {
               <AskQuestionBtn />
             </DivMainTitleBox>
             <DivSubTitleContainer>
-              <SpanSubTitleBox>
-                <SpanSubTitleLeft>Asked</SpanSubTitleLeft>
-                <SpanSubTitleRight>
-                  {new Date().getDate() - new Date(askAll.created_at).getDate()} days ago
-                </SpanSubTitleRight>
-              </SpanSubTitleBox>
-              <SpanSubTitleBox>
-                <SpanSubTitleLeft>Modified</SpanSubTitleLeft>
-                <SpanSubTitleRight>
-                  {new Date().getDate() - new Date(askAll.updated_at).getDate()} days ago
-                </SpanSubTitleRight>
-              </SpanSubTitleBox>
-              <SpanSubTitleBox>
-                <SpanSubTitleLeft>Viewed</SpanSubTitleLeft>
-                <SpanSubTitleRight>{askAll.views} times</SpanSubTitleRight>
-              </SpanSubTitleBox>
+            <SpanSubTitleBox>
+              <SpanSubTitleLeft>
+                Asked
+              </SpanSubTitleLeft>
+              <SpanSubTitleRight>
+                {new Date().getDate() - new Date(question.created_at).getDate()} days ago
+              </SpanSubTitleRight>
+            </SpanSubTitleBox>
+            <SpanSubTitleBox>
+              <SpanSubTitleLeft>
+                Modified
+              </SpanSubTitleLeft>
+              <SpanSubTitleRight>
+                {new Date().getDate() - new Date(question.updated_at).getDate()} days ago
+              </SpanSubTitleRight>
+            </SpanSubTitleBox>
+            <SpanSubTitleBox>
+              <SpanSubTitleLeft>
+                Viewed
+              </SpanSubTitleLeft>
+              <SpanSubTitleRight>
+                {question.views} times
+              </SpanSubTitleRight>
+            </SpanSubTitleBox>
             </DivSubTitleContainer>
           </DivMainTitleContainer>
           <DivMainAside>
             <MainMain>
               <ArticleQ>
                 <SpanVoteContainer>
-                  <ButtonUpDown>▲</ButtonUpDown>
-                  <DivVote>{askAll.voteUp.length - askAll.voteDown.length}</DivVote>
-                  <ButtonUpDown>▼</ButtonUpDown>
+
+                  <ButtonUpDown>
+                    ▲
+                  </ButtonUpDown>
+                  <DivVote>
+                    {question.voteUp.length - question.voteDown.length}
+                  </DivVote>
+                  <ButtonUpDown>
+                    ▼
+                  </ButtonUpDown>
                 </SpanVoteContainer>
                 <SpanQContainer>
-                  <DivQText>{askAll.body}</DivQText>
+                  <DivQText>
+                    {question.body}
+                  </DivQText>
                   <UlTags>
-                    {askAll.tags.map((tag) => {
-                      return <LiTag>{tag.toLowerCase()}</LiTag>;
+                    {question.tags.map((tag)=>{
+                      return <LiTag>{tag.toLowerCase()}</LiTag>
                     })}
                   </UlTags>
                   <DivShareEditProfile>
                     <SpanShare>
-                      <span>Share</span>
-                      <span>Improve this question</span>
-                      <span>Follow</span>
+
+                      <span onClick={shareClick}>
+                        Share
+                      </span>
+                      <span>
+                        Improve this question
+                      </span>
+                      <span>
+                        Follow
+                      </span>
                     </SpanShare>
                     <SpanProfile>
-                      <div>
-                        {"asked " +
-                          new Intl.DateTimeFormat("en-GB", { month: "short", day: "numeric" }).format(
-                            new Date(askAll.created_at)
-                          )}
-                      </div>
+                      <div>{"asked "+new Intl.DateTimeFormat("en-GB",{month: 'short', day: 'numeric'}).format(new Date(question.created_at))}</div>
                       <SpanProfileUser>
-                        <img src={askAll.avatarUrl} alt="" width="32px" height="32px" />
+                        <img
+                          src={question.avatarUrl}
+                          alt=""
+                          width="32px" height="32px"
+                        />
                         <span>
                           <DivUserName>name</DivUserName>
                           <DivFollow>follow</DivFollow>
@@ -296,40 +412,55 @@ function QuestionDetailPage() {
                 <SpanComment>Add a comment</SpanComment>
               </ArticleQ>
               <DivAnswerContainer>
-                <SpanAnswerLength>{askAll.answer.length + " Answers"}</SpanAnswerLength>
-                <form>
-                  <LabelAnswerFilter>Sorted by:</LabelAnswerFilter>
-                  <SelectAnswerFilter>
-                    <option>Highest score (default)</option>
-                    <option>Trending (recent votes count more)</option>
-                    <option>Date modified (newest first)</option>
-                    <option>Date created (oldest first)</option>
-                  </SelectAnswerFilter>
-                </form>
+                <SpanAnswerLength>
+                  {answers.length+" Answers"}
+                </SpanAnswerLength>
+                <LabelAnswerFilter>
+                  Sorted by:
+                </LabelAnswerFilter>
+                <SelectAnswerFilter>
+                  <option>Highest score (default)</option>
+                  <option>Trending (recent votes count more)</option>
+                  <option>Date modified (newest first)</option>
+                  <option>Date created (oldest first)</option>
+                </SelectAnswerFilter>
               </DivAnswerContainer>
               <ArticleA>
-                <SpanVoteContainer>
-                  <ButtonUpDown>▲</ButtonUpDown>
-                  <DivVote>{askAll.answer[0].voteUp.length - askAll.answer[0].voteDown.length}</DivVote>
-                  <ButtonUpDown>▼</ButtonUpDown>
+              <SpanVoteContainer>
+                  <ButtonUpDown>
+                    ▲
+                  </ButtonUpDown>
+                  <DivVote>
+                    {answers[0].voteUp.length - answers[0].voteDown.length}
+                  </DivVote>
+                  <ButtonUpDown>
+                    ▼
+                  </ButtonUpDown>
                 </SpanVoteContainer>
                 <SpanQContainer>
-                  <DivQText>{askAll.answer[0].body}</DivQText>
+                  <DivQText>
+                    {answers[0].body}
+                  </DivQText>
                   <DivShareEditProfile>
                     <SpanShare>
-                      <span>Share</span>
-                      <span>Improve this question</span>
-                      <span>Follow</span>
+                      <span onClick={shareClick}>
+                        Share
+                      </span>
+                      <span>
+                        Improve this question
+                      </span>
+                      <span>
+                        Follow
+                      </span>
                     </SpanShare>
                     <SpanProfile>
-                      <div>
-                        {"asked " +
-                          new Intl.DateTimeFormat("en-GB", { month: "short", day: "numeric" }).format(
-                            new Date(askAll.answer[0].created_at)
-                          )}
-                      </div>
+                      <div>{"asked "+new Intl.DateTimeFormat("en-GB",{month: 'short', day: 'numeric'}).format(new Date(answers[0].created_at))}</div>
                       <SpanProfileUser>
-                        <img src={askAll.answer[0].avatarUrl} alt="" width="32px" height="32px" />
+                        <img
+                          src={answers[0].avatarUrl}
+                          alt=""
+                          width="32px" height="32px"
+                        />
                         <span>
                           <DivUserName>name</DivUserName>
                           <DivFollow>follow</DivFollow>
@@ -343,27 +474,42 @@ function QuestionDetailPage() {
               </ArticleA>
               <ArticleA>
                 <SpanVoteContainer>
-                  <ButtonUpDown>▲</ButtonUpDown>
-                  <DivVote>{askAll.answer[1].voteUp.length - askAll.answer[0].voteDown.length}</DivVote>
-                  <ButtonUpDown>▼</ButtonUpDown>
+                  <ButtonUpDown>
+                    ▲
+                  </ButtonUpDown>
+                  <DivVote>
+                    {answers[1].voteUp.length - answers[1].voteDown.length}
+                  </DivVote>
+                  <ButtonUpDown>
+                    ▼
+                  </ButtonUpDown>
                 </SpanVoteContainer>
                 <SpanQContainer>
-                  <DivQText>{askAll.answer[1].body}</DivQText>
+                  <DivQText>
+                    {answers[1].body}
+                  </DivQText>
                   <DivShareEditProfile>
                     <SpanShare>
-                      <span>Share</span>
-                      <span>Improve this question</span>
-                      <span>Follow</span>
+                      <span onClick={shareClick}>
+                        Share
+                      </span>
+                      <span>
+                        Improve this question
+                      </span>
+                      <span>
+                        Follow
+                      </span>
                     </SpanShare>
                     <SpanProfile>
                       <div>
-                        {"asked " +
-                          new Intl.DateTimeFormat("en-GB", { month: "short", day: "numeric" }).format(
-                            new Date(askAll.answer[1].created_at)
-                          )}
+                        {"asked "+new Intl.DateTimeFormat("en-GB",{month: 'short', day: 'numeric'}).format(new Date(answers[1].created_at))}
                       </div>
                       <SpanProfileUser>
-                        <img src={askAll.answer[1].avatarUrl} alt="" width="32px" height="32px" />
+                        <img
+                          src={answers[1].avatarUrl}
+                          alt=""
+                          width="32px" height="32px"
+                        />
                         <span>
                           <DivUserName>name</DivUserName>
                           <DivFollow>follow</DivFollow>
@@ -376,12 +522,21 @@ function QuestionDetailPage() {
                 <SpanComment>Add a comment</SpanComment>
               </ArticleA>
               <ArticleNewA>
-                <form>
-                  <H2YourAnswer>Your Answer</H2YourAnswer>
+
+                <form
+                  method="POST"
+                  action={"http://host/v1/answer/questionId=?"+questionId}
+                >
+                  <H2YourAnswer>
+                    Your Answer
+                  </H2YourAnswer>
                   <DivQuill>
                     <ReactQuill theme="snow" value={newAnswerValue} onChange={setNewAnswerValue} />
                   </DivQuill>
-                  <SubmitPost type="submit" value="Post Your Answer" />
+                  <SubmitPost
+                    type="submit"
+                    value="Post Your Answer"
+                   />
                 </form>
               </ArticleNewA>
             </MainMain>
