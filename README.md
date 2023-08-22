@@ -43,6 +43,17 @@
 ---
 
 ## 3. 핵심 기능 
-
-- 게시판
+<br/>
+#### Account
+<br/>
+- [ ] Account 생성
+<br/>
+- [ ] Account 읽기
+<br/>
+- [ ] Account 수정
+<br/>
+- [ ] Account 삭제
+<br/>
+### Question
+<br/>
 
