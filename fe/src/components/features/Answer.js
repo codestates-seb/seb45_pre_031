@@ -110,7 +110,7 @@ function Answer({answer, shareClick}){
                   width="32px" height="32px"
                 />
                 <span>
-                  <DivUserName>name</DivUserName>
+                  <DivUserName>{answer.displayName}</DivUserName>
                   <DivFollow>follow</DivFollow>
                 </span>
               </SpanProfileUser>
