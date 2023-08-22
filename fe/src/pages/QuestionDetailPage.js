@@ -171,11 +171,6 @@ const SelectAnswerFilter = styled.select`
   padding: 5px;
   font-size: 13px;
 `
-const ArticleA = styled.article`
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  margin-bottom: 24px;
-`
 const ArticleNewA = styled.article`
 `
 const H2YourAnswer = styled.h2`
@@ -210,7 +205,7 @@ function QuestionDetailPage() {
     voteDown: ["onePerson","twoPerson"],
     tags: ["javascript", "react"],
     body:
-    "<p> 질문 내용 </p>",
+    "<p> 질문 내용 DB </p>",
   })
   const [answers, setAnswers] = useState([{
     answer_id: "007",
@@ -220,7 +215,7 @@ function QuestionDetailPage() {
     voteDown: ["onePerson","twoPerson"],
     displayName: "displayName",
     body:
-      "<p>안녕하세요.<p>",
+      "<p> 글 내용 DB <p>",
   }])
 
   const { questionId } = useParams();
@@ -229,6 +224,8 @@ function QuestionDetailPage() {
 
   const [newAnswerValue, setNewAnswerValue] = useState('');
 
+  const [login, setLogin] = useState(false)
+
   function loadQnA(){
     axios.get("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/questions/"+questionId)
     .then(question=>setQuestion(question.data.data))
@@ -236,6 +233,7 @@ function QuestionDetailPage() {
     axios.get("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/answer?questionId="+questionId)
     .then(answers=>setAnswers(answers.data.data))
     .catch(err=>console.log(err+"답변을 가져오지 못했습니다."))
+    localStorage.getItem("access_token")? setLogin(true) : setLogin(false)
   }
 
   useEffect(loadQnA,[])
@@ -245,13 +243,13 @@ function QuestionDetailPage() {
     .then(res=>alert('링크가 복사되었습니다.'))
   }
 
-  const token = localStorage.getItem("access_token");
-  const postSend = (e) => {
-    console.log("llllllllll")
+  function addComment(){
+    login? console.log("댓글기능 개발중") : navigate("/login")
+  }
+
+  function postSend(){
     axios.post(
-      "http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/answer/questionId=?"+questionId+"&body="+newAnswerValue,
-      {headers:{"Authorization": token}},
-      {body: {data: newAnswerValue}}
+      `http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/answer?questionId=${questionId}&body=${newAnswerValue}`,
     )
     .then(res=>console.log(res+"포스팅에 성공했습니다."))
     .catch(err=>console.log(err+"포스팅에 실패했습니다."))
@@ -348,31 +346,27 @@ function QuestionDetailPage() {
                   </DivShareEditProfile>
                 </SpanQContainer>
                 <span></span>
-                <SpanComment>Add a comment</SpanComment>
+                <SpanComment onClick={addComment}>Add a comment</SpanComment>
               </ArticleQ>
               <DivAnswerContainer>
                 <SpanAnswerLength>
                   {answers.length+" Answers"}
                 </SpanAnswerLength>
-                <LabelAnswerFilter>
-                  Sorted by:
-                </LabelAnswerFilter>
-                <SelectAnswerFilter>
-                  <option>Highest score (default)</option>
-                  <option>Trending (recent votes count more)</option>
-                  <option>Date modified (newest first)</option>
-                  <option>Date created (oldest first)</option>
-                </SelectAnswerFilter>
+                <span>
+                  <LabelAnswerFilter>
+                    Sorted by:
+                  </LabelAnswerFilter>
+                  <SelectAnswerFilter>
+                    <option>Highest score (default)</option>
+                    <option>Trending (recent votes count more)</option>
+                    <option>Date modified (newest first)</option>
+                    <option>Date created (oldest first)</option>
+                  </SelectAnswerFilter>
+                </span>
               </DivAnswerContainer>
               {answers.map(answer=><Answer answer={answer} shareClick={shareClick} />)}
               <ArticleNewA>
-                <form
-                  // name="newAnswerPost"
-                  // method="POST"
-                  // action={"http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/answer?questionId="+questionId+"&body="+newAnswerValue}
-                  // onsubmit={postSend}
-                  onsubmit="return false"
-                >
+                <form>
                   <H2YourAnswer>
                     Your Answer
                   </H2YourAnswer>
@@ -381,13 +375,16 @@ function QuestionDetailPage() {
                       name="data"
                       theme="snow"
                       value={newAnswerValue}
-                      onChange={()=>setNewAnswerValue(newAnswerValue)}
+                      onChange={(e)=>{setNewAnswerValue(e)}}
                     />
                   </DivQuill>
                   <SubmitPost
                     type="submit"
                     value="Post Your Answer"
-                    onClick={postSend}
+                    onClick={(e)=>{
+                      e.preventDefault()
+                      postSend()}
+                    }
                    />
                 </form>
               </ArticleNewA>
