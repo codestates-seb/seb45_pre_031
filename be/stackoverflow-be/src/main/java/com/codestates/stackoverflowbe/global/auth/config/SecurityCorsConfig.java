@@ -19,6 +19,7 @@ public class SecurityCorsConfig {
         CorsConfiguration config = new CorsConfiguration();
         //config.setAllowCredentials(true);: 요청에서 자격증명(쿠키, 인증 헤더 등)을 허용
         config.setAllowCredentials(true);
+
 //        config.addAllowedOriginPattern("*");
 
         config.addAllowedOriginPattern("http://localhost:80"); // 로컬 아파치 환경에서 접근하는 CORS 허용
@@ -28,8 +29,9 @@ public class SecurityCorsConfig {
 //        //응답 헤더에 Authorization 헤더를 노출하도록 설정
         config.addExposedHeader("Authorization");
         config.addExposedHeader("Refresh");
+        config.addExposedHeader("displayName");
 
-        config.addAllowedHeader("*"); //특정 header만 허용
+        config.addAllowedHeader("*"); //모든 header만 허용
         config.addAllowedMethod("GET"); //특정 메소드만 허용
         config.addAllowedMethod("POST"); //특정 메소드만 허용
         config.addAllowedMethod("DELETE"); //특정 메소드만 허용

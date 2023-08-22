@@ -1,6 +1,5 @@
 package com.codestates.stackoverflowbe.global.auth.config;
 
-import com.codestates.stackoverflowbe.domain.account.repository.AccountRepository;
 import com.codestates.stackoverflowbe.domain.account.service.AccountService;
 import com.codestates.stackoverflowbe.global.auth.filter.JwtVerificationFilter;
 import com.codestates.stackoverflowbe.global.auth.handler.*;
@@ -12,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,21 +19,15 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
 
 @Configuration
-@RequiredArgsConstructor
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfiguration {
 
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
     private final AccountService accountService;
-
     private final SecurityCorsConfig corsConfig;
 
     @Bean
@@ -76,35 +68,30 @@ public class SecurityConfiguration {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        // 자격증명 (예: 쿠키, 인증 헤더 등)을 허용
-        configuration.setAllowCredentials(true);
-        //모든 출처(Origin)에 대해 스크립트 기반 HTTP 통신 허용 (단, configuration.setAllowCredentials(true)와 함께 적용 불가!)
-//        configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:80",
-                "http://localhost:8080",
-                "http://localhost:3000",
-                "http://seveneleven-stackoverflow-s3.s3-website.ap-northeast-2.amazonaws.com",
-                "3.36.128.133:8080",
-                "3.36.128.133:80"));
-
-        //4가지 HTTP Method에 대한 HTTP 통신 허용
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE", "OPTIONS"));
-
-//        configuration.setAllowedHeaders(Arrays.asList("Authorization"));
-        configuration.addExposedHeader("Authorization");
-//        configuration.addExposedHeader("Refresh");
-
-
-        // CorsConfigurationSource 인터페이스 구현 클래스인 UrlBasedCorsConfigurationSource 클래스 객체 생성
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-
-        // 모든 URL에 상기 CORS 정책 적용
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+//    @Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        // 자격증명 (예: 쿠키, 인증 헤더 등)을 허용
+//        configuration.setAllowCredentials(true);
+//        //모든 출처(Origin)에 대해 스크립트 기반 HTTP 통신 허용 (단, configuration.setAllowCredentials(true)와 함께 적용 불가!)
+////        configuration.setAllowedOrigins(Arrays.asList("*"));
+//        configuration.setAllowedOrigins(Arrays.asList("http://localhost:80",
+//                "http://localhost:8080",
+//                "http://localhost:3000",
+//                "http://seveneleven-stackoverflow-s3.s3-website.ap-northeast-2.amazonaws.com",
+//                "3.36.128.133:8080",
+//                "3.36.128.133:80"));
+//
+//        //4가지 HTTP Method에 대한 HTTP 통신 허용
+//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE", "OPTIONS"));
+//
+//        // CorsConfigurationSource 인터페이스 구현 클래스인 UrlBasedCorsConfigurationSource 클래스 객체 생성
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//
+//        // 모든 URL에 상기 CORS 정책 적용
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
 
     public class CustomFilterConfigurer extends AbstractHttpConfigurer<CustomFilterConfigurer, HttpSecurity> {
 
@@ -117,7 +104,7 @@ public class SecurityConfiguration {
 
             // AbstractAuthenticationProcessingFilter에서 상속받은 filterProcessurl을 설정 (설정하지 않으면 default 값인 /Login)
             jwtAuthenticationFilter.setFilterProcessesUrl("/v1/accounts/authenticate");
-            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new AccountAuthenticationSuccessHandler());
+            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new AccountAuthenticationSuccessHandler(accountService));
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new AccountAuthenticationFailureHandler());
 
             JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils);
