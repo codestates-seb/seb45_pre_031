@@ -46,13 +46,9 @@
 ---
 
 #### Account
-<br/>
 * [ ] 체크 박스 Account 생성
-<br/>
 * [ ] 체크 박스 Account 읽기
-<br/>
 * [ ] 체크 박스 Account 수정
-<br/>
 - [ ] 체크 박스 아이템 1
 <br/>
 ### Question
