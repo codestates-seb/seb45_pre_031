@@ -135,7 +135,7 @@ function LoginPage () {
         axios.get("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/auth/oauth")
           .then(response => {
             console.log(response);
-            const displayName = response.data.DisplayName;
+            const displayName = response.data.displayName;
 
             console.log(displayName);
 
