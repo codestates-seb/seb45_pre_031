@@ -46,10 +46,10 @@
 ---
 
 #### Account
-* [ ] 체크 박스 Account 생성
-* [ ] 체크 박스 Account 읽기
-* [ ] 체크 박스 Account 수정
-- [ ] 체크 박스 아이템 1
+* [ ] Account 생성
+* [ ] Account 읽기
+* [ ] Account 수정
+* [ ] Account 삭제
 <br/>
 ### Question
 <br/>
