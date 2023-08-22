@@ -13,9 +13,9 @@ export const LOGOUT = 'LOGOUT';
 
 
 
-export const loginSuccess = (accessToken, DisplayName) => ({
+export const loginSuccess = ({ accessToken, displayName }) => ({
     type: LOGIN_SUCCESS,
-    payload: { accessToken, DisplayName }
+    payload: { accessToken, displayName }
 });
 
 export const loginFailure = (error) => ({
