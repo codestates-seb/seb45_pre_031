@@ -255,7 +255,7 @@ function QuestionDetailPage() {
     axios.post(
       `http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/answer?questionId=${questionId}&body=${newAnswerValue}`,
     )
-    .then(res=>console.log(res+"포스팅에 성공했습니다."))
+    .then(res=>setNewAnswerValue([...newAnswerValue, res]))
     .catch(err=>console.log(err+"포스팅에 실패했습니다."))
   }
 
