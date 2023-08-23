@@ -130,7 +130,7 @@ function LoginPage () {
         localStorage.setItem("refresh_token", refreshToken);
 
         // 토큰을 헤더에 포함시켜서 요청
-         axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+        /* axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`; */
 
         // displayName 불러오기
         axios.get("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/auth/oauth")
@@ -139,9 +139,9 @@ function LoginPage () {
 
             localStorage.setItem("display_name", displayName);
 
-            const accessToken = localStorage.getItem("access_token");
+            /* const accessToken = localStorage.getItem("access_token");
 
-            axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+            axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`; */
 
             // 로그인 성공 처리
             dispatch(loginSuccess({ accessToken, displayName }));
