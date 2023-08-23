@@ -22,17 +22,10 @@ function Header() {
     setIsFocus(!isFocus);
   };
 
-  const clearCookies = () => {
-    document.cookie = 'access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-    document.cookie = 'display_name=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-  }
-
   const logoutHandler = () => {
-    clearCookies();
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("display_name");
-    localStorage.removeItem('reduxState');
 
     // 로그아웃 액션 호출
     dispatch(logoutAction());

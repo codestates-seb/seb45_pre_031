@@ -121,6 +121,7 @@ function LoginPage () {
     const urlSearchParams = new URLSearchParams(window.location.search);
     const accessToken = urlSearchParams.get("access_token");
     const refreshToken = urlSearchParams.get("refresh_token");
+  
 
 
     if (accessToken && refreshToken) {
@@ -129,17 +130,19 @@ function LoginPage () {
         localStorage.setItem("access_token", accessToken);
         localStorage.setItem("refresh_token", refreshToken);
 
-
         // 토큰을 헤더에 포함시켜서 요청
         axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
         // displayName 불러오기
         axios.get("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/auth/oauth")
           .then(response => {
-            console.log(response);
             const displayName = response.data.displayName;
 
-            console.log(displayName);
+            localStorage.setItem("display_name", displayName);
+
+            const accessToken = localStorage.getItem("access_token");
+
+            axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
             // 로그인 성공 처리
             dispatch(loginSuccess({ accessToken, displayName }));
