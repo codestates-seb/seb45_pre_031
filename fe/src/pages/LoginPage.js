@@ -121,7 +121,6 @@ function LoginPage () {
     const urlSearchParams = new URLSearchParams(window.location.search);
     const accessToken = urlSearchParams.get("access_token");
     const refreshToken = urlSearchParams.get("refresh_token");
-    const displayName = urlSearchParams.get("display_name")
 
 
     if (accessToken && refreshToken) {
@@ -137,6 +136,7 @@ function LoginPage () {
         axios.get("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/auth/oauth")
           .then(response => {
             const displayName = response.data.displayName;
+
             localStorage.setItem("display_name", displayName);
 
             axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;

@@ -22,10 +22,10 @@ function App() {
     const accessToken = localStorage.getItem("access_token");
     const displayName = localStorage.getItem("display_name");
 
-    // 토큰을 헤더에 포함시켜서 요청
+    if (accessToken && displayName) {
+      // 토큰을 헤더에 포함시켜서 요청
     axios.defaults.headers.common["Authorization"] = `${accessToken}`;
 
-    if (accessToken && displayName) {
       dispatch(loginSuccess({ accessToken, displayName }));
     } else {
       dispatch(logoutAction());
