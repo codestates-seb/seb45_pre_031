@@ -138,6 +138,8 @@ function LoginPage () {
           .then(response => {
             const displayName = response.data.displayName;
 
+            axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+
             // 로그인 성공 처리
             dispatch(loginSuccess({ accessToken, displayName }));
           })
