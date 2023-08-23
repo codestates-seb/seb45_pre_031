@@ -80,7 +80,7 @@ function Answer({answer, shareClick, login}){
   function voteUp(e){
     e.preventDefault()
     if(login){
-      axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/voteWriting/answerId="+answer.answerId+"&upVote=true")
+      axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/voteWriting", {answerId:answer.answerId, upVote:true})
       .then(res=>console.log(res+"추천하였습니다."))
       .catch(err=>console.log(err+"추천에 실패했습니다."))
     }
@@ -92,7 +92,7 @@ function Answer({answer, shareClick, login}){
   function voteDown(e){
     e.preventDefault()
     if(login){
-      axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/voteWriting/answerId="+answer.answerId+"&downVote=true")
+      axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/voteWriting", {answerId:answer.answerId, downVote:true})
       .then(res=>console.log(res+"추천하였습니다."))
       .catch(err=>console.log(err+"추천에 실패했습니다."))
     }
@@ -106,6 +106,7 @@ function Answer({answer, shareClick, login}){
       axios.delete("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/answer/"+answer.answerId)
       .then(res=>console.log(res+"삭제 요청을 보냈습니다."))
       .catch(err=>console.log(err+"삭제 요청 발송을 실패했습니다."))
+      navigate("/questionlist")
     }
   }
 
