@@ -241,7 +241,7 @@ function QuestionDetailPage() {
   function voteUp(e){
     e.preventDefault()
     if(login){
-      axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/voteWriting/questionId="+questionId+"&upVote=true")
+      axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/voteWriting", {questionId: questionId, upVote:true})
       .then(res=>console.log(res+"추천하였습니다."))
       .catch(err=>console.log(err+"추천에 실패했습니다."))
     }
@@ -253,7 +253,7 @@ function QuestionDetailPage() {
   function voteDown(e){
     e.preventDefault()
     if(login){
-      axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/voteWriting/questionId="+questionId+"&downVote=true")
+      axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/voteWriting", {questionId: questionId, downVote:true})
       .then(res=>console.log(res+"추천하였습니다."))
       .catch(err=>console.log(err+"추천에 실패했습니다."))
     }
