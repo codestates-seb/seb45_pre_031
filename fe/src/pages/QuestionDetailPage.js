@@ -238,6 +238,30 @@ function QuestionDetailPage() {
 
   useEffect(loadQnA,[])
 
+  function voteUp(e){
+    e.preventDefault()
+    if(login){
+      axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/voteWriting/questionId="+questionId+"&upVote=true")
+      .then(res=>console.log(res+"추천하였습니다."))
+      .catch(err=>console.log(err+"추천에 실패했습니다."))
+    }
+    else{
+      navigate("/login")
+    }
+  }
+
+  function voteDown(e){
+    e.preventDefault()
+    if(login){
+      axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/voteWriting/questionId="+questionId+"&downVote=true")
+      .then(res=>console.log(res+"추천하였습니다."))
+      .catch(err=>console.log(err+"추천에 실패했습니다."))
+    }
+    else{
+      navigate("/login")
+    }
+  }
+
   function shareClick(){
     navigator.clipboard.writeText(window.location.href)
     .then(res=>alert('링크가 복사되었습니다.'))
@@ -248,14 +272,19 @@ function QuestionDetailPage() {
   }
 
   function deletePost(){
-    login? console.log("del url") : console.log('')
+    if(login){
+      axios.delete("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/questions/"+questionId)
+      .then(res=>console.log(res+"삭제 요청을 보냈습니다."))
+      .catch(err=>console.log(err+"삭제 요청 발송을 실패했습니다."))
+      navigate("/questionlist")
+    }
   }
 
   function postSend(){
     axios.post(
       `http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/answer?questionId=${questionId}&body=${newAnswerValue}`,
     )
-    .then(res=>console.log(res+"포스팅에 성공했습니다."))
+    .then(res=>setNewAnswerValue([...newAnswerValue, res]))
     .catch(err=>console.log(err+"포스팅에 실패했습니다."))
   }
 
@@ -267,7 +296,7 @@ function QuestionDetailPage() {
           <DivMainTitleContainer>
             <DivMainTitleBox>
               <H1MainTitle>
-                MainTitle
+                {question.title}
               </H1MainTitle>
               <AskQuestionBtn />
             </DivMainTitleBox>
@@ -302,21 +331,13 @@ function QuestionDetailPage() {
             <MainMain>
               <ArticleQ>
                 <SpanVoteContainer>
-                  <ButtonUpDown onClick={
-                    axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/voteWriting/questionId="+questionId+"&upVote=true")
-                    .then(res=>console.log(res+"추천하였습니다."))
-                    .catch(err=>console.log(err+"추천에 실패했습니다."))
-                  }>
+                  <ButtonUpDown onClick={voteUp}>
                     ▲
                   </ButtonUpDown>
                   <DivVote>
                     {question.voteUp.length - question.voteDown.length}
                   </DivVote>
-                  <ButtonUpDown onClick={
-                    axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/voteWriting/questionId="+questionId+"&downVote=true")
-                    .then(res=>console.log(res+"비추천하였습니다."))
-                    .catch(err=>console.log(err+"비추천에 실패했습니다."))
-                  }>
+                  <ButtonUpDown onClick={voteDown}>
                     ▼
                   </ButtonUpDown>
                 </SpanVoteContainer>
@@ -334,9 +355,7 @@ function QuestionDetailPage() {
                       <span onClick={shareClick}>
                         Share
                       </span>
-                      <span onClick={deletePost}>
-                        {login? "Delete" : "Improve this question"}
-                      </span>
+                      {login? <span onClick={deletePost}>Delete</span> : <span>Improve this question</span>}
                       <span>
                         Follow
                       </span>
