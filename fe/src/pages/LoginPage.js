@@ -139,6 +139,8 @@ function LoginPage () {
 
             localStorage.setItem("display_name", displayName);
 
+            const accessToken = localStorage.getItem("access_token");
+
             axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
             // 로그인 성공 처리
