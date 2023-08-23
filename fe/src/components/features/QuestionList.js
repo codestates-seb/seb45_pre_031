@@ -321,14 +321,12 @@ const QuestionSummury = styled.div`
   height: 34px;
   max-width: 565px;
   overflow: hidden;
-  text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  margin-top: -2px;
   margin-bottom: 8px;
+  line-height: 1.4;
 `;
-
 const TagAndUserInfoContainer = styled.div`
   display: flex;
   flex-direction: row;
