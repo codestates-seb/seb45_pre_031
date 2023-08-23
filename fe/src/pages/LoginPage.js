@@ -109,11 +109,8 @@ function LoginPage () {
 
   const googleLoginHandler = async () => {
     try {
-      const accessToken = localStorage.getItem("access_token");
-      if (accessToken) {
-        axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-      }
       window.location.href = "http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/oauth2/authorization/google";
+
     } catch (error) {
       console.error("Google 로그인 중 에러:", error);
       dispatch(loginFailure("Google 로그인 중 에러가 발생했습니다."));
