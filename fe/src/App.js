@@ -12,20 +12,36 @@ import TagListPage from "./pages/TagListPage";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { loginSuccess, logoutAction } from "./redux/actions/loginAction";
+import axios from "axios";
 
 function App() {
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const accessToken = localStorage.getItem("access_token");
+    /* const accessToken = localStorage.getItem("access_token");
+    const displayName = localStorage.getItem("display_name"); */
 
-    if (accessToken) {
-      dispatch(loginSuccess(accessToken));
+    const accessToken = getCookie('access_token');
+    const displayName = getCookie('display_name');
+
+    // 토큰을 헤더에 포함시켜서 요청
+    axios.defaults.headers.common["Authorization"] = `${accessToken}`;
+
+    if (accessToken && displayName) {
+      dispatch(loginSuccess({ accessToken, displayName }));
     } else {
       dispatch(logoutAction());
     }
   }, [dispatch]);
+
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+      return parts.pop().split(';').shift();
+    }
+  }
 
   return (
     <BrowserRouter>
