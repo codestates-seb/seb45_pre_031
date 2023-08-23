@@ -272,7 +272,11 @@ function QuestionDetailPage() {
   }
 
   function deletePost(){
-    login? console.log("del url") : console.log('')
+    if(login){
+      axios.delete("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/questions/"+questionId)
+      .then(res=>console.log(res+"삭제 요청을 보냈습니다."))
+      .catch(err=>console.log(err+"삭제 요청 발송을 실패했습니다."))
+    }
   }
 
   function postSend(){
@@ -291,7 +295,7 @@ function QuestionDetailPage() {
           <DivMainTitleContainer>
             <DivMainTitleBox>
               <H1MainTitle>
-                MainTitle
+                {question.title}
               </H1MainTitle>
               <AskQuestionBtn />
             </DivMainTitleBox>
@@ -350,9 +354,7 @@ function QuestionDetailPage() {
                       <span onClick={shareClick}>
                         Share
                       </span>
-                      <span onClick={deletePost}>
-                        {login? "Delete" : "Improve this question"}
-                      </span>
+                      {login? <span onClick={deletePost}>Delete</span> : <span>Improve this question</span>}
                       <span>
                         Follow
                       </span>

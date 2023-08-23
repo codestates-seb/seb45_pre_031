@@ -73,7 +73,7 @@ const DivFollow = styled.div`
   color: rgb(106, 115, 124);
 `
 
-function Answer({answer, shareClick, login, deletePost}){
+function Answer({answer, shareClick, login}){
 
   const navigate = useNavigate()
 
@@ -101,6 +101,14 @@ function Answer({answer, shareClick, login, deletePost}){
     }
   }
 
+  function deletePost(){
+    if(login){
+      axios.delete("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/answer/"+answer.answerId)
+      .then(res=>console.log(res+"삭제 요청을 보냈습니다."))
+      .catch(err=>console.log(err+"삭제 요청 발송을 실패했습니다."))
+    }
+  }
+
     return(
       <ArticleA>
         <SpanVoteContainer>
@@ -123,9 +131,7 @@ function Answer({answer, shareClick, login, deletePost}){
               <span onClick={shareClick}>
                 Share
               </span>
-              <span onClick={deletePost}>
-                {login? "Delete" : "Improve this question"}
-              </span>
+              {login? <span onClick={deletePost}>Delete</span> : <span>Improve this question</span>}
               <span>
                 Follow
               </span>
