@@ -1,4 +1,5 @@
-import axios from "axios"
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { styled } from "styled-components"
 
 const ArticleA = styled.article`
@@ -73,24 +74,43 @@ const DivFollow = styled.div`
 `
 
 function Answer({answer, shareClick, login, deletePost}){
+
+  const navigate = useNavigate()
+
+  function voteUp(e){
+    e.preventDefault()
+    if(login){
+      axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/voteWriting/answerId="+answer.answerId+"&upVote=true")
+      .then(res=>console.log(res+"추천하였습니다."))
+      .catch(err=>console.log(err+"추천에 실패했습니다."))
+    }
+    else{
+      navigate("/login")
+    }
+  }
+
+  function voteDown(e){
+    e.preventDefault()
+    if(login){
+      axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/voteWriting/answerId="+answer.answerId+"&downVote=true")
+      .then(res=>console.log(res+"추천하였습니다."))
+      .catch(err=>console.log(err+"추천에 실패했습니다."))
+    }
+    else{
+      navigate("/login")
+    }
+  }
+
     return(
       <ArticleA>
         <SpanVoteContainer>
-          <ButtonUpDown onClick={
-            axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/voteWriting/answerId="+answer.answerId+"&upVote=true")
-            .then(res=>console.log(res+"추천하였습니다."))
-            .catch(err=>console.log(err+"추천에 실패했습니다."))
-          }>
+          <ButtonUpDown onClick={voteUp}>
             ▲
           </ButtonUpDown>
           <DivVote>
             {answer.voteUp.length - answer.voteDown.length}
           </DivVote>
-          <ButtonUpDown onClick={
-            axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/voteWriting/answerId="+answer.answerId+"&downVote=true")
-            .then(res=>console.log(res+"추천하였습니다."))
-            .catch(err=>console.log(err+"추천에 실패했습니다."))
-          }>
+          <ButtonUpDown onClick={voteDown}>
             ▼
           </ButtonUpDown>
         </SpanVoteContainer>
