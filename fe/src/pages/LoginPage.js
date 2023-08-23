@@ -76,20 +76,22 @@ function LoginPage () {
 
 
       if (response.status === 200) {
-        // 서버에서 토큰을 받음
+        // 서버에서 토큰과 유저 이름을 받음
         const accessToken = response.headers.getAuthorization();
         const refreshToken = response.headers.get("Refresh");
+        const displayName = response.data.DisplayName;
 
-        // 토큰을 로컬 스토리지에 저장
+        // 토큰과 유저이름을 로컬 스토리지에 저장
         localStorage.setItem("access_token", accessToken);
         localStorage.setItem("refresh_token", refreshToken);
+        localStorage.setItem("display_name", displayName);
+
+        // 쿠키 설정
+        document.cookie = `access_token=${accessToken}; path=/;`;
+        document.cookie = `display_name=${displayName}; path=/;`;
 
         // 토큰을 헤더에 포함시켜서 요청
         axios.defaults.headers.common["Authorization"] = `${accessToken}`;
-
-        // 유저 display name 받아오기
-        const displayName = response.data.DisplayName;
-        console.log(displayName)
 
          // 로그인 성공 처리
         dispatch(loginSuccess({ accessToken, displayName }));
