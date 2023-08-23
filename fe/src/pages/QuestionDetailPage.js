@@ -274,9 +274,11 @@ function QuestionDetailPage() {
   function deletePost(){
     if(login){
       axios.delete("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/questions/"+questionId)
-      .then(res=>console.log(res+"삭제 요청을 보냈습니다."))
+      .then(res=>{
+        console.log(res+"삭제 요청을 보냈습니다.")
+        navigate("/questionlist")
+      })
       .catch(err=>console.log(err+"삭제 요청 발송을 실패했습니다."))
-      navigate("/questionlist")
     }
   }
 
