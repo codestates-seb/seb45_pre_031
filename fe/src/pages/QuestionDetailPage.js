@@ -238,6 +238,30 @@ function QuestionDetailPage() {
 
   useEffect(loadQnA,[])
 
+  function voteUp(e){
+    e.preventDefault()
+    if(login){
+      axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/voteWriting/questionId="+questionId+"&upVote=true")
+      .then(res=>console.log(res+"추천하였습니다."))
+      .catch(err=>console.log(err+"추천에 실패했습니다."))
+    }
+    else{
+      navigate("/login")
+    }
+  }
+
+  function voteDown(e){
+    e.preventDefault()
+    if(login){
+      axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/voteWriting/questionId="+questionId+"&downVote=true")
+      .then(res=>console.log(res+"추천하였습니다."))
+      .catch(err=>console.log(err+"추천에 실패했습니다."))
+    }
+    else{
+      navigate("/login")
+    }
+  }
+
   function shareClick(){
     navigator.clipboard.writeText(window.location.href)
     .then(res=>alert('링크가 복사되었습니다.'))
@@ -302,21 +326,13 @@ function QuestionDetailPage() {
             <MainMain>
               <ArticleQ>
                 <SpanVoteContainer>
-                  <ButtonUpDown onClick={
-                    axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/voteWriting/questionId="+questionId+"&upVote=true")
-                    .then(res=>console.log(res+"추천하였습니다."))
-                    .catch(err=>console.log(err+"추천에 실패했습니다."))
-                  }>
+                  <ButtonUpDown onClick={voteUp}>
                     ▲
                   </ButtonUpDown>
                   <DivVote>
                     {question.voteUp.length - question.voteDown.length}
                   </DivVote>
-                  <ButtonUpDown onClick={
-                    axios.post("http://ec2-3-36-128-133.ap-northeast-2.compute.amazonaws.com/v1/vote/voteWriting/questionId="+questionId+"&downVote=true")
-                    .then(res=>console.log(res+"비추천하였습니다."))
-                    .catch(err=>console.log(err+"비추천에 실패했습니다."))
-                  }>
+                  <ButtonUpDown onClick={voteDown}>
                     ▼
                   </ButtonUpDown>
                 </SpanVoteContainer>
